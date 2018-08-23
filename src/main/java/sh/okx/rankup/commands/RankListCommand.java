@@ -47,7 +47,7 @@ public class RankListCommand implements CommandExecutor {
   }
 
   private void sendHeaderFooter(CommandSender sender, Rank rank, Message type) {
-    MessageBuilder builder = plugin.getMessage(type)
+    MessageBuilder builder = plugin.getMessage(rank, type)
         .failIfEmpty();
     if(rank == null) {
       builder.replace(Variable.PLAYER, sender.getName());
@@ -84,12 +84,11 @@ public class RankListCommand implements CommandExecutor {
     } else {
       amount = money.getAmount();
     }
-    DecimalFormat moneyFormat = plugin.getPlaceholders().getMoneyFormat();
     DecimalFormat percentFormat = plugin.getPlaceholders().getPercentFormat();
     return builder
-        .replace(Variable.MONEY_NEEDED, moneyFormat.format(amount))
+        .replace(Variable.MONEY_NEEDED, plugin.formatMoney(amount))
         .replace(Variable.PERCENT_LEFT, percentFormat.format((amount / money.getAmount()) * 100))
         .replace(Variable.PERCENT_DONE, percentFormat.format((1-(amount / money.getAmount())) * 100))
-        .replace(Variable.MONEY, moneyFormat.format(money.getAmount()));
+        .replace(Variable.MONEY, plugin.formatMoney(money.getAmount()));
   }
 }

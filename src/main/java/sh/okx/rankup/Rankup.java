@@ -24,12 +24,13 @@ import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
-import sh.okx.rankup.ranks.requirements.PlaytimeHoursRequirement;
-import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
 import sh.okx.rankup.ranks.requirements.MoneyRequirement;
+import sh.okx.rankup.ranks.requirements.PlaytimeMinutesRequirement;
 import sh.okx.rankup.ranks.requirements.RequirementRegistry;
+import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
 
 import java.io.File;
+import java.util.List;
 
 public class Rankup extends JavaPlugin {
   @Getter
@@ -86,7 +87,7 @@ public class Rankup extends JavaPlugin {
       placeholders.register();
     }
 
-    if(config.getInt("version") != YamlConfiguration.loadConfiguration(getTextResource("config.yml")).getInt("version")) {
+    if (config.getInt("version") != YamlConfiguration.loadConfiguration(getTextResource("config.yml")).getInt("version")) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename your config files (or the folder they are in),");
@@ -103,9 +104,9 @@ public class Rankup extends JavaPlugin {
    * on a plugin reload.
    */
   private void closeInventories() {
-    for(Player player : Bukkit.getOnlinePlayers()) {
+    for (Player player : Bukkit.getOnlinePlayers()) {
       InventoryView view = player.getOpenInventory();
-      if(view.getType() == InventoryType.CHEST
+      if (view.getType() == InventoryType.CHEST
           && view.getTopInventory().getHolder() instanceof Gui) {
         player.closeInventory();
       }
@@ -129,7 +130,7 @@ public class Rankup extends JavaPlugin {
   private void registerRequirements() {
     requirementRegistry.addRequirement(new MoneyRequirement(this, "money"));
     requirementRegistry.addRequirement(new XpLevelRequirement(this, "xp-level"));
-    requirementRegistry.addRequirement(new PlaytimeHoursRequirement(this, "playtime-hours"));
+    requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this, "playtime-minutes"));
   }
 
   private void setupPermissions() {
@@ -146,10 +147,26 @@ public class Rankup extends JavaPlugin {
     }
   }
 
+  public String formatMoney(double money) {
+    List<String> shortened = config.getStringList("shorten");
+    String suffix = "";
+
+    for (int i = shortened.size(); i > 0; i--) {
+      double value = Math.pow(10, 3 * i);
+      if (money >= value) {
+        money /= value;
+        suffix = shortened.get(i - 1);
+      }
+    }
+
+    String format = placeholders.getMoneyFormat().format(money);
+    return format + suffix;
+  }
+
   public MessageBuilder getMessage(Rank rank, Message message) {
     ConfigurationSection messages = rankups.getConfig()
         .getConfigurationSection(rank.getName());
-    if(messages == null || !messages.isSet(message.getName())) {
+    if (messages == null || !messages.isSet(message.getName())) {
       messages = this.messages;
     }
     return MessageBuilder.of(messages, message);
@@ -160,7 +177,7 @@ public class Rankup extends JavaPlugin {
   }
 
   public void rankup(Player player) {
-    if(!checkRankup(player)) {
+    if (!checkRankup(player)) {
       return;
     }
 
@@ -187,6 +204,7 @@ public class Rankup extends JavaPlugin {
   /**
    * Checks if a player can rankup,
    * and if they can't, sends the player a message and returns false
+   *
    * @param player the player to check if they can rankup
    * @return true if the player can rankup, false otherwise
    */
@@ -208,9 +226,10 @@ public class Rankup extends JavaPlugin {
               .replaceAll(player, rank);
       if (economy != null) {
         double balance = economy.getBalance(player);
+        double amount = rank.getRequirement("money").getAmount();
         builder = builder
-            .replace(Variable.MONEY, balance)
-            .replace(Variable.MONEY_NEEDED, rank.getRequirement("money").getAmount() - balance);
+            .replace(Variable.MONEY, formatMoney(amount))
+            .replace(Variable.MONEY_NEEDED, formatMoney(Math.max(0, amount - balance)));
       }
       builder.send(player);
       return false;

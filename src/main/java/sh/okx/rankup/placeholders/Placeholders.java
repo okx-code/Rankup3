@@ -53,9 +53,9 @@ public class Placeholders extends PlaceholderExpansion {
       case "current_rank_name":
         return orElsePlaceholder(rank, Rank::getRank, "not-in-ladder");
       case "current_rank_money":
-        return orElsePlaceholder(rank, r -> simplify(r.getRequirement("money").getAmount()), 0);
+        return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getAmount()), 0));
       case "current_rank_money_formatted":
-        return moneyFormat.format(orElsePlaceholder(rank, r -> r.getRequirement("money").getAmount(), 0));
+        return moneyFormat.format(orElse(rank, r -> r.getRequirement("money").getAmount(), 0));
       case "next_rank":
         if (rank == null) {
           return getPlaceholder("not-in-ladder");
@@ -72,22 +72,22 @@ public class Placeholders extends PlaceholderExpansion {
         } else {
           return next.getName();
         }
-      case "next_rank_money":
-        return orElsePlaceholder(next, r -> simplify(r.getRequirement("money").getAmount()), 0);
-      case "next_rank_money_formatted":
-        return moneyFormat.format(orElsePlaceholder(next, r -> r.getRequirement("money").getAmount(), 0));
-      case "next_rank_money_left":
-        return orElsePlaceholder(next, r -> simplify(plugin.getEconomy().getBalance(player) - r.getRequirement("money").getAmount()), 0);
-      case "next_rank_money_left_formatted":
-        return moneyFormat.format(orElsePlaceholder(next, r -> plugin.getEconomy().getBalance(player) - r.getRequirement("money").getAmount(), 0));
-      case "next_rank_percent_left":
-        return orElsePlaceholder(next, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0);
-      case "next_rank_percent_left_formatted":
-        return percentFormat.format(orElsePlaceholder(next, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0));
-      case "next_rank_percent_done":
-        return orElsePlaceholder(next, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0);
-      case "next_rank_percent_done_formatted":
-        return percentFormat.format(orElsePlaceholder(next, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0));
+      case "money":
+        return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getAmount()), 0));
+      case "money_formatted":
+        return plugin.formatMoney(orElse(rank, r -> r.getRequirement("money").getAmount(), 0D));
+      case "money_left":
+        return String.valueOf(Math.max(0, orElse(rank, r -> simplify(plugin.getEconomy().getBalance(player) - r.getRequirement("money").getAmount()), 0).doubleValue()));
+      case "money_left_formatted":
+        return plugin.formatMoney(Math.max(0D, orElse(rank, r -> plugin.getEconomy().getBalance(player) - r.getRequirement("money").getAmount(), 0D)));
+      case "percent_left":
+        return String.valueOf(Math.max(0D, orElse(rank, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
+      case "percent_left_formatted":
+        return percentFormat.format(Math.max(0D, orElse(rank, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
+      case "percent_done":
+        return String.valueOf(Math.max(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
+      case "percent_done_formatted":
+        return percentFormat.format(Math.max(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
       default:
         return null;
     }
@@ -114,9 +114,9 @@ public class Placeholders extends PlaceholderExpansion {
 
   private Number simplify(Number number) {
     if (number instanceof Float) {
-      return (float) number % 1 == 0 ? (int) number : number;
+      return (float) number % 1 == 0 ? number.intValue() : number;
     } else if (number instanceof Double) {
-      return (double) number % 1 == 0 ? (long) number : number;
+      return (double) number % 1 == 0 ? number.longValue() : number;
     } else {
       return number;
     }

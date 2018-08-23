@@ -10,8 +10,8 @@ public enum Message {
   SUCCESS_PRIVATE("rankup.success-private"),
   CONFIRMATION("rankup.confirmation"),
   TITLE("rankup.title"),
-  RANKS_HEADER("ranks.header"),
-  RANKS_FOOTER("ranks.footer"),
+  RANKS_HEADER("rankup.ranks.header"),
+  RANKS_FOOTER("rankup.ranks.footer"),
   RANKS_COMPLETE("rankup.ranks.complete"),
   RANKS_CURRENT("rankup.ranks.current"),
   RANKS_INCOMPLETE("rankup.ranks.incomplete");

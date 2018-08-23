@@ -10,7 +10,7 @@ Aexample:
   # (ie, this example will charge 1000 money to rankup from A to B)
   # money: money from the server economy
   # xp-level: amount of experience levels
-  # playtime-hours: hours a player has played
+  # playtime-minutes: minutes a player has played
   # custom requirements can also be added by other plugins.
   requirements:
     money: 1000

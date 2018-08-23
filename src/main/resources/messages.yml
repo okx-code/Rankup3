@@ -27,9 +27,8 @@ rankup:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
     current: "&c{OLD_RANK} &e\xbb &c{RANK}"
     incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
-ranks:
-  # an empty string disables the header/footer
-  header: ''
-  footer: ''
+    # an empty string disables the header/footer
+    header: ''
+    footer: ''
 
 not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."

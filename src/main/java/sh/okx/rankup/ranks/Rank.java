@@ -39,7 +39,7 @@ public class Rank {
     if(requirementsSection != null) {
       for (Map.Entry<String, Object> entry : requirementsSection.getValues(false).entrySet()) {
         String name = entry.getKey();
-        double amount = Double.parseDouble(String.valueOf(entry.getValue()));
+        double amount = Double.parseDouble(String.valueOf(entry.getValue()).replace(",", ""));
 
         Requirement requirement = plugin.getRequirementRegistry().newRequirement(name, amount);
         if (requirement == null) {

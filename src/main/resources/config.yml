@@ -43,3 +43,15 @@ placeholders:
   not-in-ladder: "None"
   # used in next_rank placeholders when there is no rankup
   highest-rank: "None"
+
+# what to shorten money by.
+# ie 1000 -> 1k
+# set to an empty list to disable
+shorten:
+- 'k'
+- 'M'
+- 'B'
+- 'T'
+- 'Q'
+- 'Qu'
+- 'S'

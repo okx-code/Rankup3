@@ -54,20 +54,6 @@ public class MessageBuilder {
     return this;
   }
 
-  public MessageBuilder replaceCost(CommandSender sender, Economy economy, Rank rank) {
-    Requirement money = rank.getRequirement("money");
-    if(money == null || economy == null) {
-      return this;
-    }
-    replace(Variable.MONEY, money.getAmount());
-    if(sender instanceof Player && rank.isInRank((Player) sender)) {
-      replace(Variable.MONEY_NEEDED, money.getRemaining((Player) sender));
-    } else {
-      replace(Variable.MONEY_NEEDED, money.getAmount());
-    }
-    return this;
-  }
-
   /**
    * Fails the MessageBuilder if the message is empty.
    * if this fails, all subsequent calls to that MessageBuilder will do nothing
