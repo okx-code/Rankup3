@@ -26,6 +26,7 @@ public class Rank {
   private final String next;
   @Getter
   private final String rank;
+  @Getter
   private final Set<Requirement> requirements;
   private final BinaryOperator<Boolean> reducer;
   private final List<String> commands;

@@ -13,8 +13,6 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.ranks.requirements.Requirement;
 
-import java.text.DecimalFormat;
-
 @RequiredArgsConstructor
 public class RankListCommand implements CommandExecutor {
   private final Rankup plugin;
@@ -59,36 +57,36 @@ public class RankListCommand implements CommandExecutor {
 
   private void sendMessage(CommandSender player, int state, Rank oldRank, Rank rank) {
     if(state == 0) {
-      replaceCost(plugin.getMessage(oldRank, Message.RANKS_COMPLETE)
+      replaceRequirements(plugin.getMessage(oldRank, Message.RANKS_COMPLETE)
           .replaceAll(player, oldRank, rank), player, oldRank)
           .send(player);
     } else if(state == 1) {
-      replaceCost(plugin.getMessage(oldRank, Message.RANKS_CURRENT)
+      replaceRequirements(plugin.getMessage(oldRank, Message.RANKS_CURRENT)
           .replaceAll(player, oldRank, rank), player, oldRank)
           .send(player);
     } else if(state == 2) {
-      replaceCost(plugin.getMessage(oldRank, Message.RANKS_INCOMPLETE)
+      replaceRequirements(plugin.getMessage(oldRank, Message.RANKS_INCOMPLETE)
           .replaceAll(player, oldRank, rank), player, oldRank)
           .send(player);
     }
   }
 
-  private MessageBuilder replaceCost(MessageBuilder builder, CommandSender sender, Rank rank) {
+  private MessageBuilder replaceRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
     Requirement money = rank.getRequirement("money");
-    if(money == null || plugin.getEconomy() == null) {
-      return builder;
-    }
-    double amount;
+    Double amount = null;
     if(sender instanceof Player && rank.isInRank((Player) sender)) {
-      amount = money.getRemaining((Player) sender);
+      if(money != null && plugin.getEconomy() != null) {
+        amount = money.getRemaining((Player) sender);
+      }
+      plugin.replaceRequirements((Player) sender, builder, rank);
     } else {
       amount = money.getAmount();
     }
-    DecimalFormat percentFormat = plugin.getPlaceholders().getPercentFormat();
-    return builder
-        .replace(Variable.MONEY_NEEDED, plugin.formatMoney(amount))
-        .replace(Variable.PERCENT_LEFT, percentFormat.format((amount / money.getAmount()) * 100))
-        .replace(Variable.PERCENT_DONE, percentFormat.format((1-(amount / money.getAmount())) * 100))
-        .replace(Variable.MONEY, plugin.formatMoney(money.getAmount()));
+    if(amount != null && plugin.getEconomy() != null) {
+      builder.replace(Variable.MONEY_NEEDED, plugin.formatMoney(amount));
+      builder.replace(Variable.MONEY, plugin.formatMoney(money.getAmount()));
+    }
+    return builder;
+
   }
 }

@@ -26,11 +26,14 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.ranks.requirements.MoneyRequirement;
 import sh.okx.rankup.ranks.requirements.PlaytimeMinutesRequirement;
+import sh.okx.rankup.ranks.requirements.Requirement;
 import sh.okx.rankup.ranks.requirements.RequirementRegistry;
 import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Rankup extends JavaPlugin {
   @Getter
@@ -87,7 +90,7 @@ public class Rankup extends JavaPlugin {
       placeholders.register();
     }
 
-    if (config.getInt("version") != YamlConfiguration.loadConfiguration(getTextResource("config.yml")).getInt("version")) {
+    if (config.getInt("version") != 0) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename your config files (or the folder they are in),");
@@ -231,9 +234,25 @@ public class Rankup extends JavaPlugin {
             .replace(Variable.MONEY, formatMoney(amount))
             .replace(Variable.MONEY_NEEDED, formatMoney(Math.max(0, amount - balance)));
       }
+      replaceRequirements(player, builder, rank);
       builder.send(player);
       return false;
     }
     return true;
+  }
+
+  public void replaceRequirements(Player player, MessageBuilder builder, Rank rank) {
+    DecimalFormat simpleFormat = placeholders.getSimpleFormat();
+    DecimalFormat percentFormat = placeholders.getPercentFormat();
+    for(Requirement requirement : rank.getRequirements()) {
+      replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getAmount()));
+      replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
+      replaceRequirements(builder, Variable.PERCENT_LEFT, requirement, () -> percentFormat.format((requirement.getRemaining(player) / requirement.getAmount()) * 100));
+      replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format((1-(requirement.getRemaining(player) / requirement.getAmount())) * 100));
+    }
+  }
+
+  private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
+    builder.replace(variable +  " " + requirement.getName(), value.get());
   }
 }

@@ -11,6 +11,8 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.requirements.Requirement;
 
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MessageBuilder {
   private String message;
@@ -24,7 +26,13 @@ public class MessageBuilder {
   }
 
   public MessageBuilder replace(Variable variable, Object value) {
-    this.message = variable.replace(message, String.valueOf(value));
+    return replace(variable.name(), value);
+  }
+
+  public MessageBuilder replace(String name, Object value) {
+    Pattern pattern = Pattern.compile("\\{" + name + "}", Pattern.CASE_INSENSITIVE);
+    Matcher matcher = pattern.matcher(message);
+    this.message = matcher.replaceAll(String.valueOf(value));
     return this;
   }
 

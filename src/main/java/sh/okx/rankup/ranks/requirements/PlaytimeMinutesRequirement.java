@@ -35,7 +35,7 @@ public class PlaytimeMinutesRequirement extends Requirement {
 
   @Override
   public double getRemaining(Player player) {
-    return amount - (player.getStatistic(playOneTick) * TICKS_PER_MINUTE);
+    return Math.max(0, amount - (player.getStatistic(playOneTick) * TICKS_PER_MINUTE));
   }
 
   @Override

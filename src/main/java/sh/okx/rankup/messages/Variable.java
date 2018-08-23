@@ -11,20 +11,13 @@ public enum Variable {
   RANK_NAME,
   MONEY,
   MONEY_NEEDED,
+  AMOUNT,
+  AMOUNT_NEEDED,
   PERCENT_DONE,
   PERCENT_LEFT;
 
-  public static Variable getVariable(String name) {
-    for(Variable variable : values()) {
-      if(variable.toString().equalsIgnoreCase(name)) {
-        return variable;
-      }
-    }
-    return null;
-  }
-
-  public String replace(String message, String value) {
-    Pattern pattern = Pattern.compile("\\{" + this + "}", Pattern.CASE_INSENSITIVE);
+  public String replace(String message, String value, String type) {
+    Pattern pattern = Pattern.compile("\\{" + type + "_" + this + "}", Pattern.CASE_INSENSITIVE);
     Matcher matcher = pattern.matcher(message);
     return matcher.replaceAll(value);
   }

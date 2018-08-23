@@ -85,9 +85,9 @@ public class Placeholders extends PlaceholderExpansion {
       case "percent_left_formatted":
         return percentFormat.format(Math.max(0D, orElse(rank, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
       case "percent_done":
-        return String.valueOf(Math.max(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
+        return String.valueOf(Math.min(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
       case "percent_done_formatted":
-        return percentFormat.format(Math.max(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
+        return percentFormat.format(Math.min(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
       default:
         return null;
     }
