@@ -1,0 +1,49 @@
+Aexample:
+  # the name of the rank in your permissions plugin
+  rank: 'A'
+  # the next rank a player can rank up to.
+  # this must be the name of the configuration section.
+  # for example, the name of this configuration section is "Aexample".
+  # this is not required.
+  next: 'Bexample'
+  # List of requirements to go to the next rank
+  # (ie, this example will charge 1000 money to rankup from A to B)
+  # money: money from the server economy
+  # xp-level: amount of experience levels
+  # playtime-hours: hours a player has played
+  # custom requirements can also be added by other plugins.
+  requirements:
+    money: 1000
+  # What requirements players need to match to /rankup.
+  # this is optional - if you don't use it, it defaults to "and"
+  # n.b. if there are no requirements players will always be able to /rankup.
+  # and: all requirements
+  # or: at least one requirement
+  # xor: only one requirement
+  # none: no requirements
+  operation: and
+  # the console will run these commands when a player ranks up
+  #commands:
+  # this will run when a player ranks up from A to B.
+  #- 'say {PLAYER} well done for ranking up from {OLD_RANK} to {RANK}!'
+Bexample:
+  rank: 'B'
+  next: 'Cexample'
+  requirements:
+    money: 2500
+Cexample:
+  rank: 'C'
+  next: 'Dexample'
+  requirements:
+      money: 5000
+      xp-level: 2
+  # you can have a custom messages too.
+  # you can use this to list the requirements needed.
+  rankup:
+    requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
+    ranks:
+      complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e(5000 money, 2 XP levels)"
+      current: "&c{OLD_RANK} &e\xbb &c{RANK} &e(5000 money, 2 XP levels)"
+      incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e(5000 money, 2 XP levels)"
+Dexample:
+  rank: 'D'

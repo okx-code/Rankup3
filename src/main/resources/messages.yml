@@ -1,0 +1,35 @@
+# the messages in this section can be customised for each rankup in rankups.yml.
+rankup:
+  # NOTE: if you are using requirements for your ranks that are NOT money,
+  # you will want to change this for each rank!
+  requirements-not-met: "&cYou need {MONEY} money to rankup."
+  no-rankup: "&eYou are at the highest rank."
+  # set to an empty string, ie: success-public: ""
+  # to hide that message.
+  success-public: "&a{PLAYER} &ehas ranked up to: &d{RANK}"
+  success-private: "&aYou have ranked up to: &d{RANK}"
+  # used for the text confirmation
+  confirmation: |-
+    &eAre you sure you want to rankup to &a{RANK}&e?
+    &eType &c/rankup &eagain to confirm.
+  # used for the GUI confirmation
+  title: "Rankup to {RANK}"
+
+  # It is HIGHLY RECOMMENDED you override these in rankups.yml
+  # to show the specific requirements for each rank.
+  # however if you are just using money, you can use {MONEY} or {MONEY_NEEDED} or {PERCENT_DONE} or {PERCENT_LEFT}
+  # for example:
+  #ranks:
+  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
+  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE}%"
+  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
+  ranks:
+    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
+    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+ranks:
+  # an empty string disables the header/footer
+  header: ''
+  footer: ''
+
+not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."

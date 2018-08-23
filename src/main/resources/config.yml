@@ -1,0 +1,45 @@
+# this is used for letting you know that you need to update/change your config file
+version: 0
+
+# how people should confirm ranking up
+# options are: gui, text or none
+confirmation-type: 'gui'
+
+gui:
+  rows: 1
+  rankup:
+    material: EMERALD_BLOCK
+    # index can be separated by spaces to show in multiple ways
+    # ie, 0-3 9-12 18-21
+    # you can also just use a single number instead of a range.
+    index: 0-3
+    name: '&a&lConfirm'
+    # lore is optional
+    lore: '&6Rankup to &b{RANK}'
+  cancel:
+    material: REDSTONE_BLOCK
+    index: 5-8
+    name: '&c&lCancel'
+  fill:
+    name: ' '
+    # if you are using a 1.8-1.12 and you want to change this
+    # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
+    # this works for both the rankup and cancel blocks as well
+    material: BLACK_STAINED_GLASS_PANE
+
+text:
+  # the time in seconds for a player to
+  # confirm ranking up by typing the command again
+  timeout: 10
+
+placeholders:
+  # format for money. for more information, see
+  # https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
+  money-format: "#,##0.##"
+  percent-format: "0.##"
+  # the format used for requirements
+  simple-format: "#.##"
+  # used for current_rank and next_rank placeholders when a player not in anything in rankups.yml
+  not-in-ladder: "None"
+  # used in next_rank placeholders when there is no rankup
+  highest-rank: "None"
