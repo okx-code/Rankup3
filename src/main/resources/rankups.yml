@@ -4,7 +4,7 @@ Aexample:
   # the next rank a player can rank up to.
   # this must be the name of the configuration section.
   # for example, the name of this configuration section is "Aexample".
-  # this is not required.
+  # if this is the last rank, you don't need this.
   next: 'Bexample'
   # List of requirements to go to the next rank
   # (ie, this example will charge 1000 money to rankup from A to B)
@@ -37,7 +37,7 @@ Cexample:
   requirements:
       money: 5000
       xp-level: 2
-  # you can have a custom messages too.
+  # you can have a custom messages for each rank
   # you can use this to list the requirements needed.
   rankup:
     requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'

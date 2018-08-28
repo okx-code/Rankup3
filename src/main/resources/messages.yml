@@ -15,13 +15,15 @@ rankup:
   # used for the GUI confirmation
   title: "Rankup to {RANK}"
 
-  # It is HIGHLY RECOMMENDED you override these in rankups.yml
+  # you can (and probably should) you override these in rankups.yml
   # to show the specific requirements for each rank.
-  # however if you are just using money, you can use {MONEY} or {MONEY_NEEDED} or {PERCENT_DONE} or {PERCENT_LEFT}
-  # for example:
+  # however if you are just using money or don't need to change the message per rank, you can use any combination of:
+  # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {MONEY} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
+  # here is an example of showing the requirements for just money:
   #ranks:
   #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
-  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE}%"
+  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE mon ey}%"
   #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
   ranks:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"

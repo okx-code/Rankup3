@@ -69,9 +69,11 @@ public class Rankup extends JavaPlugin {
       }
     });
 
+    if(config.getBoolean("ranks")) {
+      getCommand("ranks").setExecutor(new RankListCommand(this));
+    }
     getCommand("rankup").setExecutor(new RankupCommand(this));
     getCommand("rankup3").setExecutor(new InfoCommand(this));
-    getCommand("ranks").setExecutor(new RankListCommand(this));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
   }
 
@@ -226,7 +228,7 @@ public class Rankup extends JavaPlugin {
     } else if (!rank.checkRequirements(player)) { // check if they can afford it
       MessageBuilder builder =
           getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-              .replaceAll(player, rank);
+              .replaceAll(player, rank, rankups.nextRank(rank));
       if (economy != null) {
         double balance = economy.getBalance(player);
         double amount = rank.getRequirement("money").getAmount();
@@ -247,8 +249,8 @@ public class Rankup extends JavaPlugin {
     for(Requirement requirement : rank.getRequirements()) {
       replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getAmount()));
       replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
-      replaceRequirements(builder, Variable.PERCENT_LEFT, requirement, () -> percentFormat.format((requirement.getRemaining(player) / requirement.getAmount()) * 100));
-      replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format((1-(requirement.getRemaining(player) / requirement.getAmount())) * 100));
+      replaceRequirements(builder, Variable.PERCENT_LEFT, requirement, () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getAmount()) * 100)));
+      replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format(Math.min(100, (1-(requirement.getRemaining(player) / requirement.getAmount())) * 100)));
     }
   }
 

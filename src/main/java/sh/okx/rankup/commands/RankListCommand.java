@@ -27,15 +27,15 @@ public class RankListCommand implements CommandExecutor {
 
     sendHeaderFooter(sender, playerRank, Message.RANKS_HEADER);
 
-    int state = playerRank == null ? 2 : 0;
+    Message message = playerRank == null ? Message.RANKS_INCOMPLETE : Message.RANKS_COMPLETE;
     Rank rank = rankups.getFirstRank();
     do {
       Rank next = rankups.nextRank(rank);
       if(rank.equals(playerRank)) {
-        sendMessage(sender, 1, rank, next);
-        state = 2;
+        sendMessage(sender, Message.RANKS_CURRENT, rank, next);
+        message = Message.RANKS_COMPLETE;
       } else {
-        sendMessage(sender, state, rank, next);
+        sendMessage(sender, message, rank, next);
       }
       rank = next;
     } while(!rank.isLastRank());
@@ -55,20 +55,10 @@ public class RankListCommand implements CommandExecutor {
     builder.send(sender);
   }
 
-  private void sendMessage(CommandSender player, int state, Rank oldRank, Rank rank) {
-    if(state == 0) {
-      replaceRequirements(plugin.getMessage(oldRank, Message.RANKS_COMPLETE)
-          .replaceAll(player, oldRank, rank), player, oldRank)
-          .send(player);
-    } else if(state == 1) {
-      replaceRequirements(plugin.getMessage(oldRank, Message.RANKS_CURRENT)
-          .replaceAll(player, oldRank, rank), player, oldRank)
-          .send(player);
-    } else if(state == 2) {
-      replaceRequirements(plugin.getMessage(oldRank, Message.RANKS_INCOMPLETE)
-          .replaceAll(player, oldRank, rank), player, oldRank)
-          .send(player);
-    }
+  private void sendMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
+    replaceRequirements(plugin.getMessage(oldRank, message)
+        .replaceAll(player, oldRank, rank), player, oldRank)
+        .send(player);
   }
 
   private MessageBuilder replaceRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {

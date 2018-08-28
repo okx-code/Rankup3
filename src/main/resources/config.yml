@@ -1,6 +1,11 @@
 # this is used for letting you know that you need to update/change your config file
 version: 0
 
+# whether /ranks should be enabled (true) or disabled (false)
+# /rankup3 reload will not do anything if this is changed,
+# you will have to restart your server.
+ranks: true
+
 # how people should confirm ranking up
 # options are: gui, text or none
 confirmation-type: 'gui'

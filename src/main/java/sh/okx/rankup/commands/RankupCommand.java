@@ -53,9 +53,7 @@ public class RankupCommand implements CommandExecutor {
       case "text":
         confirming.put(player, System.currentTimeMillis());
         plugin.getMessage(rank, Message.CONFIRMATION)
-            .replace(Variable.PLAYER, player.getName())
-            .replace(Variable.RANK, rank.getRank())
-            .replace(Variable.RANK_NAME, rank.getName())
+            .replaceAll(player, rank, rankups.nextRank(rank))
             .send(player);
         break;
       case "gui":
