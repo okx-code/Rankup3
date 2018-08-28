@@ -41,10 +41,19 @@ public class Placeholders extends PlaceholderExpansion {
       next = rankups.nextRank(rank);
     }
 
-    if(params.startsWith("requirement_")) {
+    if (params.startsWith("requirement_")) {
       String[] parts = params.split("_", 3);
       return getPlaceholderRequirement(player, rank,
           parts[1], parts.length > 2 ? parts[2] : "");
+    } else if (params.startsWith("rank_requirement_")) {
+      String[] parts = params.split("_", 5);
+      return getPlaceholderRequirement(player, rankups.getRank(parts[2]),
+          parts[3], parts.length > 4 ? parts[4] : "");
+    } else if(params.startsWith("rank_money_")) {
+      String[] parts = params.split("_", 3);
+      return moneyFormat.format(rankups.getRank(parts[2]).getRequirement("money").getAmount());
+    } else {
+      
     }
 
     switch (params) {
@@ -81,9 +90,9 @@ public class Placeholders extends PlaceholderExpansion {
       case "money_left_formatted":
         return plugin.formatMoney(Math.max(0D, orElse(rank, r -> plugin.getEconomy().getBalance(player) - r.getRequirement("money").getAmount(), 0D)));
       case "percent_left":
-        return String.valueOf(Math.max(0D, orElse(rank, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
+        return String.valueOf(Math.max(0D, orElse(rank, r -> (1 - (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
       case "percent_left_formatted":
-        return percentFormat.format(Math.max(0D, orElse(rank, r -> (1-(plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
+        return percentFormat.format(Math.max(0D, orElse(rank, r -> (1 - (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount())) * 100, 0).doubleValue()));
       case "percent_done":
         return String.valueOf(Math.min(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getAmount()) * 100, 0).doubleValue()));
       case "percent_done_formatted":
@@ -94,11 +103,11 @@ public class Placeholders extends PlaceholderExpansion {
   }
 
   private String getPlaceholderRequirement(Player player, Rank rank, String requirementName, String params) {
-    if(rank == null) {
+    if (rank == null) {
       return "";
     }
     Requirement requirement = rank.getRequirement(requirementName);
-    switch(params) {
+    switch (params) {
       case "":
         return simpleFormat.format(orElse(requirement, Requirement::getAmount, 0));
       case "left":
@@ -106,7 +115,7 @@ public class Placeholders extends PlaceholderExpansion {
       case "percent_left":
         return percentFormat.format(orElse(requirement, r -> (r.getRemaining(player) / r.getAmount()) * 100, 0));
       case "percent_done":
-        return percentFormat.format(orElse(requirement, r -> (1-(r.getRemaining(player) / r.getAmount())) * 100, 100));
+        return percentFormat.format(orElse(requirement, r -> (1 - (r.getRemaining(player) / r.getAmount())) * 100, 100));
       default:
         return null;
     }

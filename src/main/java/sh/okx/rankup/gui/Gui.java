@@ -54,7 +54,7 @@ public class Gui implements InventoryHolder {
     return gui;
   }
 
-  private static ItemStack getItem(ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
+  private static ItemStack getItem(ConfigurationSection section, Player player, Rank oldRank, Rank rank ) {
     boolean legacy = !Bukkit.getVersion().contains("1.13");
 
     String materialName = section.getString("material").toUpperCase();

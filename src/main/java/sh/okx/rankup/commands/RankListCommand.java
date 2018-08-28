@@ -33,7 +33,7 @@ public class RankListCommand implements CommandExecutor {
       Rank next = rankups.nextRank(rank);
       if(rank.equals(playerRank)) {
         sendMessage(sender, Message.RANKS_CURRENT, rank, next);
-        message = Message.RANKS_COMPLETE;
+        message = Message.RANKS_INCOMPLETE;
       } else {
         sendMessage(sender, message, rank, next);
       }
