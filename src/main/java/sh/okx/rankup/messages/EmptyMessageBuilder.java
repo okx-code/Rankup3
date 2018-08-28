@@ -7,6 +7,9 @@ class EmptyMessageBuilder extends MessageBuilder {
     super(null);
   }
 
+  /**
+   * what are you doing failing if empty when it has already failed?
+   */
   @Override
   public MessageBuilder failIfEmpty() {
     throw new UnsupportedOperationException();

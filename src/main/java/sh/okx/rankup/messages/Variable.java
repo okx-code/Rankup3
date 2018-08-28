@@ -14,7 +14,8 @@ public enum Variable {
   AMOUNT,
   AMOUNT_NEEDED,
   PERCENT_DONE,
-  PERCENT_LEFT;
+  PERCENT_LEFT,
+  SECONDS;
 
   public String replace(String message, String value, String type) {
     Pattern pattern = Pattern.compile("\\{" + type + "_" + this + "}", Pattern.CASE_INSENSITIVE);

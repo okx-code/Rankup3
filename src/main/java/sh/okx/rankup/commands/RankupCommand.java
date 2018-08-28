@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.messages.Message;
-import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 
@@ -16,7 +15,10 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class RankupCommand implements CommandExecutor {
+  // weak hash maps so players going offline are automatically removed.
+  // otherwise there is a potential (but small) memory leak.
   private final Map<Player, Long> confirming = new WeakHashMap<>();
+
   private final Rankup plugin;
 
   public RankupCommand(Rankup plugin) {

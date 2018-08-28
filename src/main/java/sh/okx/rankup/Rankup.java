@@ -33,6 +33,8 @@ import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 public class Rankup extends JavaPlugin {
@@ -54,6 +56,11 @@ public class Rankup extends JavaPlugin {
   @Getter
   private Placeholders placeholders;
 
+  /**
+   * Players who cannot rankup for a certain amount of time.
+   */
+  private Map<Player, Long> cooldowns;
+
   @Override
   public void onEnable() {
     registerRequirements();
@@ -69,7 +76,7 @@ public class Rankup extends JavaPlugin {
       }
     });
 
-    if(config.getBoolean("ranks")) {
+    if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RankListCommand(this));
     }
     getCommand("rankup").setExecutor(new RankupCommand(this));
@@ -85,6 +92,7 @@ public class Rankup extends JavaPlugin {
   }
 
   public void reload() {
+    cooldowns = new WeakHashMap<>();
     closeInventories();
     loadConfigs();
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -204,6 +212,11 @@ public class Rankup extends JavaPlugin {
         .send(player);
 
     oldRank.runCommands(player, rank);
+
+    // apply cooldown last
+    if(config.getInt("cooldown") > 0) {
+      cooldowns.put(player, System.currentTimeMillis());
+    }
   }
 
   /**
@@ -239,22 +252,38 @@ public class Rankup extends JavaPlugin {
       replaceRequirements(player, builder, rank);
       builder.send(player);
       return false;
+    } else if (cooldowns.containsKey(player)) {
+      long time = System.currentTimeMillis() - cooldowns.get(player);
+      // if time passed is less than the cooldown
+      long timeLeft = (config.getInt("cooldown") * 1000) - time;
+      if (timeLeft > 0) {
+        long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
+        getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
+            .failIfEmpty()
+            .replaceAll(player, rank)
+            .replace(Variable.SECONDS, secondsLeft)
+            .send(player);
+        return false;
+      }
+      // cooldown has expired so remove it
+      cooldowns.remove(player);
     }
+
     return true;
   }
 
   public void replaceRequirements(Player player, MessageBuilder builder, Rank rank) {
     DecimalFormat simpleFormat = placeholders.getSimpleFormat();
     DecimalFormat percentFormat = placeholders.getPercentFormat();
-    for(Requirement requirement : rank.getRequirements()) {
+    for (Requirement requirement : rank.getRequirements()) {
       replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getAmount()));
       replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
       replaceRequirements(builder, Variable.PERCENT_LEFT, requirement, () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getAmount()) * 100)));
-      replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format(Math.min(100, (1-(requirement.getRemaining(player) / requirement.getAmount())) * 100)));
+      replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getAmount())) * 100)));
     }
   }
 
   private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
-    builder.replace(variable +  " " + requirement.getName(), value.get());
+    builder.replace(variable + " " + requirement.getName(), value.get());
   }
 }

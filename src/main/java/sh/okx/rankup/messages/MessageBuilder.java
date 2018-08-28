@@ -1,16 +1,12 @@
 package sh.okx.rankup.messages;
 
-import lombok.AllArgsConstructor;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.ranks.Rank;
-import sh.okx.rankup.ranks.requirements.Requirement;
 
-import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,10 +61,11 @@ public class MessageBuilder {
   /**
    * Fails the MessageBuilder if the message is empty.
    * if this fails, all subsequent calls to that MessageBuilder will do nothing
+   *
    * @return an EmptyMessageBuilder if the message is empty, itself otherwise
    */
   public MessageBuilder failIfEmpty() {
-    if(message.isEmpty()) {
+    if (message.isEmpty()) {
       return new EmptyMessageBuilder();
     } else {
       return this;
@@ -84,7 +81,7 @@ public class MessageBuilder {
    * ie, calls MessageBuilder#send(Player) for all players online, and sends the message in the console.
    */
   public void broadcast() {
-    for(Player player : Bukkit.getOnlinePlayers()) {
+    for (Player player : Bukkit.getOnlinePlayers()) {
       send(player);
     }
     send(Bukkit.getConsoleSender());

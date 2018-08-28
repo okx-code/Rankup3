@@ -14,7 +14,9 @@ public enum Message {
   RANKS_FOOTER("rankup.ranks.footer"),
   RANKS_COMPLETE("rankup.ranks.complete"),
   RANKS_CURRENT("rankup.ranks.current"),
-  RANKS_INCOMPLETE("rankup.ranks.incomplete");
+  RANKS_INCOMPLETE("rankup.ranks.incomplete"),
+  COOLDOWN_SINGULAR("rankup.cooldown.singular"),
+  COOLDOWN_PLURAL("rankup.cooldown.plural");
 
   @Getter
   private final String name;

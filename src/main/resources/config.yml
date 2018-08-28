@@ -10,6 +10,11 @@ ranks: true
 # options are: gui, text or none
 confirmation-type: 'gui'
 
+# how long in seconds people have to wait between a /rankup
+# only successful rankups start the cooldown.
+# set to 0 to disable.
+cooldown: 1
+
 gui:
   rows: 1
   rankup:
@@ -34,7 +39,7 @@ gui:
 
 text:
   # the time in seconds for a player to
-  # confirm ranking up by typing the command again
+  # confirm by typing /rankup again
   timeout: 10
 
 placeholders:
