@@ -5,6 +5,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,9 +25,9 @@ import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
+import sh.okx.rankup.ranks.requirements.GroupRequirement;
 import sh.okx.rankup.ranks.requirements.MoneyRequirement;
 import sh.okx.rankup.ranks.requirements.PlaytimeMinutesRequirement;
-import sh.okx.rankup.ranks.requirements.GroupRequirement;
 import sh.okx.rankup.ranks.requirements.Requirement;
 import sh.okx.rankup.ranks.requirements.RequirementRegistry;
 import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
@@ -216,7 +217,7 @@ public class Rankup extends JavaPlugin {
     oldRank.runCommands(player, rank);
 
     // apply cooldown last
-    if(config.getInt("cooldown") > 0) {
+    if (config.getInt("cooldown") > 0) {
       cooldowns.put(player, System.currentTimeMillis());
     }
   }
@@ -241,18 +242,9 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (!rank.checkRequirements(player)) { // check if they can afford it
-      MessageBuilder builder =
-          getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-              .replaceAll(player, rank, rankups.nextRank(rank));
-      if (economy != null) {
-        double balance = economy.getBalance(player);
-        double amount = rank.getRequirement("money").getValueDouble();
-        builder = builder
-            .replace(Variable.MONEY, formatMoney(amount))
-            .replace(Variable.MONEY_NEEDED, formatMoney(Math.max(0, amount - balance)));
-      }
-      replaceRequirements(player, builder, rank);
-      builder.send(player);
+      replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
+          .replaceAll(player, rank, rankups.nextRank(rank)), player, rank)
+          .send(player);
       return false;
     } else if (cooldowns.containsKey(player)) {
       long time = System.currentTimeMillis() - cooldowns.get(player);
@@ -274,7 +266,25 @@ public class Rankup extends JavaPlugin {
     return true;
   }
 
-  public void replaceRequirements(Player player, MessageBuilder builder, Rank rank) {
+  public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
+    Requirement money = rank.getRequirement("money");
+    Double amount = null;
+    if (sender instanceof Player && rank.isInRank((Player) sender)) {
+      if (money != null && economy != null) {
+        amount = money.getRemaining((Player) sender);
+      }
+      replaceRequirements(builder, (Player) sender, rank);
+    } else {
+      amount = money.getValueDouble();
+    }
+    if (amount != null && economy != null) {
+      builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
+      builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
+    }
+    return builder;
+  }
+
+  public MessageBuilder replaceRequirements(MessageBuilder builder, Player player, Rank rank) {
     DecimalFormat simpleFormat = placeholders.getSimpleFormat();
     DecimalFormat percentFormat = placeholders.getPercentFormat();
     for (Requirement requirement : rank.getRequirements()) {
@@ -283,9 +293,10 @@ public class Rankup extends JavaPlugin {
         replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
         replaceRequirements(builder, Variable.PERCENT_LEFT, requirement, () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
         replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
-      } catch(NumberFormatException ignored) {
+      } catch (NumberFormatException ignored) {
       }
     }
+    return builder;
   }
 
   private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {

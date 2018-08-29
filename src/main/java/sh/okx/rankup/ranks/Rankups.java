@@ -25,10 +25,10 @@ public class Rankups {
 
   public Rank getFirstRank() {
     OUTER:
-    for(Rank rank : ranks) {
+    for (Rank rank : ranks) {
       // see if anything ranks up to this
-      for(Rank rank0 : ranks) {
-        if(!rank0.isLastRank() && rank0.getNext().equals(rank.getName())) {
+      for (Rank rank0 : ranks) {
+        if (!rank0.isLastRank() && rank0.getNext().equals(rank.getName())) {
           continue OUTER;
         }
       }
@@ -39,8 +39,8 @@ public class Rankups {
   }
 
   public Rank getRank(String name) {
-    for(Rank rank : ranks) {
-      if(rank.getName().equalsIgnoreCase(name)) {
+    for (Rank rank : ranks) {
+      if (rank.getName().equalsIgnoreCase(name)) {
         return rank;
       }
     }
@@ -55,11 +55,11 @@ public class Rankups {
   }
 
   public Rank nextRank(Rank rank) {
-    if(rank.isLastRank()) {
+    if (rank.isLastRank()) {
       return null;
     }
 
-    for(Rank nextRank : ranks) {
+    for (Rank nextRank : ranks) {
       if (rank.getNext().equalsIgnoreCase(nextRank.getName())) {
         return nextRank;
       }

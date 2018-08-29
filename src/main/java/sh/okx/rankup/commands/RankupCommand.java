@@ -54,8 +54,8 @@ public class RankupCommand implements CommandExecutor {
     switch (confirmationType) {
       case "text":
         confirming.put(player, System.currentTimeMillis());
-        plugin.getMessage(rank, Message.CONFIRMATION)
-            .replaceAll(player, rank, rankups.nextRank(rank))
+        plugin.replaceMoneyRequirements(plugin.getMessage(rank, Message.CONFIRMATION)
+            .replaceAll(player, rank, rankups.nextRank(rank)), player, rank)
             .send(player);
         break;
       case "gui":

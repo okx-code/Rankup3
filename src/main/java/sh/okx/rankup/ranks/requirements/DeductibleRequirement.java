@@ -17,6 +17,7 @@ public abstract class DeductibleRequirement extends Requirement {
    * For money, this could be taking money away from the player.
    * You can assume that <code>Requirement#check(Player)</code> has been called,
    * and has returned true immediately prior to this.
+   *
    * @param player the player to take from
    */
   public abstract void apply(Player player);

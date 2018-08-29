@@ -12,7 +12,7 @@ public class PlaytimeMinutesRequirement extends Requirement {
     super(plugin, name);
     try {
       playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
-    } catch(IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       // statistic was changed in 1.13.
       playOneTick = Statistic.valueOf("PLAY_ONE_TICK");
     }

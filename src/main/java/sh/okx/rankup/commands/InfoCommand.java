@@ -17,13 +17,13 @@ import java.net.URL;
 
 @RequiredArgsConstructor
 public class InfoCommand implements CommandExecutor {
-  private String versionMessage;
   private final Rankup plugin;
+  private String versionMessage;
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if(args.length > 0) {
-      if(args[0].equalsIgnoreCase("reload") && sender.hasPermission("rankup.reload")) {
+    if (args.length > 0) {
+      if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("rankup.reload")) {
         plugin.reload();
         sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Rankup " + ChatColor.YELLOW + "Reloaded configuration files.");
         return true;
@@ -33,12 +33,12 @@ public class InfoCommand implements CommandExecutor {
     PluginDescriptionFile description = plugin.getDescription();
     sender.sendMessage(
         ChatColor.GREEN + "" + ChatColor.BOLD + description.getName() + " " + description.getVersion() +
-        ChatColor.YELLOW + " by " + ChatColor.BLUE + ChatColor.BOLD + String.join(", ", description.getAuthors()));
-    if(sender.hasPermission("rankup.reload")) {
+            ChatColor.YELLOW + " by " + ChatColor.BLUE + ChatColor.BOLD + String.join(", ", description.getAuthors()));
+    if (sender.hasPermission("rankup.reload")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " reload " + ChatColor.YELLOW + "Reloads configuration files.");
     }
-    if(sender.hasPermission("rankup.checkversion")) {
-      if(versionMessage == null) {
+    if (sender.hasPermission("rankup.checkversion")) {
+      if (versionMessage == null) {
         sender.sendMessage(ChatColor.YELLOW + "Checking version...");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
           String message;

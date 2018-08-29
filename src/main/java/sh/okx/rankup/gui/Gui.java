@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
-import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.ranks.Rank;
 
 import java.util.Arrays;
@@ -29,10 +28,6 @@ public class Gui implements InventoryHolder {
   private ItemStack rankup;
   @Getter
   private ItemStack cancel;
-
-  public void open(Player player) {
-    player.openInventory(inventory);
-  }
 
   public static Gui of(Player player, Rank oldRank, Rank rank, Rankup plugin) {
     ConfigurationSection config = plugin.getConfig().getConfigurationSection("gui");
@@ -54,7 +49,7 @@ public class Gui implements InventoryHolder {
     return gui;
   }
 
-  private static ItemStack getItem(ConfigurationSection section, Player player, Rank oldRank, Rank rank ) {
+  private static ItemStack getItem(ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
     boolean legacy = !Bukkit.getVersion().contains("1.13");
 
     String materialName = section.getString("material").toUpperCase();
@@ -117,5 +112,9 @@ public class Gui implements InventoryHolder {
         }
       }
     }
+  }
+
+  public void open(Player player) {
+    player.openInventory(inventory);
   }
 }

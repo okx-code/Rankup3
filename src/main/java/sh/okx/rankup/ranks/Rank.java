@@ -38,7 +38,7 @@ public class Rank {
     Set<Requirement> requirements = new HashSet<>();
     BinaryOperator<Boolean> reducer = null;
     ConfigurationSection requirementsSection = section.getConfigurationSection("requirements");
-    if(requirementsSection != null) {
+    if (requirementsSection != null) {
       for (Map.Entry<String, Object> entry : requirementsSection.getValues(false).entrySet()) {
         String name = entry.getKey();
         String value = String.valueOf(entry.getValue());
@@ -91,7 +91,7 @@ public class Rank {
   public boolean isInRank(Player player) {
     String[] groups = plugin.getPermissions().getPlayerGroups(player);
     for (String group : groups) {
-      if(group.equalsIgnoreCase(rank)) {
+      if (group.equalsIgnoreCase(rank)) {
         return true;
       }
     }
@@ -103,8 +103,8 @@ public class Rank {
   }
 
   public Requirement getRequirement(String name) {
-    for(Requirement requirement : requirements) {
-      if(requirement.getName().equalsIgnoreCase(name)) {
+    for (Requirement requirement : requirements) {
+      if (requirement.getName().equalsIgnoreCase(name)) {
         return requirement;
       }
     }
@@ -112,8 +112,8 @@ public class Rank {
   }
 
   public void applyRequirements(Player player) {
-    for(Requirement requirement : requirements) {
-      if(requirement instanceof DeductibleRequirement) {
+    for (Requirement requirement : requirements) {
+      if (requirement instanceof DeductibleRequirement) {
         ((DeductibleRequirement) requirement).apply(player);
       }
     }
@@ -133,7 +133,7 @@ public class Rank {
 
   @Override
   public boolean equals(Object o) {
-    if(!(o instanceof Rank)) {
+    if (!(o instanceof Rank)) {
       return false;
     }
     return ((Rank) o).name.equals(name);

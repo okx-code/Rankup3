@@ -11,8 +11,8 @@ public class RequirementRegistry {
   }
 
   public Requirement newRequirement(String name, String value) {
-    for(Requirement requirement : requirements) {
-      if(requirement.getName().equalsIgnoreCase(name)) {
+    for (Requirement requirement : requirements) {
+      if (requirement.getName().equalsIgnoreCase(name)) {
         Requirement newRequirement = requirement.clone();
         newRequirement.setValue(value);
         return newRequirement;

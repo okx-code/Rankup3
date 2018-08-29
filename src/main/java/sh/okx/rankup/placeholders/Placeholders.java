@@ -45,7 +45,7 @@ public class Placeholders extends PlaceholderExpansion {
     } else if (params.startsWith("rank_requirement_")) {
       String[] parts = params.split("_", 4);
       return simpleFormat.format(orElse(rankups.getRank(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
-    } else if(params.startsWith("rank_money_")) {
+    } else if (params.startsWith("rank_money_")) {
       String[] parts = params.split("_", 3);
       return plugin.formatMoney(rankups.getRank(parts[2]).getRequirement("money").getValueDouble());
     }

@@ -1,7 +1,6 @@
 package sh.okx.rankup.ranks.requirements;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 
@@ -43,6 +42,7 @@ public abstract class Requirement implements Cloneable {
 
   /**
    * Check if a player meets this requirement
+   *
    * @param player the player to check
    * @return true if they meet the requirement, false otherwise
    */
@@ -51,11 +51,13 @@ public abstract class Requirement implements Cloneable {
   /**
    * Get the remaining amount needed for <code>Requirement#check(Player)</code> to yield true.
    * This is not required and is only used in placeholders.
+   *
    * @param player the player to find the remaining amount of
    * @return the remaining amount needed. Should be non-negative.
    */
   public double getRemaining(Player player) {
     return getValueDouble();
   }
+
   public abstract Requirement clone();
 }
