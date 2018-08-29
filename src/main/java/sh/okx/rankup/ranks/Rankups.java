@@ -39,7 +39,6 @@ public class Rankups {
   }
 
   public Rank getRank(String name) {
-    System.out.println(name);
     for(Rank rank : ranks) {
       if(rank.getName().equalsIgnoreCase(name)) {
         return rank;
