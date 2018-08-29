@@ -10,11 +10,11 @@ public class RequirementRegistry {
     requirements.add(requirement);
   }
 
-  public Requirement newRequirement(String name, double amount) {
+  public Requirement newRequirement(String name, String value) {
     for(Requirement requirement : requirements) {
       if(requirement.getName().equalsIgnoreCase(name)) {
         Requirement newRequirement = requirement.clone();
-        newRequirement.setAmount(amount);
+        newRequirement.setValue(value);
         return newRequirement;
       }
     }

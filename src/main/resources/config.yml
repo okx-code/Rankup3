@@ -49,7 +49,7 @@ placeholders:
   percent-format: "0.##"
   # the format used for requirements
   simple-format: "#.##"
-  # used for current_rank and next_rank placeholders when a player not in anything in rankups.yml
+  # used for current_rank and next_rank placeholders when a player is not in anything in rankups.yml
   not-in-ladder: "None"
   # used in next_rank placeholders when there is no rankup
   highest-rank: "None"

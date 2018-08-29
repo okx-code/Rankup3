@@ -25,17 +25,12 @@ public class PlaytimeMinutesRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    return player.getStatistic(playOneTick) * TICKS_PER_MINUTE >= amount;
-  }
-
-  @Override
-  public void apply(Player player) {
-    // well, we can't really take hours of playtime away, can we?
+    return player.getStatistic(playOneTick) * TICKS_PER_MINUTE >= getValueDouble();
   }
 
   @Override
   public double getRemaining(Player player) {
-    return Math.max(0, amount - (player.getStatistic(playOneTick) * TICKS_PER_MINUTE));
+    return Math.max(0, getValueDouble() - (player.getStatistic(playOneTick) * TICKS_PER_MINUTE));
   }
 
   @Override

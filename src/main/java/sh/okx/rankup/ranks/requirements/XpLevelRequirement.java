@@ -3,7 +3,7 @@ package sh.okx.rankup.ranks.requirements;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 
-public class XpLevelRequirement extends Requirement {
+public class XpLevelRequirement extends DeductibleRequirement {
   public XpLevelRequirement(Rankup plugin, String name) {
     super(plugin, name);
   }
@@ -13,24 +13,18 @@ public class XpLevelRequirement extends Requirement {
   }
 
   @Override
-  public void setAmount(double amount) {
-    // experience level should be a whole number
-    super.setAmount(Math.round(amount));
-  }
-
-  @Override
   public boolean check(Player player) {
-    return player.getLevel() >= amount;
+    return player.getLevel() >= getValueInt();
   }
 
   @Override
   public void apply(Player player) {
-    player.setLevel(player.getLevel() - (int) amount);
+    player.setLevel(player.getLevel() - getValueInt());
   }
 
   @Override
   public double getRemaining(Player player) {
-    return Math.max(0, amount - player.getLevel());
+    return Math.max(0, getValueInt() - player.getLevel());
   }
 
   @Override

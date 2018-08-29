@@ -9,9 +9,7 @@ public abstract class Requirement implements Cloneable {
   protected Rankup plugin;
   @Getter
   protected String name;
-  @Getter
-  @Setter
-  protected double amount;
+  private String value;
 
   public Requirement(Rankup plugin, String name) {
     this.plugin = plugin;
@@ -19,12 +17,29 @@ public abstract class Requirement implements Cloneable {
   }
 
   protected Requirement(Requirement clone) {
-    if(clone != null) {
+    if (clone != null) {
       this.plugin = clone.plugin;
       this.name = clone.name;
-      this.amount = clone.amount;
+      this.value = clone.value;
     }
   }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  public String getValueString() {
+    return value;
+  }
+
+  public double getValueDouble() {
+    return Double.parseDouble(value);
+  }
+
+  public int getValueInt() {
+    return Integer.parseInt(value);
+  }
+
 
   /**
    * Check if a player meets this requirement
@@ -34,22 +49,13 @@ public abstract class Requirement implements Cloneable {
   public abstract boolean check(Player player);
 
   /**
-   * Apply the effect of this requirement to the player.
-   * For money, this could be taking money away from the player.
-   * You can assume that <code>Requirement#check(Player)</code> has been called,
-   * and has returned true immediately prior to this.
-   * @param player the player to take from
-   */
-  public abstract void apply(Player player);
-
-  /**
    * Get the remaining amount needed for <code>Requirement#check(Player)</code> to yield true.
    * This is not required and is only used in placeholders.
    * @param player the player to find the remaining amount of
    * @return the remaining amount needed. Should be non-negative.
    */
   public double getRemaining(Player player) {
-    return amount;
+    return getValueDouble();
   }
   public abstract Requirement clone();
 }

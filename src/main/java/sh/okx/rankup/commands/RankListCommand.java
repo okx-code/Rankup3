@@ -70,11 +70,11 @@ public class RankListCommand implements CommandExecutor {
       }
       plugin.replaceRequirements((Player) sender, builder, rank);
     } else {
-      amount = money.getAmount();
+      amount = money.getValueDouble();
     }
     if(amount != null && plugin.getEconomy() != null) {
       builder.replace(Variable.MONEY_NEEDED, plugin.formatMoney(amount));
-      builder.replace(Variable.MONEY, plugin.formatMoney(money.getAmount()));
+      builder.replace(Variable.MONEY, plugin.formatMoney(money.getValueDouble()));
     }
     return builder;
 

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.Variable;
+import sh.okx.rankup.ranks.requirements.DeductibleRequirement;
 import sh.okx.rankup.ranks.requirements.Requirement;
 
 import java.util.HashSet;
@@ -40,9 +41,8 @@ public class Rank {
     if(requirementsSection != null) {
       for (Map.Entry<String, Object> entry : requirementsSection.getValues(false).entrySet()) {
         String name = entry.getKey();
-        double amount = Double.parseDouble(String.valueOf(entry.getValue()).replace(",", ""));
-
-        Requirement requirement = plugin.getRequirementRegistry().newRequirement(name, amount);
+        String value = String.valueOf(entry.getValue());
+        Requirement requirement = plugin.getRequirementRegistry().newRequirement(name, value);
         if (requirement == null) {
           plugin.getLogger().warning("Unknown requirement " + name);
         } else {
@@ -113,7 +113,9 @@ public class Rank {
 
   public void applyRequirements(Player player) {
     for(Requirement requirement : requirements) {
-      requirement.apply(player);
+      if(requirement instanceof DeductibleRequirement) {
+        ((DeductibleRequirement) requirement).apply(player);
+      }
     }
   }
 
