@@ -33,6 +33,7 @@ import sh.okx.rankup.ranks.requirements.RequirementRegistry;
 import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +111,14 @@ public class Rankup extends JavaPlugin {
       getLogger().severe("If that does not work, restart your server.");
       getLogger().severe("You may then copy in your config values from the old config.");
       getLogger().severe("Check the changelog on the Rankup spigot page to see the changes.");
+    }
+
+    if(config.getBoolean("stats")) {
+      try {
+        new Stats().init(this);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
