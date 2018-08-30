@@ -117,7 +117,7 @@ public class Rankup extends JavaPlugin {
       try {
         new Stats().init(this);
       } catch (IOException e) {
-        e.printStackTrace();
+        getLogger().warning("Could not connect to stats server");
       }
     }
   }

@@ -70,6 +70,10 @@ public class Gui implements InventoryHolder {
       item = new ItemStack(material);
     }
 
+    if(item.getType() == Material.AIR && section.getName().equalsIgnoreCase("fill")) {
+      return item;
+    }
+
     ItemMeta meta = item.getItemMeta();
     if (section.contains("lore")) {
       meta.setLore(Arrays.stream(format(section.getString("lore"), player, oldRank, rank).split("\n"))
