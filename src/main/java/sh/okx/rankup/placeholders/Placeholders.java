@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
-import sh.okx.rankup.ranks.requirements.Requirement;
+import sh.okx.rankup.requirements.Requirement;
 
 import java.text.DecimalFormat;
 import java.util.function.Function;

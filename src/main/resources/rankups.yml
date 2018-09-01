@@ -16,13 +16,13 @@ Aexample:
   requirements:
     money: 1000
   # What requirements players need to match to /rankup.
-  # this is optional - if you don't use it, it defaults to "and"
+  # this is optional - if you don't use it, it defaults to "all"
   # n.b. if there are no requirements players will always be able to /rankup.
-  # and: all requirements
-  # or: at least one requirement
-  # xor: only one requirement
+  # all: all requirements
+  # any: at least one requirement
+  # one: only one requirement
   # none: no requirements
-  operation: and
+  operation: all
   # the console will run these commands when a player ranks up
   #commands:
   # this will run when a player ranks up from A to B.

@@ -1,4 +1,4 @@
-package sh.okx.rankup.ranks.requirements;
+package sh.okx.rankup.requirements;
 
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;

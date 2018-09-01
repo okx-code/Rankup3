@@ -70,7 +70,7 @@ public class Gui implements InventoryHolder {
       item = new ItemStack(material);
     }
 
-    if(item.getType() == Material.AIR && section.getName().equalsIgnoreCase("fill")) {
+    if (item.getType() == Material.AIR && section.getName().equalsIgnoreCase("fill")) {
       return item;
     }
 

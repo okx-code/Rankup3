@@ -1,4 +1,4 @@
-package sh.okx.rankup.ranks.requirements;
+package sh.okx.rankup.requirements;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;

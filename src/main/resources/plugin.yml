@@ -27,7 +27,6 @@ permissions:
             rankup.ranks: true
             rankup.reload: true
             rankup.ranks: true
-            rankup.sign: true
     rankup.info:
         default: true
     rankup.rankup:
@@ -40,5 +39,3 @@ permissions:
         default: op
     rankup.ranks:
         default: true
-    rankup.sign:
-        default: op

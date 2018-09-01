@@ -1,7 +1,8 @@
-package sh.okx.rankup.ranks.requirements;
+package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
+import sh.okx.rankup.requirements.Requirement;
 
 public class GroupRequirement extends Requirement {
   public GroupRequirement(Rankup plugin, String name) {

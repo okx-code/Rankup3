@@ -9,14 +9,16 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.Variable;
-import sh.okx.rankup.ranks.requirements.DeductibleRequirement;
-import sh.okx.rankup.ranks.requirements.Requirement;
+import sh.okx.rankup.requirements.DeductibleRequirement;
+import sh.okx.rankup.requirements.Operation;
+import sh.okx.rankup.requirements.Requirement;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Rank {
@@ -29,14 +31,14 @@ public class Rank {
   private final String rank;
   @Getter
   private final Set<Requirement> requirements;
-  private final BinaryOperator<Boolean> reducer;
+  private final Operation operation;
   private final List<String> commands;
 
   public static Rank deserialize(Rankup plugin, ConfigurationSection section) {
     String rank = section.getString("rank");
 
     Set<Requirement> requirements = new HashSet<>();
-    BinaryOperator<Boolean> reducer = null;
+    Operation operation = null;
     ConfigurationSection requirementsSection = section.getConfigurationSection("requirements");
     if (requirementsSection != null) {
       for (Map.Entry<String, Object> entry : requirementsSection.getValues(false).entrySet()) {
@@ -50,26 +52,8 @@ public class Rank {
         }
       }
 
-      String operation = section.getString("operation");
-      if (operation == null) {
-        operation = "and";
-      }
-      switch (operation) {
-        case "and":
-          reducer = (a, b) -> a && b;
-          break;
-        case "or":
-          reducer = (a, b) -> a || b;
-          break;
-        case "xor":
-          reducer = (a, b) -> (a && !b) || (b && !a);
-          break;
-        case "none":
-          reducer = (a, b) -> !a && !b;
-          break;
-        default:
-          throw new IllegalArgumentException("Invalid operation type for rank " + rank);
-      }
+      String operationName = Optional.ofNullable(section.getString("operation")).orElse("all");
+      operation = plugin.getOperationRegistry().getOperation(operationName);
     }
 
     return new Rank(plugin,
@@ -77,15 +61,14 @@ public class Rank {
         section.getString("next"),
         rank,
         requirements,
-        reducer,
+        operation,
         section.getStringList("commands"));
   }
 
   public boolean checkRequirements(Player player) {
-    return requirements.stream()
+    return operation.check(requirements.stream()
         .map(requirement -> requirement.check(player))
-        .reduce(reducer)
-        .orElse(true);
+        .collect(Collectors.toList()));
   }
 
   public boolean isInRank(Player player) {

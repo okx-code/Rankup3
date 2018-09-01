@@ -64,9 +64,8 @@ public class InfoCommand implements CommandExecutor {
     return true;
   }
 
-  public String getLatestVersion() throws IOException {
+  private String getLatestVersion() throws IOException {
     URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=17933");
-    String result = CharStreams.toString(new InputStreamReader(url.openStream(), Charsets.UTF_8));
-    return result;
+    return CharStreams.toString(new InputStreamReader(url.openStream(), Charsets.UTF_8));
   }
 }

@@ -1,10 +1,6 @@
 # this is used for letting you know that you need to update/change your config file
 version: 0
 
-# as well as bStats (which can be disabled in the plugins/bStats folder),
-# this will send more detailed stats  privately, to help see what features are being used.
-stats: true
-
 # whether /ranks should be enabled (true) or disabled (false)
 # /rankup3 reload will not do anything if this is changed,
 # you will have to restart your server.

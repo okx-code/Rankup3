@@ -25,15 +25,19 @@ import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
-import sh.okx.rankup.ranks.requirements.GroupRequirement;
-import sh.okx.rankup.ranks.requirements.MoneyRequirement;
-import sh.okx.rankup.ranks.requirements.PlaytimeMinutesRequirement;
-import sh.okx.rankup.ranks.requirements.Requirement;
-import sh.okx.rankup.ranks.requirements.RequirementRegistry;
-import sh.okx.rankup.ranks.requirements.XpLevelRequirement;
+import sh.okx.rankup.requirements.OperationRegistry;
+import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.requirements.RequirementRegistry;
+import sh.okx.rankup.requirements.operation.AllOperation;
+import sh.okx.rankup.requirements.operation.AnyOperation;
+import sh.okx.rankup.requirements.operation.NoneOperation;
+import sh.okx.rankup.requirements.operation.OneOperation;
+import sh.okx.rankup.requirements.requirement.GroupRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyRequirement;
+import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
+import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +55,8 @@ public class Rankup extends JavaPlugin {
   @Getter
   private RequirementRegistry requirementRegistry = new RequirementRegistry();
   @Getter
+  private OperationRegistry operationRegistry = new OperationRegistry();
+  @Getter
   private FileConfiguration messages;
   @Getter
   private FileConfiguration config;
@@ -58,7 +64,6 @@ public class Rankup extends JavaPlugin {
   private Rankups rankups;
   @Getter
   private Placeholders placeholders;
-
   /**
    * Players who cannot rankup for a certain amount of time.
    */
@@ -112,14 +117,6 @@ public class Rankup extends JavaPlugin {
       getLogger().severe("You may then copy in your config values from the old config.");
       getLogger().severe("Check the changelog on the Rankup spigot page to see the changes.");
     }
-
-    if(config.getBoolean("stats")) {
-      try {
-        new Stats().init(this);
-      } catch (IOException e) {
-        getLogger().warning("Could not connect to stats server");
-      }
-    }
   }
 
   /**
@@ -156,6 +153,11 @@ public class Rankup extends JavaPlugin {
     requirementRegistry.addRequirement(new XpLevelRequirement(this, "xp-level"));
     requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this, "playtime-minutes"));
     requirementRegistry.addRequirement(new GroupRequirement(this, "group"));
+
+    operationRegistry.addOperation("all", new AllOperation());
+    operationRegistry.addOperation("none", new NoneOperation());
+    operationRegistry.addOperation("one", new OneOperation());
+    operationRegistry.addOperation("any", new AnyOperation());
   }
 
   private void setupPermissions() {

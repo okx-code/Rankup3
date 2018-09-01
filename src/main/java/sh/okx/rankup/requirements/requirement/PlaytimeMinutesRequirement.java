@@ -1,8 +1,9 @@
-package sh.okx.rankup.ranks.requirements;
+package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
+import sh.okx.rankup.requirements.Requirement;
 
 public class PlaytimeMinutesRequirement extends Requirement {
   private static final int TICKS_PER_MINUTE = 20 * 60;
