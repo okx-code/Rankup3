@@ -6,8 +6,8 @@ import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class XpLevelRequirement extends DeductibleRequirement {
-  public XpLevelRequirement(Rankup plugin, String name) {
-    super(plugin, name);
+  public XpLevelRequirement(Rankup plugin) {
+    super(plugin, "xp-level");
   }
 
   protected XpLevelRequirement(Requirement clone) {

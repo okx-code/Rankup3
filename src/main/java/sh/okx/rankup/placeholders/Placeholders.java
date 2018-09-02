@@ -46,8 +46,12 @@ public class Placeholders extends PlaceholderExpansion {
       String[] parts = params.split("_", 4);
       return simpleFormat.format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
     } else if (params.startsWith("rank_money_")) {
-      String[] parts = params.split("_", 3);
-      return plugin.formatMoney(rankups.getByName(parts[2]).getRequirement("money").getValueDouble());
+      String[] parts = params.split("_", 4);
+      double amount = rankups.getByName(parts[2]).getRequirement("money").getValueDouble();
+      if(parts.length > 3 && parts[3].equalsIgnoreCase("left")) {
+        amount = amount - plugin.getEconomy().getBalance(player);
+      }
+      return plugin.formatMoney(Math.max(0, amount));
     }
 
     switch (params) {

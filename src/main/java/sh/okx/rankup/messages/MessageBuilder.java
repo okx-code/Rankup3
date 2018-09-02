@@ -58,9 +58,12 @@ public class MessageBuilder {
     return this;
   }
 
-  public MessageBuilder replaceFromTo(Prestige prestige) {
-    replace(Variable.FROM, prestige.getFrom());
-    replace(Variable.TO, prestige.getTo());
+  public MessageBuilder replaceFromTo(Rank rank) {
+    if(rank instanceof Prestige) {
+      Prestige prestige = (Prestige) rank;
+      replace(Variable.FROM, prestige.getFrom());
+      replace(Variable.TO, prestige.getTo());
+    }
     return this;
   }
 

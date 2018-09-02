@@ -2,16 +2,13 @@ Aexample:
   # the name of the rank in your permissions plugin
   rank: 'A'
   # the next rank a player can rank up to.
-  # this must be the name of the configuration section.
+  # this must be the name of the configuration section, not the rank name.
   # for example, the name of this configuration section is "Aexample".
   # if this is the last rank, you don't need this.
   next: 'Bexample'
   # List of requirements to go to the next rank
   # (ie, this example will charge 1000 money to rankup from A to B)
-  # money: money from the server economy
-  # xp-level: amount of experience levels
-  # playtime-minutes: minutes a player has played
-  # group: requires a player to have a certain group - separate by spaces to require multiple. note that the group is not removed.
+  # https://github.com/okx-code/Rankup3/wiki/Requirements
   # custom requirements can also be added by other plugins.
   requirements:
     money: 1000

@@ -37,6 +37,7 @@ import sh.okx.rankup.requirements.operation.NoneOperation;
 import sh.okx.rankup.requirements.operation.OneOperation;
 import sh.okx.rankup.requirements.requirement.GroupRequirement;
 import sh.okx.rankup.requirements.requirement.MoneyRequirement;
+import sh.okx.rankup.requirements.requirement.PermissionRequirement;
 import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 
@@ -161,10 +162,11 @@ public class Rankup extends JavaPlugin {
   }
 
   private void registerRequirements() {
-    requirementRegistry.addRequirement(new MoneyRequirement(this, "money"));
-    requirementRegistry.addRequirement(new XpLevelRequirement(this, "xp-level"));
-    requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this, "playtime-minutes"));
-    requirementRegistry.addRequirement(new GroupRequirement(this, "group"));
+    requirementRegistry.addRequirement(new MoneyRequirement(this));
+    requirementRegistry.addRequirement(new XpLevelRequirement(this));
+    requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this));
+    requirementRegistry.addRequirement(new GroupRequirement(this));
+    requirementRegistry.addRequirement(new PermissionRequirement(this));
 
     operationRegistry.addOperation("all", new AllOperation());
     operationRegistry.addOperation("none", new NoneOperation());
@@ -213,6 +215,29 @@ public class Rankup extends JavaPlugin {
 
   public MessageBuilder getMessage(Message message) {
     return MessageBuilder.of(messages, message);
+  }
+
+  private boolean checkCooldown(Player player, Rank rank) {
+    if (cooldowns.containsKey(player)) {
+      long time = System.currentTimeMillis() - cooldowns.get(player);
+      // if time passed is less than the cooldown
+      long cooldownSeconds = config.getInt("cooldown");
+      long timeLeft = (cooldownSeconds * 1000) - time;
+      if (timeLeft > 0) {
+        long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
+        getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
+            .failIfEmpty()
+            .replaceRanks(player, rank)
+            .replaceFromTo(rank)
+            .replace(Variable.SECONDS, cooldownSeconds)
+            .replace(Variable.SECONDS_LEFT, secondsLeft)
+            .send(player);
+        return true;
+      }
+      // cooldown has expired so remove it
+      cooldowns.remove(player);
+    }
+    return false;
   }
 
   private void applyCooldown(Player player) {
@@ -269,7 +294,7 @@ public class Rankup extends JavaPlugin {
         }
       }
       getMessage(rank, prestiges == null ? Message.NO_RANKUP :
-            prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+          prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .replaceRanks(player, rank)
           .send(player);
       return false;
@@ -278,21 +303,8 @@ public class Rankup extends JavaPlugin {
           .replaceRanks(player, rank, rankups.next(rank)), player, rank)
           .send(player);
       return false;
-    } else if (cooldowns.containsKey(player)) {
-      long time = System.currentTimeMillis() - cooldowns.get(player);
-      // if time passed is less than the cooldown
-      long timeLeft = (config.getInt("cooldown") * 1000) - time;
-      if (timeLeft > 0) {
-        long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
-        getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
-            .failIfEmpty()
-            .replaceRanks(player, rank)
-            .replace(Variable.SECONDS, secondsLeft)
-            .send(player);
-        return false;
-      }
-      // cooldown has expired so remove it
-      cooldowns.remove(player);
+    } else if (checkCooldown(player, rank)) {
+      return false;
     }
 
     return true;
@@ -349,22 +361,8 @@ public class Rankup extends JavaPlugin {
           .replaceFromTo(prestige)
           .send(player);
       return false;
-    } else if (cooldowns.containsKey(player)) {
-      long time = System.currentTimeMillis() - cooldowns.get(player);
-      // if time passed is less than the cooldown
-      long timeLeft = (config.getInt("cooldown") * 1000) - time;
-      if (timeLeft > 0) {
-        long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
-        getMessage(prestige, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
-            .failIfEmpty()
-            .replaceRanks(player, prestige)
-            .replaceFromTo(prestige)
-            .replace(Variable.SECONDS, secondsLeft)
-            .send(player);
-        return false;
-      }
-      // cooldown has expired so remove it
-      cooldowns.remove(player);
+    } else if (checkCooldown(player, prestige)) {
+      return false;
     }
 
     return true;

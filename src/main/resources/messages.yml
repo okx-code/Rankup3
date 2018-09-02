@@ -35,7 +35,7 @@ rankup:
     footer: ''
   # sent when a player tries to rankup when they are on cooldown
   cooldown:
-    singular: '&cYou must wait {SECONDS} more second to rankup again.'
-    plural: '&cYou must wait {SECONDS} more seconds to rankup again.'
+    singular: '&cYou must wait {SECONDS_LEFT} more second to rankup again.'
+    plural: '&cYou must wait {SECONDS_LEFT} more seconds to rankup again.'
 
 not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."

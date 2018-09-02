@@ -40,20 +40,15 @@ public class Gui implements InventoryHolder {
     addItem(items, config.getConfigurationSection("fill"), player, oldRank, rank);
 
     Gui gui = new Gui();
+    gui.prestige = oldRank instanceof Prestige;
     gui.rankup = getItem(config.getConfigurationSection("rankup"), player, oldRank, rank);
     gui.cancel = getItem(config.getConfigurationSection("cancel"), player, oldRank, rank);
 
-    MessageBuilder builder = plugin.getMessage(rank, Message.TITLE)
-        .replaceRanks(player, oldRank, rank);
-    if(oldRank instanceof Prestige) {
-      gui.prestige = true;
-      builder.replaceFromTo((Prestige) oldRank);
-    } else {
-      gui.prestige = false;
-    }
-
-
-    Inventory inventory = Bukkit.createInventory(gui, items.length, builder.toString());
+    Inventory inventory = Bukkit.createInventory(gui, items.length,
+        plugin.getMessage(rank, Message.TITLE)
+            .replaceRanks(player, oldRank, rank)
+            .replaceFromTo(oldRank)
+            .toString());
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;

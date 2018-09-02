@@ -9,8 +9,8 @@ public class PlaytimeMinutesRequirement extends Requirement {
   private static final int TICKS_PER_MINUTE = 20 * 60;
   private Statistic playOneTick;
 
-  public PlaytimeMinutesRequirement(Rankup plugin, String name) {
-    super(plugin, name);
+  public PlaytimeMinutesRequirement(Rankup plugin) {
+    super(plugin, "playtime-minutes");
     try {
       playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
     } catch (IllegalArgumentException e) {

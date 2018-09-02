@@ -5,8 +5,8 @@ import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.Requirement;
 
 public class GroupRequirement extends Requirement {
-  public GroupRequirement(Rankup plugin, String name) {
-    super(plugin, name);
+  public GroupRequirement(Rankup plugin) {
+    super(plugin, "group");
   }
 
   protected GroupRequirement(Requirement clone) {

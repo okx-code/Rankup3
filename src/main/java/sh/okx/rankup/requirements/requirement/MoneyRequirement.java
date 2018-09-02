@@ -7,8 +7,8 @@ import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class MoneyRequirement extends DeductibleRequirement {
-  public MoneyRequirement(Rankup plugin, String name) {
-    super(plugin, name);
+  public MoneyRequirement(Rankup plugin) {
+    super(plugin, "money");
   }
 
   protected MoneyRequirement(Requirement clone) {
