@@ -6,12 +6,15 @@ version: 0
 # you will have to restart your server.
 ranks: true
 
+# whether or not prestiging should be enabled.
+prestige: true
+
 # how people should confirm ranking up
 # options are: gui, text or none
 confirmation-type: 'gui'
 
-# how long in seconds people have to wait between a /rankup
-# only successful rankups start the cooldown.
+# how long in seconds people have to wait between a /rankup and a /prestige
+# only successful rankups and prestiges start the cooldown.
 # set to 0 to disable.
 cooldown: 1
 

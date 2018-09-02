@@ -8,20 +8,18 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.messages.Message;
-import sh.okx.rankup.ranks.Rank;
-import sh.okx.rankup.ranks.Rankups;
+import sh.okx.rankup.prestige.Prestige;
+import sh.okx.rankup.prestige.Prestiges;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class RankupCommand implements CommandExecutor {
-  // weak hash maps so players going offline are automatically removed.
-  // otherwise there is a potential (but small) memory leak.
+public class PrestigeCommand implements CommandExecutor {
   private final Map<Player, Long> confirming = new WeakHashMap<>();
 
   private final Rankup plugin;
 
-  public RankupCommand(Rankup plugin) {
+  public PrestigeCommand(Rankup plugin) {
     this.plugin = plugin;
   }
 
@@ -33,20 +31,18 @@ public class RankupCommand implements CommandExecutor {
     }
     Player player = (Player) sender;
 
-    Rankups rankups = plugin.getRankups();
-    Rank rank = rankups.getByPlayer(player);
-    if (!plugin.checkRankup(player)) {
+    Prestiges prestiges = plugin.getPrestiges();
+    Prestige prestige = prestiges.getByPlayer(player);
+    if (!plugin.checkPrestige(player)) {
       return true;
     }
 
     FileConfiguration config = plugin.getConfig();
     String confirmationType = config.getString("confirmation-type").toLowerCase();
-
-    // if they are on text confirming, rank them up
     if (confirmationType.equals("text") && confirming.containsKey(player)) {
       long time = System.currentTimeMillis() - confirming.remove(player);
       if (time < config.getInt("text.timeout") * 1000) {
-        plugin.rankup(player);
+        plugin.prestige(player);
         return true;
       }
     }
@@ -54,15 +50,16 @@ public class RankupCommand implements CommandExecutor {
     switch (confirmationType) {
       case "text":
         confirming.put(player, System.currentTimeMillis());
-        plugin.replaceMoneyRequirements(plugin.getMessage(rank, Message.CONFIRMATION)
-            .replaceRanks(player, rank, rankups.next(rank)), player, rank)
+        plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.CONFIRMATION)
+            .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
+            .replaceFromTo(prestige)
             .send(player);
         break;
       case "gui":
-        Gui.of(player, rank, rankups.next(rank), plugin).open(player);
+        Gui.of(player, prestige, prestiges.next(prestige), plugin).open(player);
         break;
       case "none":
-        plugin.rankup(player);
+        plugin.prestige(player);
         break;
       default:
         throw new IllegalArgumentException("Invalid confirmation type " + confirmationType);

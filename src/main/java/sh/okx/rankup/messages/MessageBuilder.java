@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
 
 import java.util.regex.Matcher;
@@ -32,29 +33,34 @@ public class MessageBuilder {
     return this;
   }
 
-  public MessageBuilder replaceAll(CommandSender player, Rank rank) {
+  public MessageBuilder replaceRanks(CommandSender player, Rank rank) {
     replace(Variable.PLAYER, player.getName());
-    replaceAll(rank);
+    replaceRanks(rank);
     return this;
   }
 
-  public MessageBuilder replaceAll(CommandSender player, Rank oldRank, Rank rank) {
+  public MessageBuilder replaceRanks(CommandSender player, Rank oldRank, Rank rank) {
     replace(Variable.PLAYER, player.getName());
-    replaceAll(oldRank, rank);
+    replaceRanks(oldRank, rank);
     return this;
   }
 
-  public MessageBuilder replaceAll(Rank rank) {
+  public MessageBuilder replaceRanks(Rank rank) {
     replace(Variable.RANK, rank.getRank());
     replace(Variable.RANK_NAME, rank.getName());
     return this;
   }
 
-  public MessageBuilder replaceAll(Rank oldRank, Rank rank) {
-    replace(Variable.RANK, rank.getRank());
-    replace(Variable.RANK_NAME, rank.getName());
+  public MessageBuilder replaceRanks(Rank oldRank, Rank rank) {
+    replaceRanks(rank);
     replace(Variable.OLD_RANK, oldRank.getRank());
     replace(Variable.OLD_RANK_NAME, oldRank.getName());
+    return this;
+  }
+
+  public MessageBuilder replaceFromTo(Prestige prestige) {
+    replace(Variable.FROM, prestige.getFrom());
+    replace(Variable.TO, prestige.getTo());
     return this;
   }
 

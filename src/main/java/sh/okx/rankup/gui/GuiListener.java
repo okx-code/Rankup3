@@ -28,7 +28,11 @@ public class GuiListener implements Listener {
 
     if (gui.getRankup().isSimilar(e.getCurrentItem())) {
       Bukkit.getScheduler().runTask(plugin, player::closeInventory);
-      plugin.rankup(player);
+      if(gui.isPrestige()) {
+        plugin.prestige(player);
+      } else {
+        plugin.rankup(player);
+      }
     } else if (gui.getCancel().isSimilar(e.getCurrentItem())) {
       Bukkit.getScheduler().runTask(plugin, player::closeInventory);
     }

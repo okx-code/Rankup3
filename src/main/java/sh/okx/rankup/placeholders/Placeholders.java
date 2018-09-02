@@ -35,8 +35,8 @@ public class Placeholders extends PlaceholderExpansion {
     params = params.toLowerCase();
 
     Rankups rankups = plugin.getRankups();
-    Rank rank = rankups.getRank(player);
-    Rank next = rank == null ? null : rankups.nextRank(rank);
+    Rank rank = rankups.getByPlayer(player);
+    Rank next = rank == null ? null : rankups.next(rank);
 
     if (params.startsWith("requirement_")) {
       String[] parts = params.split("_", 3);
@@ -44,10 +44,10 @@ public class Placeholders extends PlaceholderExpansion {
           parts[1], parts.length > 2 ? parts[2] : "");
     } else if (params.startsWith("rank_requirement_")) {
       String[] parts = params.split("_", 4);
-      return simpleFormat.format(orElse(rankups.getRank(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
+      return simpleFormat.format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
     } else if (params.startsWith("rank_money_")) {
       String[] parts = params.split("_", 3);
-      return plugin.formatMoney(rankups.getRank(parts[2]).getRequirement("money").getValueDouble());
+      return plugin.formatMoney(rankups.getByName(parts[2]).getRequirement("money").getValueDouble());
     }
 
     switch (params) {

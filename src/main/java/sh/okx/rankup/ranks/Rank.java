@@ -8,70 +8,55 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.messages.MessageBuilder;
-import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Operation;
 import sh.okx.rankup.requirements.Requirement;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rank {
-  private final Rankup plugin;
+  protected final Rankup plugin;
   @Getter
-  private final String name;
+  protected final String name;
   @Getter
-  private final String next;
+  protected final String next;
   @Getter
-  private final String rank;
+  protected final String rank;
   @Getter
-  private final Set<Requirement> requirements;
-  private final Operation operation;
-  private final List<String> commands;
+  protected final Set<Requirement> requirements;
+  protected final Operation operation;
+  protected final List<String> commands;
 
   public static Rank deserialize(Rankup plugin, ConfigurationSection section) {
-    String rank = section.getString("rank");
-
     Set<Requirement> requirements = new HashSet<>();
     Operation operation = null;
     ConfigurationSection requirementsSection = section.getConfigurationSection("requirements");
-    if (requirementsSection != null) {
-      for (Map.Entry<String, Object> entry : requirementsSection.getValues(false).entrySet()) {
-        String name = entry.getKey();
-        String value = String.valueOf(entry.getValue());
-        Requirement requirement = plugin.getRequirementRegistry().newRequirement(name, value);
-        if (requirement == null) {
-          plugin.getLogger().warning("Unknown requirement " + name);
-        } else {
-          requirements.add(requirement);
-        }
-      }
 
-      String operationName = Optional.ofNullable(section.getString("operation")).orElse("all");
-      operation = plugin.getOperationRegistry().getOperation(operationName);
+    if (requirementsSection != null) {
+      requirements = plugin.getRequirementRegistry().getRequirements(requirementsSection);
+      operation = plugin.getOperationRegistry().getOperation(section.getString("operation"));
     }
 
     return new Rank(plugin,
         section.getName(),
         section.getString("next"),
-        rank,
+        section.getString("rank"),
         requirements,
         operation,
         section.getStringList("commands"));
   }
 
-  public boolean checkRequirements(Player player) {
+  public boolean hasRequirements(Player player) {
     return operation.check(requirements.stream()
         .map(requirement -> requirement.check(player))
         .collect(Collectors.toList()));
   }
 
-  public boolean isInRank(Player player) {
+  public boolean isIn(Player player) {
     String[] groups = plugin.getPermissions().getPlayerGroups(player);
     for (String group : groups) {
       if (group.equalsIgnoreCase(rank)) {
@@ -81,7 +66,7 @@ public class Rank {
     return false;
   }
 
-  public boolean isLastRank() {
+  public boolean isLast() {
     return next == null;
   }
 
@@ -104,13 +89,8 @@ public class Rank {
 
   public void runCommands(Player player, Rank nextRank) {
     for (String command : commands) {
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), new MessageBuilder(command)
-          .replace(Variable.PLAYER, player.getName())
-          .replace(Variable.OLD_RANK, rank)
-          .replace(Variable.OLD_RANK_NAME, name)
-          .replace(Variable.RANK, nextRank.rank)
-          .replace(Variable.RANK_NAME, nextRank.name)
-          .toString());
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+          new MessageBuilder(command).replaceRanks(player, this, nextRank).toString());
     }
   }
 

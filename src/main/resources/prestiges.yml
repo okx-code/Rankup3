@@ -1,20 +1,24 @@
-P1example:
+first:
   # the rank people must be to use this prestige
   from: 'D'
   # the rank to change it to
   to: 'A'
-  # the rank to also add
-  rank: 'P1'
-  # requirements are the same as in rankups.yml
+  next: 'P2example'
+  # see rankups.yml for more information on requirements, operations, commands and messages
   requirements:
     money: 10000
-  # optional
+  # optional, defaults to all
   operation: all
-  # commands & prestige messages can be added as per rankups.yml too.
 P1example:
   from: 'D'
   to: 'A'
-  rank: 'P2'
+  # the rank add to indicate this prestige
+  rank: 'P1'
+  next: 'P2example'
   requirements:
     money: 20000
     xp-level: 5
+P2example:
+  from: 'D'
+  to: 'A'
+  rank: 'P2'

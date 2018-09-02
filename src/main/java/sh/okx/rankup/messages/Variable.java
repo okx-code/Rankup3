@@ -9,6 +9,8 @@ public enum Variable {
   OLD_RANK_NAME,
   RANK,
   RANK_NAME,
+  FROM,
+  TO,
   MONEY,
   MONEY_NEEDED,
   AMOUNT,

@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
+import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
 
 import java.util.Arrays;
@@ -28,6 +29,8 @@ public class Gui implements InventoryHolder {
   private ItemStack rankup;
   @Getter
   private ItemStack cancel;
+  @Getter
+  private boolean prestige;
 
   public static Gui of(Player player, Rank oldRank, Rank rank, Rankup plugin) {
     ConfigurationSection config = plugin.getConfig().getConfigurationSection("gui");
@@ -39,11 +42,18 @@ public class Gui implements InventoryHolder {
     Gui gui = new Gui();
     gui.rankup = getItem(config.getConfigurationSection("rankup"), player, oldRank, rank);
     gui.cancel = getItem(config.getConfigurationSection("cancel"), player, oldRank, rank);
-    Inventory inventory = Bukkit.createInventory(gui,
-        items.length,
-        plugin.getMessage(rank, Message.TITLE)
-            .replaceAll(player, oldRank, rank)
-            .toString());
+
+    MessageBuilder builder = plugin.getMessage(rank, Message.TITLE)
+        .replaceRanks(player, oldRank, rank);
+    if(oldRank instanceof Prestige) {
+      gui.prestige = true;
+      builder.replaceFromTo((Prestige) oldRank);
+    } else {
+      gui.prestige = false;
+    }
+
+
+    Inventory inventory = Bukkit.createInventory(gui, items.length, builder.toString());
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;
@@ -90,7 +100,7 @@ public class Gui implements InventoryHolder {
 
   private static String format(String message, Player player, Rank oldRank, Rank rank) {
     return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
-        .replaceAll(player, oldRank, rank)
+        .replaceRanks(player, oldRank, rank)
         .toString();
   }
 

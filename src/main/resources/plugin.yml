@@ -1,5 +1,5 @@
 name: Rankup
-version: 3.0-alpha.19
+version: 3.0-alpha.20
 main: sh.okx.rankup.Rankup
 author: Okx
 depend: [Vault]
@@ -18,6 +18,9 @@ commands:
     ranks:
         permission: rankup.ranks
         description: List all the ranks.
+    prestige:
+        permission: rankup.prestige
+        description: Prestige.
 permissions:
     rankup.*:
         children:
@@ -27,6 +30,7 @@ permissions:
             rankup.ranks: true
             rankup.reload: true
             rankup.ranks: true
+            rankup.prestige: true
     rankup.info:
         default: true
     rankup.rankup:
@@ -38,4 +42,6 @@ permissions:
     rankup.reload:
         default: op
     rankup.ranks:
+        default: true
+    rankup.prestige:
         default: true

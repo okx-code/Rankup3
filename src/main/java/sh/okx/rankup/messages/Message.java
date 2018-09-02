@@ -16,7 +16,9 @@ public enum Message {
   RANKS_CURRENT("rankup.ranks.current"),
   RANKS_INCOMPLETE("rankup.ranks.incomplete"),
   COOLDOWN_SINGULAR("rankup.cooldown.singular"),
-  COOLDOWN_PLURAL("rankup.cooldown.plural");
+  COOLDOWN_PLURAL("rankup.cooldown.plural"),
+  NOT_HIGH_ENOUGH("rankup.not-high-enough"),
+  MUST_PRESTIGE("rankup.must-prestige");
 
   @Getter
   private final String name;

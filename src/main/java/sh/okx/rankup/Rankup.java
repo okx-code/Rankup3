@@ -15,7 +15,8 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import sh.okx.rankup.commands.InfoCommand;
-import sh.okx.rankup.commands.RankListCommand;
+import sh.okx.rankup.commands.PrestigeCommand;
+import sh.okx.rankup.commands.RanksCommand;
 import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
@@ -23,6 +24,8 @@ import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.placeholders.Placeholders;
+import sh.okx.rankup.prestige.Prestige;
+import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.OperationRegistry;
@@ -63,9 +66,11 @@ public class Rankup extends JavaPlugin {
   @Getter
   private Rankups rankups;
   @Getter
+  private Prestiges prestiges;
+  @Getter
   private Placeholders placeholders;
   /**
-   * Players who cannot rankup for a certain amount of time.
+   * Players who cannot rankup/prestige for a certain amount of time.
    */
   private Map<Player, Long> cooldowns;
 
@@ -85,8 +90,12 @@ public class Rankup extends JavaPlugin {
     });
 
     if (config.getBoolean("ranks")) {
-      getCommand("ranks").setExecutor(new RankListCommand(this));
+      getCommand("ranks").setExecutor(new RanksCommand(this));
     }
+    if(prestiges != null) {
+      getCommand("prestige").setExecutor(new PrestigeCommand(this));
+    }
+
     getCommand("rankup").setExecutor(new RankupCommand(this));
     getCommand("rankup3").setExecutor(new InfoCommand(this));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
@@ -138,6 +147,9 @@ public class Rankup extends JavaPlugin {
     messages = loadConfig("messages.yml");
     config = loadConfig("config.yml");
     rankups = new Rankups(this, loadConfig("rankups.yml"));
+    if(config.getBoolean("prestige")) {
+      prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
+    }
   }
 
   private FileConfiguration loadConfig(String name) {
@@ -203,13 +215,19 @@ public class Rankup extends JavaPlugin {
     return MessageBuilder.of(messages, message);
   }
 
+  private void applyCooldown(Player player) {
+    if (config.getInt("cooldown") > 0) {
+      cooldowns.put(player, System.currentTimeMillis());
+    }
+  }
+
   public void rankup(Player player) {
     if (!checkRankup(player)) {
       return;
     }
 
-    Rank oldRank = rankups.getRank(player);
-    Rank rank = rankups.nextRank(oldRank);
+    Rank oldRank = rankups.getByPlayer(player);
+    Rank rank = rankups.next(oldRank);
 
     oldRank.applyRequirements(player);
 
@@ -218,19 +236,15 @@ public class Rankup extends JavaPlugin {
 
     getMessage(oldRank, Message.SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceAll(player, oldRank, rank)
+        .replaceRanks(player, oldRank, rank)
         .broadcast();
     getMessage(oldRank, Message.SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceAll(player, oldRank, rank)
+        .replaceRanks(player, oldRank, rank)
         .send(player);
 
     oldRank.runCommands(player, rank);
-
-    // apply cooldown last
-    if (config.getInt("cooldown") > 0) {
-      cooldowns.put(player, System.currentTimeMillis());
-    }
+    applyCooldown(player);
   }
 
   /**
@@ -241,20 +255,27 @@ public class Rankup extends JavaPlugin {
    * @return true if the player can rankup, false otherwise
    */
   public boolean checkRankup(Player player) {
-    Rank rank = rankups.getRank(player);
+    Rank rank = rankups.getByPlayer(player);
     if (rank == null) { // check if in ladder
       getMessage(Message.NOT_IN_LADDER)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (rank.isLastRank()) { // check if they are at the highest rank
-      getMessage(rank, Message.NO_RANKUP)
-          .replaceAll(player, rank)
+    } else if (rank.isLast()) { // check if they are at the highest rank
+      if(prestiges != null) {
+        Prestige prestige = prestiges.getByPlayer(player);
+        if(prestige.isLast()) {
+          getMessage(rank, Message.NO_RANKUP);
+        }
+      }
+      getMessage(rank, prestiges == null ? Message.NO_RANKUP :
+            prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+          .replaceRanks(player, rank)
           .send(player);
       return false;
-    } else if (!rank.checkRequirements(player)) { // check if they can afford it
+    } else if (!rank.hasRequirements(player)) { // check if they can afford it
       replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-          .replaceAll(player, rank, rankups.nextRank(rank)), player, rank)
+          .replaceRanks(player, rank, rankups.next(rank)), player, rank)
           .send(player);
       return false;
     } else if (cooldowns.containsKey(player)) {
@@ -265,7 +286,79 @@ public class Rankup extends JavaPlugin {
         long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
         getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
             .failIfEmpty()
-            .replaceAll(player, rank)
+            .replaceRanks(player, rank)
+            .replace(Variable.SECONDS, secondsLeft)
+            .send(player);
+        return false;
+      }
+      // cooldown has expired so remove it
+      cooldowns.remove(player);
+    }
+
+    return true;
+  }
+
+  public void prestige(Player player) {
+    if (!checkPrestige(player)) {
+      return;
+    }
+
+    Prestige oldPrestige = prestiges.getByPlayer(player);
+    Prestige prestige = prestiges.next(oldPrestige);
+
+    oldPrestige.applyRequirements(player);
+
+    permissions.playerRemoveGroup(null, player, oldPrestige.getFrom());
+    permissions.playerAddGroup(null, player, oldPrestige.getTo());
+    if(oldPrestige.getRank() != null) {
+      permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
+    }
+    permissions.playerAddGroup(null, player, prestige.getRank());
+
+    getMessage(oldPrestige, Message.SUCCESS_PUBLIC)
+        .failIfEmpty()
+        .replaceRanks(player, oldPrestige, prestige)
+        .replaceFromTo(oldPrestige)
+        .broadcast();
+    getMessage(oldPrestige, Message.SUCCESS_PRIVATE)
+        .failIfEmpty()
+        .replaceRanks(player, oldPrestige, prestige)
+        .replaceFromTo(oldPrestige)
+        .send(player);
+
+    oldPrestige.runCommands(player, prestige);
+    applyCooldown(player);
+  }
+
+  public boolean checkPrestige(Player player) {
+    Prestige prestige = prestiges.getByPlayer(player);
+    if (!prestige.isEligable(player)) { // check if in ladder
+      getMessage(Message.NOT_HIGH_ENOUGH)
+          .replace(Variable.PLAYER, player.getName())
+          .send(player);
+      return false;
+    } else if (prestige.isLast()) { // check if they are at the highest rank
+      getMessage(prestige, Message.NO_RANKUP)
+          .replaceRanks(player, prestige)
+          .replaceFromTo(prestige)
+          .send(player);
+      return false;
+    } else if (!prestige.hasRequirements(player)) { // check if they can afford it
+      replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
+          .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
+          .replaceFromTo(prestige)
+          .send(player);
+      return false;
+    } else if (cooldowns.containsKey(player)) {
+      long time = System.currentTimeMillis() - cooldowns.get(player);
+      // if time passed is less than the cooldown
+      long timeLeft = (config.getInt("cooldown") * 1000) - time;
+      if (timeLeft > 0) {
+        long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
+        getMessage(prestige, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
+            .failIfEmpty()
+            .replaceRanks(player, prestige)
+            .replaceFromTo(prestige)
             .replace(Variable.SECONDS, secondsLeft)
             .send(player);
         return false;
@@ -280,7 +373,7 @@ public class Rankup extends JavaPlugin {
   public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
     Requirement money = rank.getRequirement("money");
     Double amount = null;
-    if (sender instanceof Player && rank.isInRank((Player) sender)) {
+    if (sender instanceof Player && rank.isIn((Player) sender)) {
       if (money != null && economy != null) {
         amount = money.getRemaining((Player) sender);
       }

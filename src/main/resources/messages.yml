@@ -1,7 +1,5 @@
 # the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
-  # NOTE: if you are using requirements for your ranks that are NOT money,
-  # you will want to change this for each rank!
   requirements-not-met: "&cYou need {MONEY} money to rankup."
   no-rankup: "&eYou are at the highest rank."
   # set to an empty string, ie: success-public: ""
@@ -14,6 +12,9 @@ rankup:
     &eType &c/rankup &eagain to confirm.
   # used for the GUI confirmation
   title: "Rankup to {RANK}"
+
+  not-high-enough: "&cYou cannot prestige at your rank!"
+  must-prestige: "&cYou must prestige to /rankup further!"
 
   # you can (and probably should) you override these in rankups.yml
   # to show the specific requirements for each rank.
