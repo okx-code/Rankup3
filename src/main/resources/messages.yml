@@ -33,6 +33,12 @@ rankup:
     # an empty string disables the header/footer
     header: ''
     footer: ''
+  prestiges:
+    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
+    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    header: ''
+    footer: ''
   # sent when a player tries to rankup when they are on cooldown
   cooldown:
     singular: '&cYou must wait {SECONDS_LEFT} more second to rankup again.'

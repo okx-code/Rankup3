@@ -1,12 +1,13 @@
 # this is used for letting you know that you need to update/change your config file
 version: 0
 
-# whether /ranks should be enabled (true) or disabled (false)
+# whether /ranks and /prestiges should be enabled (true) or disabled (false)
 # /rankup3 reload will not do anything if this is changed,
 # you will have to restart your server.
 ranks: true
+prestiges: true
 
-# whether or not prestiging should be enabled.
+# whether or not /prestige and /prestiges should be enabled.
 prestige: true
 
 # how people should confirm ranking up

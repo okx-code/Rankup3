@@ -17,7 +17,7 @@ public class GroupRequirement extends Requirement {
   public boolean check(Player player) {
     OUTER:
     for (String requiredGroup : getValueString().split(" ")) {
-      for (String group : plugin.getPermissions().getPlayerGroups(player)) {
+      for (String group : plugin.getPermissions().getPlayerGroups(null, player)) {
         if (group.equalsIgnoreCase(requiredGroup)) {
           continue OUTER;
         }

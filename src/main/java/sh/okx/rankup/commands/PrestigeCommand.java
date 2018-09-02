@@ -1,5 +1,6 @@
 package sh.okx.rankup.commands;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,14 +15,10 @@ import sh.okx.rankup.prestige.Prestiges;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+@RequiredArgsConstructor
 public class PrestigeCommand implements CommandExecutor {
   private final Map<Player, Long> confirming = new WeakHashMap<>();
-
   private final Rankup plugin;
-
-  public PrestigeCommand(Rankup plugin) {
-    this.plugin = plugin;
-  }
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

@@ -1,3 +1,5 @@
+# this name can be equal to your rank name for simplicity,
+# eg "A" instead of "Aexample".
 Aexample:
   # the name of the rank in your permissions plugin
   rank: 'A'

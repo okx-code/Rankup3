@@ -39,6 +39,14 @@ public class RankList<T extends Rank> {
     return null;
   }
 
+  public T getLast() {
+    T t = getFirst();
+    do {
+      t = next(t);
+    } while(!t.isLast());
+    return t;
+  }
+
   public T getByName(String name) {
     for (T rank : ranks) {
       if (rank.getName().equalsIgnoreCase(name)) {

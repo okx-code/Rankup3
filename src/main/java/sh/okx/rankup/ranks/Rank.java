@@ -57,7 +57,7 @@ public class Rank {
   }
 
   public boolean isIn(Player player) {
-    String[] groups = plugin.getPermissions().getPlayerGroups(player);
+    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
     for (String group : groups) {
       if (group.equalsIgnoreCase(rank)) {
         return true;

@@ -4,6 +4,8 @@ import lombok.Getter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
+import sh.okx.rankup.prestige.Prestige;
+import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.Requirement;
@@ -36,7 +38,11 @@ public class Placeholders extends PlaceholderExpansion {
 
     Rankups rankups = plugin.getRankups();
     Rank rank = rankups.getByPlayer(player);
-    Rank next = rank == null ? null : rankups.next(rank);
+    Rank nextRank = rank == null ? null : rankups.next(rank);
+
+    Prestiges prestiges = plugin.getPrestiges();
+    Prestige prestige = prestiges.getByPlayer(player);
+    Prestige nextPrestige = prestiges.next(prestige);
 
     if (params.startsWith("requirement_")) {
       String[] parts = params.split("_", 3);
@@ -55,6 +61,14 @@ public class Placeholders extends PlaceholderExpansion {
     }
 
     switch (params) {
+      case "current_prestige":
+        return prestige.getRank();
+      case "current_prestige_name":
+        return prestige.getName();
+      case "next_prestige":
+        return orElsePlaceholder(nextPrestige, Prestige::getRank, "highest-rank");
+      case "next_prestige_name":
+        return orElsePlaceholder(nextPrestige, Prestige::getName, "highest-rank");
       case "current_rank":
         return orElsePlaceholder(rank, Rank::getRank, "not-in-ladder");
       case "current_rank_name":
@@ -64,9 +78,9 @@ public class Placeholders extends PlaceholderExpansion {
       case "current_rank_money_formatted":
         return moneyFormat.format(orElse(rank, r -> r.getRequirement("money").getValueDouble(), 0));
       case "next_rank":
-        return orElsePlaceholder(rank, r -> orElsePlaceholder(next, Rank::getRank, "highest-rank"), "not-in-ladder");
+        return orElsePlaceholder(rank, r -> orElsePlaceholder(nextRank, Rank::getRank, "highest-rank"), "not-in-ladder");
       case "next_rank_name":
-        return orElsePlaceholder(rank, r -> orElsePlaceholder(next, Rank::getName, "highest-rank"), "not-in-ladder");
+        return orElsePlaceholder(rank, r -> orElsePlaceholder(nextRank, Rank::getName, "highest-rank"), "not-in-ladder");
       case "money":
         return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getValueDouble()), 0));
       case "money_formatted":

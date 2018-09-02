@@ -16,6 +16,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import sh.okx.rankup.commands.InfoCommand;
 import sh.okx.rankup.commands.PrestigeCommand;
+import sh.okx.rankup.commands.PrestigesCommand;
 import sh.okx.rankup.commands.RanksCommand;
 import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
@@ -95,6 +96,9 @@ public class Rankup extends JavaPlugin {
     }
     if(prestiges != null) {
       getCommand("prestige").setExecutor(new PrestigeCommand(this));
+      if(config.getBoolean("prestiges")) {
+        getCommand("prestiges").setExecutor(new PrestigesCommand(this));
+      }
     }
 
     getCommand("rankup").setExecutor(new RankupCommand(this));
@@ -197,6 +201,7 @@ public class Rankup extends JavaPlugin {
       if (money >= value) {
         money /= value;
         suffix = shortened.get(i - 1);
+        break;
       }
     }
 
@@ -403,5 +408,27 @@ public class Rankup extends JavaPlugin {
 
   private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
     builder.replace(variable + " " + requirement.getName(), value.get());
+  }
+
+  public void sendMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
+    replaceMoneyRequirements(getMessage(oldRank, message)
+        .replaceRanks(player, oldRank, rank), player, oldRank)
+        .replaceFromTo(oldRank)
+        .send(player);
+  }
+
+  public void sendHeaderFooter(CommandSender sender, Rank rank, Message type) {
+    MessageBuilder builder;
+    if(rank == null) {
+      builder = getMessage(type)
+          .failIfEmpty()
+          .replace(Variable.PLAYER, sender.getName());
+    } else {
+      builder = getMessage(rank, type)
+          .failIfEmpty()
+          .replaceRanks(sender, rank)
+          .replaceFromTo(rank);
+    }
+    builder.send(sender);
   }
 }
