@@ -13,7 +13,6 @@ rankup:
   # used for the GUI confirmation
   title: "Rankup to {RANK}"
 
-  not-high-enough: "&cYou cannot prestige at your rank!"
   must-prestige: "&cYou must prestige to /rankup further!"
 
   # you can (and probably should) you override these in rankups.yml
@@ -22,26 +21,33 @@ rankup:
   # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
   # {MONEY} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
   # here is an example of showing the requirements for just money:
-  #ranks:
+  #list:
   #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
-  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE mon ey}%"
+  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE money}%"
   #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
-  ranks:
+  list:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
     current: "&c{OLD_RANK} &e\xbb &c{RANK}"
     incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
     # an empty string disables the header/footer
-    header: ''
-    footer: ''
-  prestiges:
+    header: ""
+    footer: ""
+  # sent when a player tries to rankup when they are on cooldown
+  cooldown:
+    singular: "&cYou must wait {SECONDS_LEFT} more second to rankup again."
+    plural: "&cYou must wait {SECONDS_LEFT} more seconds to rankup again."
+# prestige messages can also be customised
+prestige:
+  title: "Prestige to {RANK}"
+  list:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
     current: "&c{OLD_RANK} &e\xbb &c{RANK}"
     incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
-    header: ''
-    footer: ''
-  # sent when a player tries to rankup when they are on cooldown
+    header: ""
+    footer: ""
   cooldown:
-    singular: '&cYou must wait {SECONDS_LEFT} more second to rankup again.'
-    plural: '&cYou must wait {SECONDS_LEFT} more seconds to rankup again.'
+      singular: "&cYou must wait {SECONDS_LEFT} second to prestige again."
+      plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
 
+not-high-enough: "&cYou cannot prestige at your rank!"
 not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."

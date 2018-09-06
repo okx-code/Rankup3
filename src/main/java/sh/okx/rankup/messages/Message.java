@@ -10,20 +10,21 @@ public enum Message {
   SUCCESS_PRIVATE("rankup.success-private"),
   CONFIRMATION("rankup.confirmation"),
   TITLE("rankup.title"),
-  RANKS_HEADER("rankup.ranks.header"),
-  RANKS_FOOTER("rankup.ranks.footer"),
-  RANKS_COMPLETE("rankup.ranks.complete"),
-  RANKS_CURRENT("rankup.ranks.current"),
-  RANKS_INCOMPLETE("rankup.ranks.incomplete"),
-  PRESTIGES_HEADER("rankup.prestiges.header"),
-  PRESTIGES_FOOTER("rankup.prestiges.footer"),
-  PRESTIGES_COMPLETE("rankup.prestiges.complete"),
-  PRESTIGES_CURRENT("rankup.prestiges.current"),
-  PRESTIGES_INCOMPLETE("rankup.prestiges.incomplete"),
+  RANKS_HEADER("rankup.list.header"),
+  RANKS_FOOTER("rankup.list.footer"),
+  RANKS_COMPLETE("rankup.list.complete"),
+  RANKS_CURRENT("rankup.list.current"),
+  RANKS_INCOMPLETE("rankup.list.incomplete"),
+  PRESTIGES_HEADER("prestige.list.header"),
+  PRESTIGES_FOOTER("prestige.list.footer"),
+  PRESTIGES_COMPLETE("prestige.list.complete"),
+  PRESTIGES_CURRENT("prestige.list.current"),
+  PRESTIGES_INCOMPLETE("prestige.list.incomplete"),
+  PRESTIGE_TITLE("prestige.title"),
   COOLDOWN_SINGULAR("rankup.cooldown.singular"),
   COOLDOWN_PLURAL("rankup.cooldown.plural"),
-  NOT_HIGH_ENOUGH("rankup.not-high-enough"),
-  MUST_PRESTIGE("rankup.must-prestige");
+  MUST_PRESTIGE("rankup.must-prestige"),
+  NOT_HIGH_ENOUGH("prestige.not-high-enough");
 
   @Getter
   private final String name;

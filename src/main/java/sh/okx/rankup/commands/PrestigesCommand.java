@@ -9,7 +9,6 @@ import sh.okx.rankup.Rankup;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
-import sh.okx.rankup.ranks.Rank;
 
 @RequiredArgsConstructor
 public class PrestigesCommand implements CommandExecutor {
@@ -27,18 +26,15 @@ public class PrestigesCommand implements CommandExecutor {
 
     Message message = playerRank == null ? Message.PRESTIGES_INCOMPLETE : Message.PRESTIGES_COMPLETE;
     Prestige prestige = prestiges.getFirst();
-    if(!prestige.isLast()) {
-      prestige = prestiges.next(prestige);
-      while (!prestige.isLast()) {
-        Prestige next = prestiges.next(prestige);
-        if (prestige.equals(playerRank)) {
-          plugin.sendMessage(sender, Message.PRESTIGES_CURRENT, prestige, next);
-          message = Message.PRESTIGES_INCOMPLETE;
-        } else {
-          plugin.sendMessage(sender, message, prestige, next);
-        }
-        prestige = next;
+    while (!prestige.isLast()) {
+      Prestige next = prestiges.next(prestige);
+      if (prestige.equals(playerRank)) {
+        plugin.sendMessage(sender, Message.PRESTIGES_CURRENT, prestige, next);
+        message = Message.PRESTIGES_INCOMPLETE;
+      } else {
+        plugin.sendMessage(sender, message, prestige, next);
       }
+      prestige = next;
     }
 
     plugin.sendHeaderFooter(sender, playerRank, Message.PRESTIGES_FOOTER);

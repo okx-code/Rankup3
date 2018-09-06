@@ -210,7 +210,7 @@ public class Rankup extends JavaPlugin {
   }
 
   public MessageBuilder getMessage(Rank rank, Message message) {
-    ConfigurationSection messages = rankups.getConfig()
+    ConfigurationSection messages = (rank instanceof Prestige ? prestiges : rankups).getConfig()
         .getConfigurationSection(rank.getName());
     if (messages == null || !messages.isSet(message.getName())) {
       messages = this.messages;
@@ -298,8 +298,7 @@ public class Rankup extends JavaPlugin {
           getMessage(rank, Message.NO_RANKUP);
         }
       }
-      getMessage(rank, prestiges == null ? Message.NO_RANKUP :
-          prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+      getMessage(rank, prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .replaceRanks(player, rank)
           .send(player);
       return false;
@@ -398,8 +397,10 @@ public class Rankup extends JavaPlugin {
       try {
         replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getValueDouble()));
         replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
-        replaceRequirements(builder, Variable.PERCENT_LEFT, requirement, () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
-        replaceRequirements(builder, Variable.PERCENT_DONE, requirement, () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
+        replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
+            () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
+        replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
+            () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
       } catch (NumberFormatException ignored) {
       }
     }
@@ -412,6 +413,7 @@ public class Rankup extends JavaPlugin {
 
   public void sendMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
     replaceMoneyRequirements(getMessage(oldRank, message)
+        .replaceFirstPrestige(oldRank, prestiges, config.getString("placeholders.first-prestige-rank"))
         .replaceRanks(player, oldRank, rank), player, oldRank)
         .replaceFromTo(oldRank)
         .send(player);

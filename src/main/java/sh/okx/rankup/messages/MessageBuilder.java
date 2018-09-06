@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.prestige.Prestige;
+import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 
 import java.util.regex.Matcher;
@@ -19,7 +20,11 @@ public class MessageBuilder {
   }
 
   public static MessageBuilder of(ConfigurationSection config, Message message) {
-    return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', config.getString(message.getName())));
+    return MessageBuilder.of(config, message.getName());
+  }
+
+  private static MessageBuilder of(ConfigurationSection config, String message) {
+    return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', config.getString(message)));
   }
 
   public MessageBuilder replace(Variable variable, Object value) {
@@ -31,6 +36,14 @@ public class MessageBuilder {
     Matcher matcher = pattern.matcher(message);
     this.message = matcher.replaceAll(String.valueOf(value));
     return this;
+  }
+
+  public MessageBuilder replaceFirstPrestige(Rank rank, Prestiges prestiges, String with) {
+     if(prestiges.getFirst().equals(rank)) {
+       replace(Variable.OLD_RANK, with);
+       replace(Variable.OLD_RANK_NAME, with);
+     }
+     return this;
   }
 
   public MessageBuilder replaceRanks(CommandSender player, Rank rank) {

@@ -12,9 +12,11 @@ public class Prestiges extends RankList<Prestige> {
 
   @Override
   public Prestige getByPlayer(Player player) {
-    return ranks.stream()
-        .filter(rank -> rank.isIn(player))
-        .findFirst()
-        .orElseGet(this::getFirst);
+    Prestige prestige = super.getByPlayer(player);
+    if(prestige == null) {
+      return getFirst();
+    } else {
+      return prestige;
+    }
   }
 }

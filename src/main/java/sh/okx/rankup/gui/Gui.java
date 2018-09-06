@@ -45,7 +45,7 @@ public class Gui implements InventoryHolder {
     gui.cancel = getItem(config.getConfigurationSection("cancel"), player, oldRank, rank);
 
     Inventory inventory = Bukkit.createInventory(gui, items.length,
-        plugin.getMessage(rank, Message.TITLE)
+        plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
             .replaceRanks(player, oldRank, rank)
             .replaceFromTo(oldRank)
             .toString());

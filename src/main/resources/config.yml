@@ -57,6 +57,8 @@ placeholders:
   not-in-ladder: "None"
   # used in next_rank placeholders when there is no rankup
   highest-rank: "None"
+  # used in /prestiges as the {OLD_RANK} placeholder for the first prestige rank
+  first-prestige-rank: 'D'
 
 # what to shorten money by.
 # ie 1000 -> 1k
