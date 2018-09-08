@@ -39,7 +39,7 @@ public class MessageBuilder {
   }
 
   public MessageBuilder replaceFirstPrestige(Rank rank, Prestiges prestiges, String with) {
-     if(prestiges.getFirst().equals(rank)) {
+     if(prestiges != null && prestiges.getFirst().equals(rank)) {
        replace(Variable.OLD_RANK, with);
        replace(Variable.OLD_RANK_NAME, with);
      }
