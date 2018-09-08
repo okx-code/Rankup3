@@ -4,9 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.0-alpha.22'
-
-sourceCompatibility = 1.8
+version '3.0.1'
 
 repositories {
     mavenCentral()

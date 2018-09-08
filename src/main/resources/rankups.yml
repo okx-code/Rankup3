@@ -41,7 +41,7 @@ Cexample:
   # you can use this to list the requirements needed.
   rankup:
     requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
-    ranks:
+    list:
       complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e(5000 money, 2 XP levels)"
       current: "&c{OLD_RANK} &e\xbb &c{RANK} &e(5000 money, 2 XP levels)"
       incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e(5000 money, 2 XP levels)"

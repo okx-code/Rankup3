@@ -104,23 +104,22 @@ public class Rankup extends JavaPlugin {
     getCommand("rankup").setExecutor(new RankupCommand(this));
     getCommand("rankup3").setExecutor(new InfoCommand(this));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
+
+    placeholders = new Placeholders(this);
+    placeholders.register();
   }
 
 
   @Override
   public void onDisable() {
     closeInventories();
-    PlaceholderAPI.unregisterExpansion(placeholders);
+    placeholders.unregister();
   }
 
   public void reload() {
     cooldowns = new WeakHashMap<>();
     closeInventories();
     loadConfigs();
-    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      placeholders = new Placeholders(this);
-      placeholders.register();
-    }
 
     if (config.getInt("version") != 0) {
       getLogger().severe("You are using an outdated config!");
