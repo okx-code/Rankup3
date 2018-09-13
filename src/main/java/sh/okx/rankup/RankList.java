@@ -16,7 +16,7 @@ public class RankList<T extends Rank> {
   protected final FileConfiguration config;
   protected final Set<T> ranks = new HashSet<>();
 
-  public RankList(Rankup plugin, FileConfiguration config, Function<ConfigurationSection, T> deserializer) {
+  public RankList(FileConfiguration config, Function<ConfigurationSection, T> deserializer) {
     this.config = config;
     for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
       ConfigurationSection rankSection = (ConfigurationSection) entry.getValue();

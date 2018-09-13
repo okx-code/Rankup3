@@ -47,7 +47,7 @@ public class PrestigeCommand implements CommandExecutor {
     switch (confirmationType) {
       case "text":
         confirming.put(player, System.currentTimeMillis());
-        plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.CONFIRMATION)
+        plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.PRESTIGE_CONFIRMATION)
             .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
             .replaceFromTo(prestige)
             .send(player);

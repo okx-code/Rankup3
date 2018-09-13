@@ -24,7 +24,10 @@ public enum Message {
   COOLDOWN_SINGULAR("rankup.cooldown.singular"),
   COOLDOWN_PLURAL("rankup.cooldown.plural"),
   MUST_PRESTIGE("rankup.must-prestige"),
-  NOT_HIGH_ENOUGH("prestige.not-high-enough");
+  NOT_HIGH_ENOUGH("not-high-enough"),
+  PRESTIGE_SUCCESS_PUBLIC("prestige.success-public"),
+  PRESTIGE_SUCCESS_PRIVATE("prestige.success-private"),
+  PRESTIGE_CONFIRMATION("prestige.confirmation");
 
   @Getter
   private final String name;

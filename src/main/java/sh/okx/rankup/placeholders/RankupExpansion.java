@@ -57,6 +57,10 @@ public class RankupExpansion extends PlaceholderExpansion {
         return orElsePlaceholder(nextPrestige, Prestige::getRank, "highest-rank");
       case "next_prestige_name":
         return orElsePlaceholder(nextPrestige, Prestige::getName, "highest-rank");
+      case "prestige_money":
+        return String.valueOf(simplify(orElse(prestige, r -> r.isEligable(player) ? r.getRequirement("money").getValueDouble() : 0, 0)));
+      case "prestige_money_formatted":
+        return plugin.formatMoney(orElse(prestige, r -> r.isEligable(player) ? r.getRequirement("money").getValueDouble() : 0, 0D));
       case "current_rank":
         return orElsePlaceholder(rank, Rank::getRank, "not-in-ladder");
       case "current_rank_name":

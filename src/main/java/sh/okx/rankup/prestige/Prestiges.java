@@ -7,7 +7,7 @@ import sh.okx.rankup.Rankup;
 
 public class Prestiges extends RankList<Prestige> {
   public Prestiges(Rankup plugin, FileConfiguration config) {
-    super(plugin, config, section -> Prestige.deserialize(plugin, section));
+    super(config, section -> Prestige.deserialize(plugin, section));
   }
 
   @Override

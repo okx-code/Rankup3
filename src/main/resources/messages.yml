@@ -38,7 +38,14 @@ rankup:
     plural: "&cYou must wait {SECONDS_LEFT} more seconds to rankup again."
 # prestige messages can also be customised
 prestige:
+  success-public: "&a{PLAYER} &ehas prestiged to: &d{RANK}"
+  success-private: "&aYou have prestiged to: &d{RANK}"
+
+  confirmation: |-
+    &eAre you sure you want to prestige to &a{RANK}&e?
+    &eType &c/prestige &eagain to confirm.
   title: "Prestige to {RANK}"
+
   list:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
     current: "&c{OLD_RANK} &e\xbb &c{RANK}"

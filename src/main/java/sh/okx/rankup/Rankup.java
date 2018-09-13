@@ -58,9 +58,9 @@ public class Rankup extends JavaPlugin {
    * The registry for listing the requirements to /rankup.
    */
   @Getter
-  private RequirementRegistry requirementRegistry = new RequirementRegistry();
+  private RequirementRegistry requirementRegistry;
   @Getter
-  private OperationRegistry operationRegistry = new OperationRegistry();
+  private OperationRegistry operationRegistry;
   @Getter
   private FileConfiguration messages;
   @Getter
@@ -78,7 +78,6 @@ public class Rankup extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    registerRequirements();
     setupPermissions();
     setupEconomy();
     reload();
@@ -121,10 +120,10 @@ public class Rankup extends JavaPlugin {
     closeInventories();
     loadConfigs();
 
-    if (config.getInt("version") != 0) {
+    if (config.getInt("version") < 1) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
-      getLogger().severe("To update, please rename your config files (or the folder they are in),");
+      getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
       getLogger().severe("and run /rankup3 reload to generate a new config file.");
       getLogger().severe("If that does not work, restart your server.");
       getLogger().severe("You may then copy in your config values from the old config.");
@@ -150,6 +149,11 @@ public class Rankup extends JavaPlugin {
   private void loadConfigs() {
     messages = loadConfig("messages.yml");
     config = loadConfig("config.yml");
+    refreshRanks();
+  }
+
+  public void refreshRanks() {
+    registerRequirements();
     rankups = new Rankups(this, loadConfig("rankups.yml"));
     if(config.getBoolean("prestige")) {
       prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
@@ -165,16 +169,20 @@ public class Rankup extends JavaPlugin {
   }
 
   private void registerRequirements() {
+    requirementRegistry = new RequirementRegistry();
     requirementRegistry.addRequirement(new MoneyRequirement(this));
     requirementRegistry.addRequirement(new XpLevelRequirement(this));
     requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this));
     requirementRegistry.addRequirement(new GroupRequirement(this));
     requirementRegistry.addRequirement(new PermissionRequirement(this));
 
+    operationRegistry = new OperationRegistry();
     operationRegistry.addOperation("all", new AllOperation());
     operationRegistry.addOperation("none", new NoneOperation());
     operationRegistry.addOperation("one", new OneOperation());
     operationRegistry.addOperation("any", new AnyOperation());
+
+    Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
   }
 
   private void setupPermissions() {
@@ -330,12 +338,12 @@ public class Rankup extends JavaPlugin {
     }
     permissions.playerAddGroup(null, player, prestige.getRank());
 
-    getMessage(oldPrestige, Message.SUCCESS_PUBLIC)
+    getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
         .replaceRanks(player, oldPrestige, prestige)
         .replaceFromTo(oldPrestige)
         .broadcast();
-    getMessage(oldPrestige, Message.SUCCESS_PRIVATE)
+    getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PRIVATE)
         .failIfEmpty()
         .replaceRanks(player, oldPrestige, prestige)
         .replaceFromTo(oldPrestige)
