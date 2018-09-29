@@ -28,6 +28,7 @@ dependencies {
     apt "org.projectlombok:lombok:1.18.2"
 
     compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
+
     compile('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
     }

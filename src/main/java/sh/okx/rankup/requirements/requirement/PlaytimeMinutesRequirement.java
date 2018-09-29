@@ -26,7 +26,7 @@ public class PlaytimeMinutesRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    return player.getStatistic(playOneTick) * TICKS_PER_MINUTE >= getValueDouble();
+    return player.getStatistic(playOneTick) / TICKS_PER_MINUTE >= getValueDouble();
   }
 
   @Override

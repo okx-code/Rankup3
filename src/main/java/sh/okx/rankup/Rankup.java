@@ -302,7 +302,9 @@ public class Rankup extends JavaPlugin {
       if(prestiges != null) {
         Prestige prestige = prestiges.getByPlayer(player);
         if(prestige.isLast()) {
-          getMessage(rank, Message.NO_RANKUP);
+          getMessage(rank, Message.NO_RANKUP)
+              .replaceRanks(player, prestige)
+              .send(player);
         }
       }
       getMessage(rank, prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)

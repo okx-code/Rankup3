@@ -45,5 +45,6 @@ Cexample:
       complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e(5000 money, 2 XP levels)"
       current: "&c{OLD_RANK} &e\xbb &c{RANK} &e(5000 money, 2 XP levels)"
       incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e(5000 money, 2 XP levels)"
+# for the last rank, you just need to specify the rank.
 Dexample:
   rank: 'D'
