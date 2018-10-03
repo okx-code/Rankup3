@@ -32,7 +32,13 @@ public class RankupCommand implements CommandExecutor {
 
     Rankups rankups = plugin.getRankups();
     Rank rank = rankups.getByPlayer(player);
+    Rank next = rankups.next(rank);
     if (!plugin.checkRankup(player)) {
+      return true;
+    } else if(next == null) {
+      plugin.getLogger().severe("Rankup from " + rank.getName() + " to " + rank.getNext() +
+          " is defined but " + rank.getNext() + " does not exist.");
+      plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(player);
       return true;
     }
 
@@ -52,11 +58,11 @@ public class RankupCommand implements CommandExecutor {
       case "text":
         confirming.put(player, System.currentTimeMillis());
         plugin.replaceMoneyRequirements(plugin.getMessage(rank, Message.CONFIRMATION)
-            .replaceRanks(player, rank, rankups.next(rank)), player, rank)
+            .replaceRanks(player, rank, next), player, rank)
             .send(player);
         break;
       case "gui":
-        Gui.of(player, rank, rankups.next(rank), plugin).open(player);
+        Gui.of(player, rank, next, plugin).open(player);
         break;
       case "none":
         plugin.rankup(player);

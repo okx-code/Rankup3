@@ -27,7 +27,8 @@ public enum Message {
   NOT_HIGH_ENOUGH("not-high-enough"),
   PRESTIGE_SUCCESS_PUBLIC("prestige.success-public"),
   PRESTIGE_SUCCESS_PRIVATE("prestige.success-private"),
-  PRESTIGE_CONFIRMATION("prestige.confirmation");
+  PRESTIGE_CONFIRMATION("prestige.confirmation"),
+  INVALID_RANKUP("invalid-rankup");
 
   @Getter
   private final String name;

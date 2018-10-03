@@ -1,5 +1,5 @@
 name: Rankup
-version: 3.1.1
+version: 3.1.2
 main: sh.okx.rankup.Rankup
 author: Okx
 depend: [Vault]
@@ -32,7 +32,6 @@ permissions:
             rankup.checkversion: true
             rankup.ranks: true
             rankup.reload: true
-            rankup.ranks: true
             rankup.prestige: true
             rankup.prestiges: true
     rankup.info:
@@ -41,8 +40,6 @@ permissions:
         default: true
     rankup.checkversion:
         default: op
-    rankup.ranks:
-        default: true
     rankup.reload:
         default: op
     rankup.ranks:

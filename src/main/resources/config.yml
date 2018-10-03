@@ -5,13 +5,13 @@ version: 1
 # /rankup3 reload will not do anything if this is changed,
 # you will have to restart your server.
 ranks: true
-# in 1.13 you can negate the permission rankup.prestiges
-# so the command will not autocomplete
+# you can alternatively negate the permission rankup.prestiges
+# this will also make the command not autocomplete in 1.13
 prestiges: true
 
 # whether or not /prestige and /prestiges should be enabled.
-# in 1.13 you can negate the permission rankup.prestige
-# so the command will not autocomplete
+# you can alternatively negate the permission rankup.prestige
+# this will also make the command not autocomplete in 1.13
 prestige: true
 
 # how people should confirm ranking up

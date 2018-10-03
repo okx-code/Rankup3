@@ -29,8 +29,12 @@ public class RankupExpansion extends PlaceholderExpansion {
     Rank nextRank = rank == null ? null : rankups.next(rank);
 
     Prestiges prestiges = plugin.getPrestiges();
-    Prestige prestige = prestiges.getByPlayer(player);
-    Prestige nextPrestige = prestiges.next(prestige);
+    Prestige prestige = null;
+    Prestige nextPrestige = null;
+    if(prestiges != null) {
+      prestige = prestiges.getByPlayer(player);
+      nextPrestige = prestiges.next(prestige);
+    }
 
     if (params.startsWith("requirement_")) {
       String[] parts = params.split("_", 3);

@@ -58,3 +58,4 @@ prestige:
 
 not-high-enough: "&cYou cannot prestige at your rank!"
 not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."
+invalid-rankup: "Invalid rankup defined in config, please check console."
