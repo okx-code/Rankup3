@@ -41,8 +41,10 @@ public class RankupExpansion extends PlaceholderExpansion {
       return getPlaceholderRequirement(player, rank,
           parts[1], parts.length > 2 ? parts[2] : "");
     } else if (params.startsWith("rank_requirement_")) {
-      String[] parts = params.split("_", 4);
-      return placeholders.getSimpleFormat().format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
+      String[] parts = params.split("_", 5);
+      return getPlaceholderRequirement(player, rankups.getByName(parts[2]),
+          parts[3], parts.length > 4 ? parts[4] : "");
+//      return placeholders.getSimpleFormat().format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
     } else if (params.startsWith("rank_money_")) {
       String[] parts = params.split("_", 4);
       double amount = rankups.getByName(parts[2]).getRequirement("money").getValueDouble();

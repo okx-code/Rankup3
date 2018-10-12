@@ -32,10 +32,11 @@ public class RankupCommand implements CommandExecutor {
 
     Rankups rankups = plugin.getRankups();
     Rank rank = rankups.getByPlayer(player);
-    Rank next = rankups.next(rank);
     if (!plugin.checkRankup(player)) {
       return true;
-    } else if(next == null) {
+    }
+    Rank next = rankups.next(rank);
+    if(next == null) {
       plugin.getLogger().severe("Rankup from " + rank.getName() + " to " + rank.getNext() +
           " is defined but " + rank.getNext() + " does not exist.");
       plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(player);

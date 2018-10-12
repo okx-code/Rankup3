@@ -383,18 +383,22 @@ public class Rankup extends JavaPlugin {
 
   public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
     Requirement money = rank.getRequirement("money");
-    Double amount = null;
-    if (sender instanceof Player && rank.isIn((Player) sender)) {
-      if (money != null && economy != null) {
-        amount = money.getRemaining((Player) sender);
+    if(money != null) {
+      Double amount = null;
+      if (sender instanceof Player && rank.isIn((Player) sender)) {
+        if (economy != null) {
+          amount = money.getRemaining((Player) sender);
+        }
+      } else {
+        amount = money.getValueDouble();
       }
-      replaceRequirements(builder, (Player) sender, rank);
-    } else {
-      amount = money.getValueDouble();
+      if (amount != null && economy != null) {
+        builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
+        builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
+      }
     }
-    if (amount != null && economy != null) {
-      builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
-      builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
+    if(sender instanceof Player) {
+      replaceRequirements(builder, (Player) sender, rank);
     }
     return builder;
   }
@@ -405,11 +409,13 @@ public class Rankup extends JavaPlugin {
     for (Requirement requirement : rank.getRequirements()) {
       try {
         replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getValueDouble()));
-        replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
-        replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
-            () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
-        replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
-            () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
+        if(rank.isIn(player)) {
+          replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
+          replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
+              () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
+          replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
+              () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
+        }
       } catch (NumberFormatException ignored) {
       }
     }
