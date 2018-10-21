@@ -1,13 +1,15 @@
 package sh.okx.rankup.requirements;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 
 public abstract class Requirement implements Cloneable {
-  protected Rankup plugin;
+  protected final Rankup plugin;
   @Getter
-  protected String name;
+  protected final String name;
+  @Setter
   private String value;
 
   public Requirement(Rankup plugin, String name) {
@@ -16,15 +18,9 @@ public abstract class Requirement implements Cloneable {
   }
 
   protected Requirement(Requirement clone) {
-    if (clone != null) {
-      this.plugin = clone.plugin;
-      this.name = clone.name;
-      this.value = clone.value;
-    }
-  }
-
-  public void setValue(String value) {
-    this.value = value;
+    this.plugin = clone.plugin;
+    this.name = clone.name;
+    this.value = clone.value;
   }
 
   public String getValueString() {

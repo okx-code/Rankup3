@@ -4,10 +4,11 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.1.4'
+version '3.2-beta'
 
 repositories {
     mavenCentral()
+    mavenLocal()
     jcenter()
     maven {
         url 'http://nexus.hc.to/content/repositories/pub_releases'
@@ -33,4 +34,6 @@ dependencies {
         exclude group: 'org.bukkit'
     }
     compile 'me.clip:placeholderapi:2.9.+'
+    // if compiling this you will have to download and install mcMMO locally
+    compile 'com.gmail.nossr50.mcMMO:mcMMO:1.6.0-SNAPSHOT'
 }

@@ -103,7 +103,7 @@ public class RankupExpansion extends PlaceholderExpansion {
     Requirement requirement = rank.getRequirement(requirementName);
     switch (params) {
       case "":
-        return placeholders.getSimpleFormat().format(orElse(requirement, Requirement::getValueDouble, 0));
+        return orElse(requirement, Requirement::getValueString, "0");
       case "left":
         return placeholders.getSimpleFormat().format(orElse(requirement, r -> r.getRemaining(player), 0));
       case "percent_left":
