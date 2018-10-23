@@ -12,7 +12,7 @@ first:
 P1example:
   from: 'D'
   to: 'A'
-  # the rank add to indicate this prestige
+  # the rank added to indicate this prestige
   rank: 'P1'
   next: 'P2example'
   requirements:

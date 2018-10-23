@@ -1,5 +1,10 @@
 # this is used for letting you know that you need to update/change your config file
-version: 1
+version: 2
+
+# interval (in minutes) to check to autorankup players
+# ranking up manually wil always be enabled
+# set to 0 to disable
+autorankup-interval: 0
 
 # whether /ranks and /prestiges should be enabled (true) or disabled (false)
 # /rankup3 reload will not do anything if this is changed,

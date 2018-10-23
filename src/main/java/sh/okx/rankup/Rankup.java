@@ -78,6 +78,7 @@ public class Rankup extends JavaPlugin {
    * Players who cannot rankup/prestige for a certain amount of time.
    */
   private Map<Player, Long> cooldowns;
+  private AutoRankup autoRankup;
 
   @Override
   public void onEnable() {
@@ -123,7 +124,16 @@ public class Rankup extends JavaPlugin {
     closeInventories();
     loadConfigs();
 
-    if (config.getInt("version") < 1) {
+    if(autoRankup != null) {
+      autoRankup.cancel();
+    }
+    long time = config.getInt("autorankup-interval") * 60 * 20;
+    if(time > 0) {
+      autoRankup = new AutoRankup(this);
+      autoRankup.runTaskTimer(this, time, time);
+    }
+
+    if (config.getInt("version") < 2) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
@@ -294,6 +304,10 @@ public class Rankup extends JavaPlugin {
     applyCooldown(player);
   }
 
+  public boolean checkRankup(Player player) {
+    return checkRankup(player, true);
+  }
+
   /**
    * Checks if a player can rankup,
    * and if they can't, sends the player a message and returns false
@@ -301,32 +315,36 @@ public class Rankup extends JavaPlugin {
    * @param player the player to check if they can rankup
    * @return true if the player can rankup, false otherwise
    */
-  public boolean checkRankup(Player player) {
+  public boolean checkRankup(Player player, boolean message) {
     Rank rank = rankups.getByPlayer(player);
     if (rank == null) { // check if in ladder
       getMessage(Message.NOT_IN_LADDER)
           .replace(Variable.PLAYER, player.getName())
+          .failIf(!message)
           .send(player);
       return false;
     } else if (rank.isLast()) { // check if they are at the highest rank
-      if(prestiges != null) {
-        Prestige prestige = prestiges.getByPlayer(player);
-        if(prestige.isLast()) {
-          getMessage(rank, Message.NO_RANKUP)
-              .replaceRanks(player, prestige)
-              .send(player);
-        }
-      }
+//      if(prestiges != null) {
+//        Prestige prestige = prestiges.getByPlayer(player);
+//        if(prestige.isLast()) {
+//          getMessage(rank, Message.NO_RANKUP)
+//              .failIf(!message)
+//              .replaceRanks(player, prestige)
+//              .send(player);
+//        }
+//      }
       getMessage(rank, prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+          .failIf(!message)
           .replaceRanks(player, rank)
           .send(player);
       return false;
     } else if (!rank.hasRequirements(player)) { // check if they can afford it
       replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
+          .failIf(!message)
           .replaceRanks(player, rank, rankups.next(rank)), player, rank)
           .send(player);
       return false;
-    } else if (checkCooldown(player, rank)) {
+    } else if (message && checkCooldown(player, rank)) {
       return false;
     }
 
@@ -366,20 +384,27 @@ public class Rankup extends JavaPlugin {
   }
 
   public boolean checkPrestige(Player player) {
+    return checkPrestige(player, true);
+  }
+
+  public boolean checkPrestige(Player player, boolean message) {
     Prestige prestige = prestiges.getByPlayer(player);
     if (!prestige.isEligable(player)) { // check if in ladder
       getMessage(Message.NOT_HIGH_ENOUGH)
+          .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
     } else if (prestige.isLast()) { // check if they are at the highest rank
       getMessage(prestige, Message.NO_RANKUP)
+          .failIf(!message)
           .replaceRanks(player, prestige)
           .replaceFromTo(prestige)
           .send(player);
       return false;
     } else if (!prestige.hasRequirements(player)) { // check if they can afford it
       replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
+          .failIf(!message)
           .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
           .replaceFromTo(prestige)
           .send(player);
