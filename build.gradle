@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.2-beta.1'
+version '3.2'
 
 repositories {
     mavenCentral()
@@ -33,7 +33,7 @@ dependencies {
     compile('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
     }
-    compile 'me.clip:placeholderapi:2.9.+'
+    compile 'me.clip:placeholderapi:2.9.2'
     // if compiling this you will have to download and install mcMMO locally
     compile 'com.gmail.nossr50.mcMMO:mcMMO:1.6.0-SNAPSHOT'
 }

@@ -1,5 +1,5 @@
 name: Rankup
-version: 3.2-beta.1
+version: 3.2
 main: sh.okx.rankup.Rankup
 author: Okx
 depend: [Vault]

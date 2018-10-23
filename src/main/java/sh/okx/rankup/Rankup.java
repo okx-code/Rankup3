@@ -152,11 +152,13 @@ public class Rankup extends JavaPlugin {
   private void loadConfigs() {
     messages = loadConfig("messages.yml");
     config = loadConfig("config.yml");
-    refreshRanks();
+    Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::refreshRanks);
   }
 
   public void refreshRanks() {
     registerRequirements();
+    Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
+
     rankups = new Rankups(this, loadConfig("rankups.yml"));
     if(config.getBoolean("prestige")) {
       prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
@@ -191,8 +193,6 @@ public class Rankup extends JavaPlugin {
     operationRegistry.addOperation("none", new NoneOperation());
     operationRegistry.addOperation("one", new OneOperation());
     operationRegistry.addOperation("any", new AnyOperation());
-
-    Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
   }
 
   private void setupPermissions() {

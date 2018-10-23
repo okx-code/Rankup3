@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import sh.okx.rankup.requirements.Operation;
 import sh.okx.rankup.requirements.OperationRegistry;
+import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
 
 /**
@@ -25,6 +27,14 @@ public class RankupRegisterEvent extends Event {
 
   public OperationRegistry getOperationRegistry() {
     return plugin.getOperationRegistry();
+  }
+
+  public void addRequirement(Requirement requirement) {
+    plugin.getRequirementRegistry().addRequirement(requirement);
+  }
+
+  public void addOperation(String name, Operation operation) {
+    plugin.getOperationRegistry().addOperation(name, operation);
   }
 
   @Override
