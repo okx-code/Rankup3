@@ -41,8 +41,8 @@ import sh.okx.rankup.requirements.requirement.GroupRequirement;
 import sh.okx.rankup.requirements.requirement.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.MoneyRequirement;
-import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
 import sh.okx.rankup.requirements.requirement.PermissionRequirement;
+import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
 import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 
@@ -98,9 +98,9 @@ public class Rankup extends JavaPlugin {
     if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RanksCommand(this));
     }
-    if(prestiges != null) {
+    if (prestiges != null) {
       getCommand("prestige").setExecutor(new PrestigeCommand(this));
-      if(config.getBoolean("prestiges")) {
+      if (config.getBoolean("prestiges")) {
         getCommand("prestiges").setExecutor(new PrestigesCommand(this));
       }
     }
@@ -125,11 +125,11 @@ public class Rankup extends JavaPlugin {
     closeInventories();
     loadConfigs();
 
-    if(autoRankup != null) {
+    if (autoRankup != null) {
       autoRankup.cancel();
     }
     long time = config.getInt("autorankup-interval") * 60 * 20;
-    if(time > 0) {
+    if (time > 0) {
       autoRankup = new AutoRankup(this);
       autoRankup.runTaskTimer(this, time, time);
     }
@@ -171,7 +171,7 @@ public class Rankup extends JavaPlugin {
     Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
 
     rankups = new Rankups(this, loadConfig("rankups.yml"));
-    if(config.getBoolean("prestige")) {
+    if (config.getBoolean("prestige")) {
       prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
     }
   }
@@ -192,8 +192,8 @@ public class Rankup extends JavaPlugin {
     requirementRegistry.addRequirement(new GroupRequirement(this));
     requirementRegistry.addRequirement(new PermissionRequirement(this));
     requirementRegistry.addRequirement(new PlaceholderRequirement(this));
-    if(Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-      for(SkillType skill : SkillType.values()) {
+    if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
+      for (SkillType skill : SkillType.values()) {
         requirementRegistry.addRequirement(new McMMOSkillRequirement(this, skill));
       }
       requirementRegistry.addRequirement(new McMMOPowerLevelRequirement(this));
@@ -366,7 +366,7 @@ public class Rankup extends JavaPlugin {
 
     permissions.playerRemoveGroup(null, player, oldPrestige.getFrom());
     permissions.playerAddGroup(null, player, oldPrestige.getTo());
-    if(oldPrestige.getRank() != null) {
+    if (oldPrestige.getRank() != null) {
       permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
     }
     permissions.playerAddGroup(null, player, prestige.getRank());
@@ -406,12 +406,11 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (!prestige.hasRequirements(player)) { // check if they can afford it
-      if(message) {
-        replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
-            .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
-            .replaceFromTo(prestige)
-            .send(player);
-      }
+      replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
+          .failIf(!message)
+          .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
+          .replaceFromTo(prestige)
+          .send(player);
       return false;
     } else if (checkCooldown(player, prestige)) {
       return false;
@@ -421,12 +420,12 @@ public class Rankup extends JavaPlugin {
   }
 
   public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
-    if(builder instanceof EmptyMessageBuilder) {
+    if (builder instanceof EmptyMessageBuilder) {
       return builder;
     }
 
     Requirement money = rank.getRequirement("money");
-    if(money != null) {
+    if (money != null) {
       Double amount = null;
       if (sender instanceof Player && rank.isIn((Player) sender)) {
         if (economy != null) {
@@ -440,7 +439,7 @@ public class Rankup extends JavaPlugin {
         builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
       }
     }
-    if(sender instanceof Player) {
+    if (sender instanceof Player) {
       replaceRequirements(builder, (Player) sender, rank);
     }
     return builder;
@@ -452,7 +451,7 @@ public class Rankup extends JavaPlugin {
     for (Requirement requirement : rank.getRequirements()) {
       try {
         replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getValueDouble()));
-        if(rank.isIn(player)) {
+        if (rank.isIn(player)) {
           replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
           replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
               () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
@@ -479,7 +478,7 @@ public class Rankup extends JavaPlugin {
 
   public void sendHeaderFooter(CommandSender sender, Rank rank, Message type) {
     MessageBuilder builder;
-    if(rank == null) {
+    if (rank == null) {
       builder = getMessage(type)
           .failIfEmpty()
           .replace(Variable.PLAYER, sender.getName());
