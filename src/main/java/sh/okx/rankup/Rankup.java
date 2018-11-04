@@ -232,9 +232,8 @@ public class Rankup extends JavaPlugin {
         break;
       }
     }
-
-    String format = placeholders.getMoneyFormat().format(money);
-    return format + suffix;
+    
+    return placeholders.getMoneyFormat().format(money) + suffix;
   }
 
   public MessageBuilder getMessage(Rank rank, Message message) {
