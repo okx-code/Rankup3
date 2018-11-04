@@ -232,7 +232,7 @@ public class Rankup extends JavaPlugin {
         break;
       }
     }
-    
+
     return placeholders.getMoneyFormat().format(money) + suffix;
   }
 

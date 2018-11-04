@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.2.1-beta.1'
+version '3.2.1-beta.2'
 
 repositories {
     mavenCentral()
@@ -23,7 +23,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'org.mockito:mockito-core:2.+'
 
     compileOnly 'org.projectlombok:lombok:1.18.2'
     apt "org.projectlombok:lombok:1.18.2"
