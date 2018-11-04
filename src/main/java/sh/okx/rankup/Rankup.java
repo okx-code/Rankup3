@@ -21,6 +21,7 @@ import sh.okx.rankup.commands.RanksCommand;
 import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
+import sh.okx.rankup.messages.EmptyMessageBuilder;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.Variable;
@@ -319,8 +320,8 @@ public class Rankup extends JavaPlugin {
     Rank rank = rankups.getByPlayer(player);
     if (rank == null) { // check if in ladder
       getMessage(Message.NOT_IN_LADDER)
-          .replace(Variable.PLAYER, player.getName())
           .failIf(!message)
+          .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
     } else if (rank.isLast()) { // check if they are at the highest rank
@@ -339,10 +340,12 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (!rank.hasRequirements(player)) { // check if they can afford it
-      replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-          .failIf(!message)
-          .replaceRanks(player, rank, rankups.next(rank)), player, rank)
-          .send(player);
+      if (message) {
+        replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
+            .failIf(!message)
+            .replaceRanks(player, rank, rankups.next(rank)), player, rank)
+            .send(player);
+      }
       return false;
     } else if (message && checkCooldown(player, rank)) {
       return false;
@@ -403,11 +406,12 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (!prestige.hasRequirements(player)) { // check if they can afford it
-      replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
-          .failIf(!message)
-          .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
-          .replaceFromTo(prestige)
-          .send(player);
+      if(message) {
+        replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
+            .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
+            .replaceFromTo(prestige)
+            .send(player);
+      }
       return false;
     } else if (checkCooldown(player, prestige)) {
       return false;
@@ -417,6 +421,10 @@ public class Rankup extends JavaPlugin {
   }
 
   public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
+    if(builder instanceof EmptyMessageBuilder) {
+      return builder;
+    }
+
     Requirement money = rank.getRequirement("money");
     if(money != null) {
       Double amount = null;

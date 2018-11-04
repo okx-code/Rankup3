@@ -35,14 +35,19 @@ public class Gui implements InventoryHolder {
   public static Gui of(Player player, Rank oldRank, Rank rank, Rankup plugin) {
     ConfigurationSection config = plugin.getConfig().getConfigurationSection("gui");
     ItemStack[] items = new ItemStack[config.getInt("rows") * 9];
-    addItem(items, config.getConfigurationSection("rankup"), player, oldRank, rank);
-    addItem(items, config.getConfigurationSection("cancel"), player, oldRank, rank);
-    addItem(items, config.getConfigurationSection("fill"), player, oldRank, rank);
+
+    ItemStack fill = getItem(plugin, "rankup", player, oldRank, rank);
+    ItemStack cancel = getItem(plugin, "cancel", player, oldRank, rank);
+    ItemStack rankup = getItem(plugin, "rankup", player, oldRank, rank);
+
+    addItem(items, config.getConfigurationSection("rankup"), rankup);
+    addItem(items, config.getConfigurationSection("cancel"), cancel);
+    addItem(items, config.getConfigurationSection("fill"), fill);
 
     Gui gui = new Gui();
     gui.prestige = oldRank instanceof Prestige;
-    gui.rankup = getItem(config.getConfigurationSection("rankup"), player, oldRank, rank);
-    gui.cancel = getItem(config.getConfigurationSection("cancel"), player, oldRank, rank);
+    gui.rankup = rankup;
+    gui.cancel = cancel;
 
     Inventory inventory = Bukkit.createInventory(gui, items.length,
         plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
@@ -54,7 +59,8 @@ public class Gui implements InventoryHolder {
     return gui;
   }
 
-  private static ItemStack getItem(ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
+  private static ItemStack getItem(Rankup plugin, String name, Player player, Rank oldRank, Rank rank) {
+    ConfigurationSection section = plugin.getConfig().getConfigurationSection("gui").getConfigurationSection(name);
     boolean legacy = !Bukkit.getVersion().contains("1.13");
 
     String materialName = section.getString("material").toUpperCase();
@@ -81,26 +87,25 @@ public class Gui implements InventoryHolder {
 
     ItemMeta meta = item.getItemMeta();
     if (section.contains("lore")) {
-      meta.setLore(Arrays.stream(format(section.getString("lore"), player, oldRank, rank).split("\n"))
+      meta.setLore(Arrays.stream(format(plugin, section.getString("lore"), player, oldRank, rank).split("\n"))
           .map(string -> ChatColor.RESET + string)
           .collect(Collectors.toList()));
     }
     if (section.contains("name")) {
-      meta.setDisplayName(ChatColor.RESET + format(section.getString("name"), player, oldRank, rank));
+      meta.setDisplayName(ChatColor.RESET + format(plugin, section.getString("name"), player, oldRank, rank));
     }
     item.setItemMeta(meta);
 
     return item;
   }
 
-  private static String format(String message, Player player, Rank oldRank, Rank rank) {
-    return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
-        .replaceRanks(player, oldRank, rank)
+  private static String format(Rankup plugin, String message, Player player, Rank oldRank, Rank rank) {
+    return plugin.replaceMoneyRequirements(new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
+        .replaceRanks(player, oldRank, rank), player, oldRank)
         .toString();
   }
 
-  private static void addItem(ItemStack[] items, ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
-    ItemStack item = getItem(section, player, oldRank, rank);
+  private static void addItem(ItemStack[] items, ConfigurationSection section, ItemStack item) {
     if (section.getName().equalsIgnoreCase("fill")) {
       for (int i = 0; i < items.length; i++) {
         if (items[i] == null) {

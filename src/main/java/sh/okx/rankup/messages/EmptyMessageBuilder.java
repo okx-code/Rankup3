@@ -2,7 +2,7 @@ package sh.okx.rankup.messages;
 
 import org.bukkit.command.CommandSender;
 
-class EmptyMessageBuilder extends MessageBuilder {
+public class EmptyMessageBuilder extends MessageBuilder {
   EmptyMessageBuilder() {
     super(null);
   }
