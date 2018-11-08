@@ -98,7 +98,7 @@ public class Rankup extends JavaPlugin {
     if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RanksCommand(this));
     }
-    if (prestiges != null) {
+    if (config.getBoolean("prestige")) {
       getCommand("prestige").setExecutor(new PrestigeCommand(this));
       if (config.getBoolean("prestiges")) {
         getCommand("prestiges").setExecutor(new PrestigesCommand(this));
