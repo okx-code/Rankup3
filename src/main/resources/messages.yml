@@ -39,6 +39,7 @@ rankup:
 # prestige messages can also be customised
 prestige:
   requirements-not-met: "&cYou need {MONEY} money to prestige."
+  no-prestige: "&eYou are at the highest prestige."
 
   success-public: "&a{PLAYER} &ehas prestiged to: &d{RANK}"
   success-private: "&aYou have prestiged to: &d{RANK}"

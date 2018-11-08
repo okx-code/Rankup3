@@ -16,6 +16,7 @@ public enum Message {
   RANKS_CURRENT("rankup.list.current"),
   RANKS_INCOMPLETE("rankup.list.incomplete"),
   PRESTIGE_REQUIREMENTS_NOT_MET("prestige.requirements-not-met"),
+  PRESTIGE_NO_PRESTIGE("prestige.no-prestige"),
   PRESTIGES_HEADER("prestige.list.header"),
   PRESTIGES_FOOTER("prestige.list.footer"),
   PRESTIGES_COMPLETE("prestige.list.complete"),

@@ -398,7 +398,7 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (prestige.isLast()) { // check if they are at the highest rank
-      getMessage(prestige, Message.NO_RANKUP)
+      getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, prestige)
           .replaceFromTo(prestige)
