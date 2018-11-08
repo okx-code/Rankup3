@@ -405,7 +405,7 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (!prestige.hasRequirements(player)) { // check if they can afford it
-      replaceMoneyRequirements(getMessage(prestige, Message.REQUIREMENTS_NOT_MET)
+      replaceMoneyRequirements(getMessage(prestige, Message.PRESTIGE_REQUIREMENTS_NOT_MET)
           .failIf(!message)
           .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
           .replaceFromTo(prestige)

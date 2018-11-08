@@ -38,6 +38,8 @@ rankup:
     plural: "&cYou must wait {SECONDS_LEFT} more seconds to rankup again."
 # prestige messages can also be customised
 prestige:
+  requirements-not-met: "&cYou need {MONEY} money to prestige."
+
   success-public: "&a{PLAYER} &ehas prestiged to: &d{RANK}"
   success-private: "&aYou have prestiged to: &d{RANK}"
 
