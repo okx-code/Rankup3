@@ -40,12 +40,4 @@ public class RequirementRegistry {
     }
     return requirements;
   }
-
-  public void apply(Player player, Set<Requirement> requirements) {
-    for (Requirement requirement : requirements) {
-      if (requirement instanceof DeductibleRequirement) {
-        ((DeductibleRequirement) requirement).apply(player);
-      }
-    }
-  }
 }

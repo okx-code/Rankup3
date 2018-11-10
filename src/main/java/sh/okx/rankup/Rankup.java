@@ -38,8 +38,10 @@ import sh.okx.rankup.requirements.operation.AnyOperation;
 import sh.okx.rankup.requirements.operation.NoneOperation;
 import sh.okx.rankup.requirements.operation.OneOperation;
 import sh.okx.rankup.requirements.requirement.GroupRequirement;
-import sh.okx.rankup.requirements.requirement.McMMOPowerLevelRequirement;
-import sh.okx.rankup.requirements.requirement.McMMOSkillRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.MoneyRequirement;
 import sh.okx.rankup.requirements.requirement.PermissionRequirement;
 import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
@@ -197,6 +199,10 @@ public class Rankup extends JavaPlugin {
         requirementRegistry.addRequirement(new McMMOSkillRequirement(this, skill));
       }
       requirementRegistry.addRequirement(new McMMOPowerLevelRequirement(this));
+    }
+    if (Bukkit.getPluginManager().isPluginEnabled("AdvancedAchievements")) {
+      requirementRegistry.addRequirement(new AdvancedAchievementsAchievementRequirement(this));
+      requirementRegistry.addRequirement(new AdvancedAchievementsTotalRequirement(this));
     }
 
     operationRegistry = new OperationRegistry();

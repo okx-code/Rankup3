@@ -1,4 +1,4 @@
-package sh.okx.rankup.requirements.requirement;
+package sh.okx.rankup.requirements.requirement.mcmmo;
 
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;

@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.2.1-beta.4'
+version '3.3-beta'
 
 repositories {
     mavenCentral()
@@ -18,6 +18,9 @@ repositories {
     }
     maven {
         url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+    maven {
+        url 'https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/'
     }
 }
 
@@ -33,6 +36,7 @@ dependencies {
         exclude group: 'org.bukkit'
     }
     compile 'me.clip:placeholderapi:2.9.2'
+    compile 'com.hm.achievement:advanced-achievements-api:1.1.0'
     // if compiling this you will have to download and install mcMMO locally
     compile 'com.gmail.nossr50.mcMMO:mcMMO:1.6.0-SNAPSHOT'
 }

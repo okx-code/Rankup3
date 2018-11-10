@@ -15,16 +15,22 @@ public class GroupRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    OUTER:
-    for (String requiredGroup : getValueString().split(" ")) {
+    return getRemaining(player) < 1;
+  }
+
+  @Override
+  public double getRemaining(Player player) {
+    int matched = 0;
+    String[] groups = getValueString().split(" ");
+    for (String requiredGroup : groups) {
       for (String group : plugin.getPermissions().getPlayerGroups(null, player)) {
         if (group.equalsIgnoreCase(requiredGroup)) {
-          continue OUTER;
+          matched++;
+          break;
         }
       }
-      return false;
     }
-    return true;
+    return groups.length - matched;
   }
 
   @Override
