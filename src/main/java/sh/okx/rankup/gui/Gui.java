@@ -36,7 +36,7 @@ public class Gui implements InventoryHolder {
     ConfigurationSection config = plugin.getConfig().getConfigurationSection("gui");
     ItemStack[] items = new ItemStack[config.getInt("rows") * 9];
 
-    ItemStack fill = getItem(plugin, "rankup", player, oldRank, rank);
+    ItemStack fill = getItem(plugin, "fill", player, oldRank, rank);
     ItemStack cancel = getItem(plugin, "cancel", player, oldRank, rank);
     ItemStack rankup = getItem(plugin, "rankup", player, oldRank, rank);
 
