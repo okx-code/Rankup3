@@ -56,8 +56,8 @@ prestige:
     header: ""
     footer: ""
   cooldown:
-      singular: "&cYou must wait {SECONDS_LEFT} second to prestige again."
-      plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
+    singular: "&cYou must wait {SECONDS_LEFT} second to prestige again."
+    plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
 
 not-high-enough: "&cYou cannot prestige at your rank!"
 not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."

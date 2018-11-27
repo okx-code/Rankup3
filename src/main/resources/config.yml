@@ -1,5 +1,11 @@
 # this is used for letting you know that you need to update/change your config file
-version: 2
+version: 3
+
+# the ISO-639-1 locale to use for messages
+# all messages can be customised but this allows you to
+# choose messages that are already translated
+# locales can be found in the locale/ folder
+locale: en
 
 # interval (in minutes) to check to autorankup players
 # ranking up manually wil always be enabled
