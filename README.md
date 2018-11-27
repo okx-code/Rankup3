@@ -1,7 +1,7 @@
 # Rankup3
 
 This is the branch for new locale changes to Rankup.
-Locale names are in ISO-639-1 and in the folder [`src/main/resources/locale`](https://github.com/okx-code/Rankup3/tree/locale/src/main/resources/locale)
+Locale names are in ISO-639-1 and are in the folder [`src/main/resources/locale`](https://github.com/okx-code/Rankup3/tree/locale/src/main/resources/locale)
 
 When a locale is added, it should be saved [here](https://github.com/okx-code/Rankup3/blob/locale/src/main/java/sh/okx/rankup/Rankup.java#L193), ie through adding a line such as `saveLocale("es");`
 
@@ -31,7 +31,7 @@ rankup:
     plural: 
 prestige:
   requirements-not-met: 
-  no-prestige 
+  no-prestige: 
 
   success-public: 
   success-private: 
