@@ -1,5 +1,5 @@
 name: Rankup
-version: 3.3.2-beta
+version: 3.3.2-beta.1
 main: sh.okx.rankup.Rankup
 author: Okx
 depend: [Vault]
@@ -7,47 +7,47 @@ softdepend: [PlaceholderAPI, mcMMO, AdvancedAchievements]
 api-version: 1.13
 
 commands:
-    rankup:
-        permission: rankup.rankup
-        description: Rankup.
-    rankup3:
-        permission: rankup3.info
-        description: View Rankup version and perform some administrative commands.
-        # support the old command
-        aliases: [pru]
-    ranks:
-        permission: rankup.ranks
-        description: List all the ranks.
-    prestige:
-        permission: rankup.prestige
-        description: Prestige.
-    prestiges:
-        permission: rankup.prestiges
-        description: List all the prestiges.
+  rankup:
+    permission: rankup.rankup
+    description: Rankup.
+  rankup3:
+    permission: rankup3.info
+    description: View Rankup version and perform some administrative commands.
+    # support the old command
+    aliases: [pru]
+  ranks:
+    permission: rankup.ranks
+    description: List all the ranks.
+  prestige:
+    permission: rankup.prestige
+    description: Prestige.
+  prestiges:
+    permission: rankup.prestiges
+    description: List all the prestiges.
 permissions:
-    rankup.*:
-        children:
-            rankup.info: true
-            rankup.rankup: true
-            rankup.checkversion: true
-            rankup.ranks: true
-            rankup.reload: true
-            rankup.prestige: true
-            rankup.prestiges: true
-            rankup.auto: true
-    rankup.info:
-        default: true
-    rankup.rankup:
-        default: true
-    rankup.checkversion:
-        default: op
-    rankup.reload:
-        default: op
-    rankup.ranks:
-        default: true
-    rankup.prestige:
-        default: true
-    rankup.prestiges:
-        default: true
-    rankup.auto:
-        default: true
+  rankup.*:
+    children:
+      rankup.info: true
+      rankup.rankup: true
+      rankup.checkversion: true
+      rankup.ranks: true
+      rankup.reload: true
+      rankup.prestige: true
+      rankup.prestiges: true
+      rankup.auto: true
+  rankup.info:
+    default: true
+  rankup.rankup:
+    default: true
+  rankup.checkversion:
+    default: op
+  rankup.reload:
+    default: op
+  rankup.ranks:
+    default: true
+  rankup.prestige:
+    default: true
+  rankup.prestiges:
+    default: true
+  rankup.auto:
+    default: true

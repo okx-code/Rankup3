@@ -1,7 +1,6 @@
 package sh.okx.rankup.requirements;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Map;

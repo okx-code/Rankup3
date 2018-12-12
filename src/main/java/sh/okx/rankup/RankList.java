@@ -43,7 +43,7 @@ public class RankList<T extends Rank> {
     T t = getFirst();
     do {
       t = next(t);
-    } while(!t.isLast());
+    } while (!t.isLast());
     return t;
   }
 

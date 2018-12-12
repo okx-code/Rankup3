@@ -1,7 +1,6 @@
 package sh.okx.rankup;
 
 import com.gmail.nossr50.datatypes.skills.SkillType;
-import com.google.common.base.Preconditions;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -15,7 +14,11 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import sh.okx.rankup.commands.*;
+import sh.okx.rankup.commands.InfoCommand;
+import sh.okx.rankup.commands.PrestigeCommand;
+import sh.okx.rankup.commands.PrestigesCommand;
+import sh.okx.rankup.commands.RanksCommand;
+import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
 import sh.okx.rankup.messages.EmptyMessageBuilder;
@@ -30,22 +33,26 @@ import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.OperationRegistry;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
-import sh.okx.rankup.requirements.operation.*;
-import sh.okx.rankup.requirements.requirement.*;
-import sh.okx.rankup.requirements.requirement.advancedachievements.*;
-import sh.okx.rankup.requirements.requirement.mcmmo.*;
+import sh.okx.rankup.requirements.operation.AllOperation;
+import sh.okx.rankup.requirements.operation.AnyOperation;
+import sh.okx.rankup.requirements.operation.NoneOperation;
+import sh.okx.rankup.requirements.operation.OneOperation;
+import sh.okx.rankup.requirements.requirement.GroupRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyRequirement;
+import sh.okx.rankup.requirements.requirement.PermissionRequirement;
+import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
+import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
+import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
@@ -318,8 +325,8 @@ public class Rankup extends JavaPlugin {
 
     oldRank.applyRequirements(player);
 
-    permissions.playerRemoveGroup(null, player, oldRank.getRank());
-    permissions.playerAddGroup(null, player, rank.getRank());
+    permissions.playerRemoveGroup(player, oldRank.getRank());
+    permissions.playerAddGroup(player, rank.getRank());
 
     getMessage(oldRank, Message.SUCCESS_PUBLIC)
         .failIfEmpty()
@@ -393,12 +400,12 @@ public class Rankup extends JavaPlugin {
 
     oldPrestige.applyRequirements(player);
 
-    permissions.playerRemoveGroup(null, player, oldPrestige.getFrom());
-    permissions.playerAddGroup(null, player, oldPrestige.getTo());
+    permissions.playerRemoveGroup(player, oldPrestige.getFrom());
+    permissions.playerAddGroup(player, oldPrestige.getTo());
     if (oldPrestige.getRank() != null) {
-      permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
+      permissions.playerRemoveGroup(player, oldPrestige.getRank());
     }
-    permissions.playerAddGroup(null, player, prestige.getRank());
+    permissions.playerAddGroup(player, prestige.getRank());
 
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()

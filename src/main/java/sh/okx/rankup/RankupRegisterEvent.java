@@ -21,6 +21,10 @@ public class RankupRegisterEvent extends Event {
   @Getter
   private final Rankup plugin;
 
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
+
   public RequirementRegistry getRequirementRegistry() {
     return plugin.getRequirementRegistry();
   }
@@ -39,10 +43,6 @@ public class RankupRegisterEvent extends Event {
 
   @Override
   public HandlerList getHandlers() {
-    return handlers;
-  }
-
-  public static HandlerList getHandlerList() {
     return handlers;
   }
 }

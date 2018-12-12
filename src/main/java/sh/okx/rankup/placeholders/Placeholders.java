@@ -2,28 +2,20 @@ package sh.okx.rankup.placeholders;
 
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
-import sh.okx.rankup.prestige.Prestige;
-import sh.okx.rankup.prestige.Prestiges;
-import sh.okx.rankup.ranks.Rank;
-import sh.okx.rankup.ranks.Rankups;
-import sh.okx.rankup.requirements.Requirement;
 
 import java.text.DecimalFormat;
-import java.util.function.Function;
 
 public class Placeholders {
   private final Rankup plugin;
-  private boolean registered;
   @Getter
   private final DecimalFormat moneyFormat;
   @Getter
   private final DecimalFormat percentFormat;
   @Getter
   private final DecimalFormat simpleFormat;
+  private boolean registered;
 
   public Placeholders(Rankup plugin) {
     this.plugin = plugin;
@@ -42,7 +34,7 @@ public class Placeholders {
   }
 
   public void unregister() {
-    if(registered) {
+    if (registered) {
       PlaceholderAPI.unregisterPlaceholderHook("rankup");
     }
   }

@@ -18,7 +18,7 @@ public class PlaceholderRequirement extends Requirement {
   public boolean check(Player player) {
     String[] parts = getValueString().split(" ");
     String parsed = PlaceholderAPI.setPlaceholders(player, parts[0]);
-    if(!PlaceholderAPI.containsPlaceholders(parts[0]) || parsed.equals(parts[0])) {
+    if (!PlaceholderAPI.containsPlaceholders(parts[0]) || parsed.equals(parts[0])) {
       throw new IllegalArgumentException(parts[0] + " is not a PlaceholderAPI placeholder!");
     } else if (parts.length < 3) {
       throw new IllegalArgumentException("Placeholder requirements must be in the form %placeholder% <operation> string");
@@ -26,7 +26,7 @@ public class PlaceholderRequirement extends Requirement {
     String value = parts[2];
 
     // string operations
-    switch(parts[1]) {
+    switch (parts[1]) {
       case "=":
         return parsed.equals(value);
     }
@@ -34,7 +34,7 @@ public class PlaceholderRequirement extends Requirement {
     // numeric operations
     double p = Double.parseDouble(parsed);
     double v = Double.parseDouble(value);
-    switch(parts[1]) {
+    switch (parts[1]) {
       case ">":
         return p > v;
       case ">=":

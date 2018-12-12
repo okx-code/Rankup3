@@ -13,7 +13,7 @@ public class Prestiges extends RankList<Prestige> {
   @Override
   public Prestige getByPlayer(Player player) {
     Prestige prestige = super.getByPlayer(player);
-    if(prestige == null) {
+    if (prestige == null) {
       return getFirst();
     } else {
       return prestige;

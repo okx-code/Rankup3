@@ -35,8 +35,8 @@ Cexample:
   rank: 'C'
   next: 'Dexample'
   requirements:
-      money: 5000
-      xp-level: 2
+    money: 5000
+    xp-level: 2
   # you can have a custom messages for each rank
   # you can use this to list the requirements needed.
   rankup:
