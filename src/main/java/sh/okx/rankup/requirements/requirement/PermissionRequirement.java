@@ -22,8 +22,8 @@ public class PermissionRequirement extends Requirement {
   public double getRemaining(Player player) {
     int matched = 0;
     String[] permissions = getValueString().split(" ");
-    for(String permission : permissions) {
-      if(player.hasPermission(permission)) {
+    for (String permission : permissions) {
+      if (player.hasPermission(permission)) {
         matched++;
       }
     }

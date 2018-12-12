@@ -31,7 +31,7 @@ public class RankupExpansion extends PlaceholderExpansion {
     Prestiges prestiges = plugin.getPrestiges();
     Prestige prestige = null;
     Prestige nextPrestige = null;
-    if(prestiges != null) {
+    if (prestiges != null) {
       prestige = prestiges.getByPlayer(player);
       nextPrestige = prestiges.next(prestige);
     }

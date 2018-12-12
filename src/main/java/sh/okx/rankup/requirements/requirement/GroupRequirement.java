@@ -23,7 +23,7 @@ public class GroupRequirement extends Requirement {
     int matched = 0;
     String[] groups = getValueString().split(" ");
     for (String requiredGroup : groups) {
-      for (String group : plugin.getPermissions().getPlayerGroups(null, player)) {
+      for (String group : plugin.getPermissions().getPlayerGroups(player)) {
         if (group.equalsIgnoreCase(requiredGroup)) {
           matched++;
           break;

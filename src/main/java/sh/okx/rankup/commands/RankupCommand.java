@@ -36,7 +36,7 @@ public class RankupCommand implements CommandExecutor {
       return true;
     }
     Rank next = rankups.next(rank);
-    if(next == null) {
+    if (next == null) {
       plugin.getLogger().severe("Rankup from " + rank.getName() + " to " + rank.getNext() +
           " is defined but " + rank.getNext() + " does not exist.");
       plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(player);

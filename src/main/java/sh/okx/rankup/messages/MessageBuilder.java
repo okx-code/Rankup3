@@ -39,11 +39,11 @@ public class MessageBuilder {
   }
 
   public MessageBuilder replaceFirstPrestige(Rank rank, Prestiges prestiges, String with) {
-     if(prestiges != null && prestiges.getFirst().equals(rank)) {
-       replace(Variable.OLD_RANK, with);
-       replace(Variable.OLD_RANK_NAME, with);
-     }
-     return this;
+    if (prestiges != null && prestiges.getFirst().equals(rank)) {
+      replace(Variable.OLD_RANK, with);
+      replace(Variable.OLD_RANK_NAME, with);
+    }
+    return this;
   }
 
   public MessageBuilder replaceRanks(CommandSender player, Rank rank) {
@@ -72,7 +72,7 @@ public class MessageBuilder {
   }
 
   public MessageBuilder replaceFromTo(Rank rank) {
-    if(rank instanceof Prestige) {
+    if (rank instanceof Prestige) {
       Prestige prestige = (Prestige) rank;
       replace(Variable.FROM, prestige.getFrom());
       replace(Variable.TO, prestige.getTo());

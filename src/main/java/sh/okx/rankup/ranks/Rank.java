@@ -11,7 +11,6 @@ import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Operation;
 import sh.okx.rankup.requirements.Requirement;
-import sh.okx.rankup.requirements.operation.AllOperation;
 
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +39,7 @@ public class Rank {
     if (requirementsSection != null) {
       requirements = plugin.getRequirementRegistry().getRequirements(requirementsSection);
       operation = plugin.getOperationRegistry().getOperation(section.getString("operation"));
-    } else if(section.contains("next")) {
+    } else if (section.contains("next")) {
       plugin.getLogger().severe("Rank " + section.getName() + " has no requirements.");
       return null;
     }
@@ -61,7 +60,7 @@ public class Rank {
   }
 
   public boolean isIn(Player player) {
-    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
+    String[] groups = plugin.getPermissions().getPlayerGroups(player);
     for (String group : groups) {
       if (group.equalsIgnoreCase(rank)) {
         return true;

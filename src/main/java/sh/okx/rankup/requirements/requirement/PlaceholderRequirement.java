@@ -14,44 +14,19 @@ public class PlaceholderRequirement extends Requirement {
     super(clone);
   }
 
-  private double getValue(Player player) {
-    String[] parts = getValueString().split(" ", 2);
-    String parsed = PlaceholderAPI.setPlaceholders(player, parts[0]);
-    if(!PlaceholderAPI.containsPlaceholders(parts[0]) || parsed.equals(parts[0])) {
-      plugin.getLogger().severe(parts[0] + " is not a PlaceholderAPI placeholder!");
-      return -1;
-    }
-    double value;
-    try {
-      value = Double.parseDouble(parsed);
-    } catch(NumberFormatException ex) {
-      plugin.getLogger().severe("Parsed placeholder '" +parsed + "' is not a valid number");
-      return -1;
-    }
-    return value;
-  }
-
-  private double getNeeded() {
-    String needed = getValueString().split(" ", 2)[1];
-    try {
-      return Double.parseDouble(needed);
-    } catch(NumberFormatException e) {
-      plugin.getLogger().severe("Needed '" + needed + "' is not a valid number!");
-      return -1;
-    }
-  }
-
   @Override
   public boolean check(Player player) {
     String[] parts = getValueString().split(" ");
     String parsed = PlaceholderAPI.setPlaceholders(player, parts[0]);
-    if(!PlaceholderAPI.containsPlaceholders(parts[0]) || parsed.equals(parts[0])) {
+    if (!PlaceholderAPI.containsPlaceholders(parts[0]) || parsed.equals(parts[0])) {
       throw new IllegalArgumentException(parts[0] + " is not a PlaceholderAPI placeholder!");
+    } else if (parts.length < 3) {
+      throw new IllegalArgumentException("Placeholder requirements must be in the form %placeholder% <operation> string");
     }
     String value = parts[2];
 
     // string operations
-    switch(parts[1]) {
+    switch (parts[1]) {
       case "=":
         return parsed.equals(value);
     }
@@ -59,7 +34,7 @@ public class PlaceholderRequirement extends Requirement {
     // numeric operations
     double p = Double.parseDouble(parsed);
     double v = Double.parseDouble(value);
-    switch(parts[1]) {
+    switch (parts[1]) {
       case ">":
         return p > v;
       case ">=":

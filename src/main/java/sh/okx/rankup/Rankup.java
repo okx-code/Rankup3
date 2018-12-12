@@ -38,18 +38,19 @@ import sh.okx.rankup.requirements.operation.AnyOperation;
 import sh.okx.rankup.requirements.operation.NoneOperation;
 import sh.okx.rankup.requirements.operation.OneOperation;
 import sh.okx.rankup.requirements.requirement.GroupRequirement;
-import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
-import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
-import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
-import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.MoneyRequirement;
 import sh.okx.rankup.requirements.requirement.PermissionRequirement;
 import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
 import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -90,12 +91,16 @@ public class Rankup extends JavaPlugin {
     reload();
 
     Metrics metrics = new Metrics(this);
-    metrics.addCustomChart(new Metrics.SimplePie("confirmation") {
-      @Override
-      public String getValue() {
-        return getConfig().getString("confirmation.type");
+    metrics.addCustomChart(new Metrics.SimplePie("confirmation",
+        () -> config.getString("confirmation.type")));
+    metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
+      Map<String, Integer> map = new HashMap<>();
+      addAll(map, rankups);
+      if (prestiges != null) {
+        addAll(map, prestiges);
       }
-    });
+      return map;
+    }));
 
     if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RanksCommand(this));
@@ -136,7 +141,7 @@ public class Rankup extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
-    if (config.getInt("version") < 2) {
+    if (config.getInt("version") < 3) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
@@ -144,6 +149,15 @@ public class Rankup extends JavaPlugin {
       getLogger().severe("If that does not work, restart your server.");
       getLogger().severe("You may then copy in your config values from the old config.");
       getLogger().severe("Check the changelog on the Rankup spigot page to see the changes.");
+    }
+  }
+
+  private void addAll(Map<String, Integer> map, RankList<? extends Rank> ranks) {
+    for (Rank rank : ranks.ranks) {
+      for (Requirement requirement : rank.getRequirements()) {
+        String name = requirement.getName();
+        map.put(name, map.getOrDefault(name, 0) + 1);
+      }
     }
   }
 
@@ -163,8 +177,13 @@ public class Rankup extends JavaPlugin {
   }
 
   private void loadConfigs() {
-    messages = loadConfig("messages.yml");
+    saveLocales();
+
     config = loadConfig("config.yml");
+    String locale = config.getString("locale");
+    File localeFile = new File(new File(getDataFolder(), "locale"), locale + ".yml");
+    messages = YamlConfiguration.loadConfiguration(localeFile);
+
     Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::refreshRanks);
   }
 
@@ -175,6 +194,18 @@ public class Rankup extends JavaPlugin {
     rankups = new Rankups(this, loadConfig("rankups.yml"));
     if (config.getBoolean("prestige")) {
       prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
+    }
+  }
+
+  private void saveLocales() {
+    saveLocale("en");
+  }
+
+  private void saveLocale(String locale) {
+    String name = "locale/" + locale + ".yml";
+    File file = new File(getDataFolder(), name);
+    if (!file.exists()) {
+      saveResource("locale/" + locale + ".yml", false);
     }
   }
 
@@ -294,8 +325,8 @@ public class Rankup extends JavaPlugin {
 
     oldRank.applyRequirements(player);
 
-    permissions.playerRemoveGroup(null, player, oldRank.getRank());
-    permissions.playerAddGroup(null, player, rank.getRank());
+    permissions.playerRemoveGroup(player, oldRank.getRank());
+    permissions.playerAddGroup(player, rank.getRank());
 
     getMessage(oldRank, Message.SUCCESS_PUBLIC)
         .failIfEmpty()
@@ -369,12 +400,12 @@ public class Rankup extends JavaPlugin {
 
     oldPrestige.applyRequirements(player);
 
-    permissions.playerRemoveGroup(null, player, oldPrestige.getFrom());
-    permissions.playerAddGroup(null, player, oldPrestige.getTo());
+    permissions.playerRemoveGroup(player, oldPrestige.getFrom());
+    permissions.playerAddGroup(player, oldPrestige.getTo());
     if (oldPrestige.getRank() != null) {
-      permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
+      permissions.playerRemoveGroup(player, oldPrestige.getRank());
     }
-    permissions.playerAddGroup(null, player, prestige.getRank());
+    permissions.playerAddGroup(player, prestige.getRank());
 
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
