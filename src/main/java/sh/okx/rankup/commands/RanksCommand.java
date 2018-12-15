@@ -35,8 +35,8 @@ public class RanksCommand implements CommandExecutor {
         // helpful message to say there is a null rankup
         if (next == null) {
           plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(sender);
-          plugin.getLogger().severe("Rankup from " + rank.getName() + " to " + rank.getNext() +
-              " is defined but " + rank.getNext() + " does not exist.");
+          plugin.getLogger().severe("Rankup from " + rank.getName() + " to " + rank.getNext()
+              + " is defined but " + rank.getNext() + " does not exist.");
           return true;
         }
 
