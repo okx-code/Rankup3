@@ -325,8 +325,8 @@ public class Rankup extends JavaPlugin {
 
     oldRank.applyRequirements(player);
 
-    permissions.playerRemoveGroup(player, oldRank.getRank());
-    permissions.playerAddGroup(player, rank.getRank());
+    permissions.playerRemoveGroup(null, player, oldRank.getRank());
+    permissions.playerAddGroup(null, player, rank.getRank());
 
     getMessage(oldRank, Message.SUCCESS_PUBLIC)
         .failIfEmpty()
@@ -400,12 +400,12 @@ public class Rankup extends JavaPlugin {
 
     oldPrestige.applyRequirements(player);
 
-    permissions.playerRemoveGroup(player, oldPrestige.getFrom());
-    permissions.playerAddGroup(player, oldPrestige.getTo());
+    permissions.playerRemoveGroup(null, player, oldPrestige.getFrom());
+    permissions.playerAddGroup(null, player, oldPrestige.getTo());
     if (oldPrestige.getRank() != null) {
-      permissions.playerRemoveGroup(player, oldPrestige.getRank());
+      permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
     }
-    permissions.playerAddGroup(player, prestige.getRank());
+    permissions.playerAddGroup(null, player, prestige.getRank());
 
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
