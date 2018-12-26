@@ -1,0 +1,41 @@
+---
+rankup:
+  requirements-not-met: "&cYou need {MONEY} money to rankup."
+  no-rankup: "&eYou are at the highest rank."
+  success-public: "&a{PLAYER} &ehas ranked up to: &d{RANK}"
+  success-private: "&aYou have ranked up to: &d{RANK}"
+  confirmation: |-
+    &eAre you sure you want to rankup to &a{RANK}&e?
+    &eType &c/rankup &eagain to confirm.
+  title: "Rankup to {RANK}"
+  must-prestige: "&cYou must prestige to /rankup further!"
+  list:
+    complete: "&7{OLD_RANK} &8» &7{RANK}"
+    current: "&c{OLD_RANK} &e» &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e» &r{RANK}"
+    header: ""
+    footer: ""
+  cooldown:
+    singular: "&cYou must wait {SECONDS_LEFT} more second to rankup again."
+    plural: "&cYou must wait {SECONDS_LEFT} more seconds to rankup again."
+prestige:
+  requirements-not-met: "&cYou need {MONEY} money to prestige."
+  no-prestige: "&eYou are at the highest prestige."
+  success-public: "&a{PLAYER} &ehas prestiged to: &d{RANK}"
+  success-private: "&aYou have prestiged to: &d{RANK}"
+  confirmation: |-
+    &eAre you sure you want to prestige to &a{RANK}&e?
+    &eType &c/prestige &eagain to confirm.
+  title: "Prestige to {RANK}"
+  list:
+    complete: "&7{OLD_RANK} &8» &7{RANK}"
+    current: "&c{OLD_RANK} &e» &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e» &r{RANK}"
+    header: ""
+    footer: ""
+  cooldown:
+    singular: "&cYou must wait {SECONDS_LEFT} second to prestige again."
+    plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
+not-high-enough: "&cYou cannot prestige at your rank!"
+not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."
+invalid-rankup: "Invalid rankup defined in config, please check console."
