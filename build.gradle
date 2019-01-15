@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'net.ltgt.apt' version '0.10'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 
 group 'sh.okx'
@@ -26,10 +26,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    compileOnly 'org.projectlombok:lombok:1.18.2'
-    apt "org.projectlombok:lombok:1.18.2"
-
     compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
 
     compile('net.milkbowl.vault:VaultAPI:1.6') {

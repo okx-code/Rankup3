@@ -6,7 +6,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.ranks.Rank;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -39,12 +42,15 @@ public class RankList<T extends Rank> {
     return null;
   }
 
-  public T getLast() {
+  public List<T> getOrderedList() {
+    List<T> list = new ArrayList<>();
     T t = getFirst();
+    list.add(t);
     do {
       t = next(t);
+      list.add(t);
     } while (!t.isLast());
-    return t;
+    return list;
   }
 
   public T getByName(String name) {
@@ -57,10 +63,14 @@ public class RankList<T extends Rank> {
   }
 
   public T getByPlayer(Player player) {
-    return ranks.stream()
-        .filter(rank -> rank.isIn(player))
-        .findFirst()
-        .orElse(null);
+    List<T> list = getOrderedList();
+    Collections.reverse(list);
+    for (T t : list) {
+      if (t.isIn(player)) {
+        return t;
+      }
+    }
+    return null;
   }
 
   public T next(T rank) {
