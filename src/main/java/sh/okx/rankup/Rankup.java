@@ -1,6 +1,6 @@
 package sh.okx.rankup;
 
-import com.gmail.nossr50.datatypes.skills.SkillType;
+import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -180,7 +180,7 @@ public class Rankup extends JavaPlugin {
     saveLocales();
 
     config = loadConfig("config.yml");
-    String locale = config.getString("locale");
+    String locale = config.getString("locale", "en");
     File localeFile = new File(new File(getDataFolder(), "locale"), locale + ".yml");
     messages = YamlConfiguration.loadConfiguration(localeFile);
 
@@ -226,7 +226,7 @@ public class Rankup extends JavaPlugin {
     requirementRegistry.addRequirement(new PermissionRequirement(this));
     requirementRegistry.addRequirement(new PlaceholderRequirement(this));
     if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-      for (SkillType skill : SkillType.values()) {
+      for (PrimarySkillType skill : PrimarySkillType.values()) {
         requirementRegistry.addRequirement(new McMMOSkillRequirement(this, skill));
       }
       requirementRegistry.addRequirement(new McMMOPowerLevelRequirement(this));
