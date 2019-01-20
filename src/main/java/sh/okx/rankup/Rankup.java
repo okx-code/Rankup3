@@ -1,6 +1,5 @@
 package sh.okx.rankup;
 
-import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -47,6 +46,7 @@ import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchie
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillUtil;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -219,14 +219,16 @@ public class Rankup extends JavaPlugin {
 
   private void registerRequirements() {
     requirementRegistry = new RequirementRegistry();
-    requirementRegistry.addRequirement(new MoneyRequirement(this));
+    if (economy != null) {
+      requirementRegistry.addRequirement(new MoneyRequirement(this));
+    }
     requirementRegistry.addRequirement(new XpLevelRequirement(this));
     requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this));
     requirementRegistry.addRequirement(new GroupRequirement(this));
     requirementRegistry.addRequirement(new PermissionRequirement(this));
     requirementRegistry.addRequirement(new PlaceholderRequirement(this));
     if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-      for (PrimarySkillType skill : PrimarySkillType.values()) {
+      for (String skill : McMMOSkillUtil.getInstance().getSkills()) {
         requirementRegistry.addRequirement(new McMMOSkillRequirement(this, skill));
       }
       requirementRegistry.addRequirement(new McMMOPowerLevelRequirement(this));

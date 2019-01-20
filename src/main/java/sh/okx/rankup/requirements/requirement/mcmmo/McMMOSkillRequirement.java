@@ -1,16 +1,14 @@
 package sh.okx.rankup.requirements.requirement.mcmmo;
 
-import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
-import com.gmail.nossr50.util.player.UserManager;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.Requirement;
 
 public class McMMOSkillRequirement extends Requirement {
-  private PrimarySkillType skill;
+  private String skill;
 
-  public McMMOSkillRequirement(Rankup plugin, PrimarySkillType skill) {
-    super(plugin, "mcmmo-" + skill.toString().toLowerCase());
+  public McMMOSkillRequirement(Rankup plugin, String skill) {
+    super(plugin, "mcmmo-" + skill.toLowerCase());
     this.skill = skill;
   }
 
@@ -26,7 +24,7 @@ public class McMMOSkillRequirement extends Requirement {
 
   @Override
   public double getRemaining(Player player) {
-    return Math.max(0, getValueInt() - UserManager.getPlayer(player).getSkillLevel(skill));
+    return Math.max(0, getValueInt() - McMMOSkillUtil.getInstance().getSkillLevel(player, skill));
   }
 
   @Override
