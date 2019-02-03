@@ -1,0 +1,67 @@
+# As mensagens nessa sessão podem ser customizadas para cada rankup em rankups.yml.
+rankup:
+  requirements-not-met: "&cVocê {MONEY} para poder dar subir de rank."
+  no-rankup: "&eVocê já está no maior rank."
+  # coloque como uma String vazia, ex: success-public: ""
+  # para ocultar a mensagem.
+  success-public: "&a{PLAYER} &eacaba de subir para: &d{RANK}"
+  success-private: "&aVocê subiu para: &d{RANK}"
+  # Utilizado para a confirmação via mensagem.
+  confirmation: |-
+    &eVocê tem certeza que deseja subir para &a{RANK}&e?
+    &eDigite &c/rankup &enovamente para confirmar.
+  # Utilizado para confirmação em GUI.
+  title: "Rankup to {RANK}"
+
+  must-prestige: "&cVocê deve subir de prestígio para dar /rankup a frente!"
+
+  # Você pode (e deveria) substituir isto em rankups.yml
+  # para mostrar os requerimentos específicos para cada rank.
+  # contudo, se você está apenas usando dinheiro ou não precisa mudar as mensagens por rank, você pode usar qualquer combinação de:
+  # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {MONEY} e {MONEY_NEEDED} são diferentes de {AMOUNT money} e {AMOUNT_NEEDED money} pois eles usam diferentes formatos.
+  # here is an example of showing the requirements for just money:
+  # Segue um exemplo de como mostrar um requerimento para apenas dinheiro.
+  #list:
+  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
+  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
+  list:
+    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
+    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    # Uma string vázia desativa o cabeçalho/rodapé
+    header: ""
+    footer: ""
+  # sent when a player tries to rankup when they are on cooldown.
+  # Enviado quando um jogador tenta dar rankup enquanto ele está em um cooldown (tempo de espera entre comandos, freeze).
+  cooldown:
+    singular: "&cVocê precisa esperar {SECONDS_LEFT} segundo para dar rankup novamente."
+    plural: "&cVocê precisa {SECONDS_LEFT} segundos para dar rankup novamente."
+# prestige messages can also be customised
+# Mensagens de prestígio também podem ser customizadas
+prestige:
+  requirements-not-met: "&cVocê precisa {MONEY} para dar prestigiar."
+  no-prestige: "&eVocê está no maior prestígio."
+
+  success-public: "&a{PLAYER} &esubiu de prestígio para: &d{RANK}"
+  success-private: "&aVocê subiu de prestígio para: &d{RANK}"
+
+  confirmation: |-
+    &eVocê tem certeza que deseja subir de prestígio para &a{RANK}&e?
+    &eDigite &c/prestige &enovamente para confimar.
+  title: "Subiu de prestígio para {RANK}"
+
+  list:
+    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
+    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    header: ""
+    footer: ""
+  cooldown:
+    singular: "&cVocê deve esperar {SECONDS_LEFT} segundo para subir de prestígio novamente."
+    plural: "&cVocê deve esperar {SECONDS_LEFT} segundos para subir de prestígio novamente."
+
+not-high-enough: "&cVocê não pode subir de prestígio nesse rank!"
+not-in-ladder: "&cDesculpa, não conseguimos achar nenhum rank para você subir."
+invalid-rankup: "Rankup inválido definido na config, por favor confira o console."
