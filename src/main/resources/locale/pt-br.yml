@@ -33,7 +33,7 @@ rankup:
     # Uma string vázia desativa o cabeçalho/rodapé
     header: ""
     footer: ""
-  # sent when a player tries to rankup when they are on cooldown
+  # sent when a player tries to rankup when they are on cooldown.
   # Enviado quando um jogador tenta dar rankup enquanto ele está em um cooldown (tempo de espera entre comandos, freeze).
   cooldown:
     singular: "&cVocê precisa esperar {SECONDS_LEFT} segundo para dar rankup novamente."
