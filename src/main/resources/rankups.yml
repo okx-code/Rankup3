@@ -4,6 +4,7 @@
 # eg "A" instead of "Aexample".
 Aexample:
   # the name of the rank in your permissions plugin
+  # players have to be in this rank to rankup
   rank: 'A'
   # the next rank a player can rank up to.
   # this must be the name of the configuration section, not the rank name.
@@ -25,6 +26,7 @@ Aexample:
   # none: no requirements
   operation: all
   # the console will run these commands when a player ranks up
+  # rankup will change the group for you, commands are not needed for that
   #commands:
   # this will run when a player ranks up from A to B.
   #- 'say {PLAYER} well done for ranking up from {OLD_RANK} to {RANK}!'

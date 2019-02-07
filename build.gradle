@@ -4,11 +4,10 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.4.1'
+version '3.4.2-beta'
 
 repositories {
     mavenCentral()
-    mavenLocal()
     jcenter()
     maven {
         url 'http://nexus.hc.to/content/repositories/pub_releases'
@@ -16,6 +15,7 @@ repositories {
     maven {
         url 'https://hub.spigotmc.org/nexus/content/groups/public/'
     }
+    mavenLocal()
     maven {
         url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
@@ -34,5 +34,5 @@ dependencies {
     compile 'me.clip:placeholderapi:2.9.2'
     compile 'com.hm.achievement:advanced-achievements-api:1.1.0'
     // if compiling this you will have to download and install mcMMO locally
-    compile 'com.gmail.nossr50.mcMMO:mcMMO:2.1.0-SNAPSHOT'
+    compile 'com.gmail.nossr50.mcMMO:mcMMO:2.2.0-SNAPSHOT'
 }

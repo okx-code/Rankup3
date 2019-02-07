@@ -13,11 +13,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import sh.okx.rankup.commands.InfoCommand;
-import sh.okx.rankup.commands.PrestigeCommand;
-import sh.okx.rankup.commands.PrestigesCommand;
-import sh.okx.rankup.commands.RanksCommand;
-import sh.okx.rankup.commands.RankupCommand;
+import sh.okx.rankup.commands.*;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
 import sh.okx.rankup.messages.EmptyMessageBuilder;
@@ -32,21 +28,11 @@ import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.OperationRegistry;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
-import sh.okx.rankup.requirements.operation.AllOperation;
-import sh.okx.rankup.requirements.operation.AnyOperation;
-import sh.okx.rankup.requirements.operation.NoneOperation;
-import sh.okx.rankup.requirements.operation.OneOperation;
-import sh.okx.rankup.requirements.requirement.GroupRequirement;
-import sh.okx.rankup.requirements.requirement.MoneyRequirement;
-import sh.okx.rankup.requirements.requirement.PermissionRequirement;
-import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
-import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
+import sh.okx.rankup.requirements.operation.*;
+import sh.okx.rankup.requirements.requirement.*;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
-import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
-import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
-import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
-import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
-import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillUtil;
+import sh.okx.rankup.requirements.requirement.advancedachievements.*;
+import sh.okx.rankup.requirements.requirement.mcmmo.*;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -363,15 +349,6 @@ public class Rankup extends JavaPlugin {
           .send(player);
       return false;
     } else if (rank.isLast()) { // check if they are at the highest rank
-//      if(prestiges != null) {
-//        Prestige prestige = prestiges.getByPlayer(player);
-//        if(prestige.isLast()) {
-//          getMessage(rank, Message.NO_RANKUP)
-//              .failIf(!message)
-//              .replaceRanks(player, prestige)
-//              .send(player);
-//        }
-//      }
       getMessage(rank, prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, rank)

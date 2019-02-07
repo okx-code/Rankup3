@@ -59,7 +59,7 @@ public class RankList<T extends Rank> {
         return rank;
       }
     }
-    return null;
+    throw new RuntimeException("Invalid rank: " + name);
   }
 
   public T getByPlayer(Player player) {
@@ -83,7 +83,6 @@ public class RankList<T extends Rank> {
         return nextRank;
       }
     }
-    // this shouldn't happen but whatever
-    return null;
+    throw new RuntimeException(rank.getName() + " has an invalid next rank");
   }
 }
