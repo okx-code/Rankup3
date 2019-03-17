@@ -50,10 +50,10 @@ public class Gui implements InventoryHolder {
     gui.cancel = cancel;
 
     Inventory inventory = Bukkit.createInventory(gui, items.length,
-        plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
-            .replaceRanks(player, oldRank, rank)
-            .replaceFromTo(oldRank)
-            .toString());
+        plugin.replaceMoneyRequirements(
+            plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
+                .replaceRanks(player, oldRank, rank)
+                .replaceFromTo(oldRank), player, rank).toString());
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;

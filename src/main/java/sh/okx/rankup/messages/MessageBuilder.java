@@ -1,5 +1,7 @@
 package sh.okx.rankup.messages;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +26,9 @@ public class MessageBuilder {
   }
 
   private static MessageBuilder of(ConfigurationSection config, String message) {
-    return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', config.getString(message)));
+    String string = config.getString(message);
+    Validate.notNull(string, "Configuration message '" + message + "' not found!");
+    return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', string));
   }
 
   public MessageBuilder replace(Variable variable, Object value) {
@@ -99,7 +103,11 @@ public class MessageBuilder {
   }
 
   public void send(CommandSender sender) {
-    sender.sendMessage(message);
+    String msg = message;
+    if (sender instanceof Player) {
+      msg = PlaceholderAPI.setPlaceholders((Player) sender, msg);
+    }
+    sender.sendMessage(msg);
   }
 
   /**

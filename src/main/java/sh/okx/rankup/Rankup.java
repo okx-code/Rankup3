@@ -127,6 +127,8 @@ public class Rankup extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
+
+
     if (config.getInt("version") < 3) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
