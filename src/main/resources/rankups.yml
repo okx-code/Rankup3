@@ -1,54 +1,40 @@
 # see https://github.com/okx-code/Rankup3/wiki/Rank-format      
 
-# this name can be equal to your rank name for simplicity,
-# eg "A" instead of "Aexample".
+# this name doesn't matter
 Aexample:
-  # the name of the rank in your permissions plugin
+  # the name of the group
   # players have to be in this rank to rankup
   rank: 'A'
-  # the next rank a player can rank up to.
-  # this must be the name of the configuration section, not the rank name.
-  # for example, the name of this configuration section is "Aexample".
-  # if this is the last rank, you don't need this.
-  next: 'Bexample'
+  # the name of the rank a player can rankup to
+  next: 'B'
   # List of requirements to go to the next rank
-  # (ie, this example will charge 1000 money to rankup from A to B)
+  # This example will charge 1000 money to rankup from A to B.
   # https://github.com/okx-code/Rankup3/wiki/Requirements
   # custom requirements can also be added by other plugins.
   requirements:
-    money: 1000
-  # What requirements players need to match to /rankup.
-  # this is optional - if you don't use it, it defaults to "all"
-  # n.b. if there are no requirements players will always be able to /rankup.
-  # all: all requirements
-  # any: at least one requirement
-  # one: only one requirement
-  # none: no requirements
-  operation: all
+    - 'money 1000'
   # the console will run these commands when a player ranks up
-  # rankup will change the group for you, commands are not needed for that
+  # the groups are automatically changed with vault
   #commands:
   # this will run when a player ranks up from A to B.
   #- 'say {PLAYER} well done for ranking up from {OLD_RANK} to {RANK}!'
 Bexample:
   rank: 'B'
-  next: 'Cexample'
+  next: 'C'
   requirements:
-    money: 2500
+    - 'money 2500'
 Cexample:
   rank: 'C'
-  next: 'Dexample'
+  next: 'D'
   requirements:
-    money: 5000
-    xp-level: 2
+    - 'money 5000'
+    - 'xp-level 2'
   # you can have a custom messages for each rank
   # you can use this to list the requirements needed.
+  # the paths of these messages are the exact same as in the messages for your locale
   rankup:
     requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
     list:
       complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e(5000 money, 2 XP levels)"
       current: "&c{OLD_RANK} &e\xbb &c{RANK} &e(5000 money, 2 XP levels)"
       incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e(5000 money, 2 XP levels)"
-# for the last rank, you just need to specify the rank.
-Dexample:
-  rank: 'D'

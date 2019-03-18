@@ -25,10 +25,8 @@ import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
-import sh.okx.rankup.requirements.OperationRegistry;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
-import sh.okx.rankup.requirements.operation.*;
 import sh.okx.rankup.requirements.requirement.*;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.*;
@@ -52,8 +50,6 @@ public class Rankup extends JavaPlugin {
    */
   @Getter
   private RequirementRegistry requirementRegistry;
-  @Getter
-  private OperationRegistry operationRegistry;
   @Getter
   private FileConfiguration messages;
   @Getter
@@ -226,12 +222,6 @@ public class Rankup extends JavaPlugin {
       requirementRegistry.addRequirement(new AdvancedAchievementsAchievementRequirement(this));
       requirementRegistry.addRequirement(new AdvancedAchievementsTotalRequirement(this));
     }
-
-    operationRegistry = new OperationRegistry();
-    operationRegistry.addOperation("all", new AllOperation());
-    operationRegistry.addOperation("none", new NoneOperation());
-    operationRegistry.addOperation("one", new OneOperation());
-    operationRegistry.addOperation("any", new AnyOperation());
   }
 
   private void setupPermissions() {
@@ -266,7 +256,7 @@ public class Rankup extends JavaPlugin {
 
   public MessageBuilder getMessage(Rank rank, Message message) {
     ConfigurationSection messages = (rank instanceof Prestige ? prestiges : rankups).getConfig()
-        .getConfigurationSection(rank.getName());
+        .getConfigurationSection(rank.getRank());
     if (messages == null || !messages.isSet(message.getName())) {
       messages = this.messages;
     }
@@ -410,7 +400,7 @@ public class Rankup extends JavaPlugin {
 
   public boolean checkPrestige(Player player, boolean message) {
     Prestige prestige = prestiges.getByPlayer(player);
-    if (!prestige.isEligable(player)) { // check if in ladder
+    if (!prestige.isIn(player)) { // check if in ladder
       getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
@@ -486,12 +476,10 @@ public class Rankup extends JavaPlugin {
     builder.replace(variable + " " + requirement.getName(), value.get());
   }
 
-  public void sendMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
-    replaceMoneyRequirements(getMessage(oldRank, message)
-        .replaceFirstPrestige(oldRank, prestiges, config.getString("placeholders.first-prestige-rank"))
+  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
+    return replaceMoneyRequirements(getMessage(oldRank, message)
         .replaceRanks(player, oldRank, rank), player, oldRank)
-        .replaceFromTo(oldRank)
-        .send(player);
+        .replaceFromTo(oldRank);
   }
 
   public void sendHeaderFooter(CommandSender sender, Rank rank, Message type) {
@@ -507,5 +495,10 @@ public class Rankup extends JavaPlugin {
           .replaceFromTo(rank);
     }
     builder.send(sender);
+  }
+
+  public boolean isLegacy() {
+    String version = Bukkit.getVersion();
+    return !(version.startsWith("1.13") || version.startsWith("1.14"));
   }
 }

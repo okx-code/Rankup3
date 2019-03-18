@@ -26,13 +26,17 @@ public class PrestigesCommand implements CommandExecutor {
 
     Message message = playerRank == null ? Message.PRESTIGES_INCOMPLETE : Message.PRESTIGES_COMPLETE;
     Prestige prestige = prestiges.getFirst();
-    while (!prestige.isLast()) {
-      Prestige next = prestiges.next(prestige);
+    Prestige next;
+    while ((next = prestiges.next(prestige)) != null) {
       if (prestige.equals(playerRank)) {
-        plugin.sendMessage(sender, Message.PRESTIGES_CURRENT, prestige, next);
+        plugin.getMessage(sender, Message.PRESTIGES_CURRENT, prestige, next)
+            .replaceFirstPrestige(prestige, prestiges, prestige.getFrom())
+            .send(sender);
         message = Message.PRESTIGES_INCOMPLETE;
       } else {
-        plugin.sendMessage(sender, message, prestige, next);
+        plugin.getMessage(sender, message, prestige, next)
+            .replaceFirstPrestige(prestige, prestiges, prestige.getFrom())
+            .send(sender);
       }
       prestige = next;
     }

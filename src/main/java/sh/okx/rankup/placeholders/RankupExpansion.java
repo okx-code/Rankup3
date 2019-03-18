@@ -10,6 +10,7 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.Requirement;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -47,7 +48,7 @@ public class RankupExpansion extends PlaceholderExpansion {
 //      return placeholders.getSimpleFormat().format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
     } else if (params.startsWith("rank_money_")) {
       String[] parts = params.split("_", 4);
-      double amount = rankups.getByName(parts[2]).getRequirement("money").getValueDouble();
+      double amount = Objects.requireNonNull(rankups.getByName(parts[2]), "Rankup " + parts[2] + " does not exist").getRequirement("money").getValueDouble();
       if (parts.length > 3 && parts[3].equalsIgnoreCase("left")) {
         amount = amount - plugin.getEconomy().getBalance(player);
       }
@@ -56,25 +57,17 @@ public class RankupExpansion extends PlaceholderExpansion {
 
     switch (params) {
       case "current_prestige":
-        return prestige.getRank();
-      case "current_prestige_name":
-        return prestige.getName();
+        return Objects.requireNonNull(prestige, "Using current_prestige placeholder but prestiging is disabled").getRank();
       case "next_prestige":
         return orElsePlaceholder(nextPrestige, Prestige::getRank, "highest-rank");
-      case "next_prestige_name":
-        return orElsePlaceholder(nextPrestige, Prestige::getName, "highest-rank");
       case "prestige_money":
-        return String.valueOf(simplify(orElse(prestige, r -> r.isEligable(player) ? r.getRequirement("money").getValueDouble() : 0, 0)));
+        return String.valueOf(simplify(orElse(prestige, r -> r.isIn(player) ? r.getRequirement("money").getValueDouble() : 0, 0)));
       case "prestige_money_formatted":
-        return plugin.formatMoney(orElse(prestige, r -> r.isEligable(player) ? r.getRequirement("money").getValueDouble() : 0, 0D));
+        return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement("money").getValueDouble() : 0, 0D));
       case "current_rank":
         return orElsePlaceholder(rank, Rank::getRank, "not-in-ladder");
-      case "current_rank_name":
-        return orElsePlaceholder(rank, Rank::getName, "not-in-ladder");
       case "next_rank":
         return orElsePlaceholder(rank, r -> orElsePlaceholder(nextRank, Rank::getRank, "highest-rank"), "not-in-ladder");
-      case "next_rank_name":
-        return orElsePlaceholder(rank, r -> orElsePlaceholder(nextRank, Rank::getName, "highest-rank"), "not-in-ladder");
       case "money":
         return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getValueDouble()), 0));
       case "money_formatted":

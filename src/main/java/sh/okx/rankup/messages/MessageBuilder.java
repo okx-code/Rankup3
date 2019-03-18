@@ -64,14 +64,14 @@ public class MessageBuilder {
 
   public MessageBuilder replaceRanks(Rank rank) {
     replace(Variable.RANK, rank.getRank());
-    replace(Variable.RANK_NAME, rank.getName());
+    replace(Variable.RANK_NAME, rank.getRank());
     return this;
   }
 
   public MessageBuilder replaceRanks(Rank oldRank, Rank rank) {
     replaceRanks(rank);
     replace(Variable.OLD_RANK, oldRank.getRank());
-    replace(Variable.OLD_RANK_NAME, oldRank.getName());
+    replace(Variable.OLD_RANK_NAME, oldRank.getRank());
     return this;
   }
 

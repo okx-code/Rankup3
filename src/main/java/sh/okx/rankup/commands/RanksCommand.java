@@ -26,25 +26,16 @@ public class RanksCommand implements CommandExecutor {
 
     Message message = playerRank == null ? Message.RANKS_INCOMPLETE : Message.RANKS_COMPLETE;
     Rank rank = rankups.getFirst();
-    do {
-      Rank next = rankups.next(rank);
+    Rank next;
+    while ((next = rankups.next(rank)) != null) {
       if (rank.equals(playerRank)) {
-        plugin.sendMessage(sender, Message.RANKS_CURRENT, rank, next);
+        plugin.getMessage(sender, Message.RANKS_CURRENT, rank, next).send(sender);
         message = Message.RANKS_INCOMPLETE;
       } else {
-        // helpful message to say there is a null rankup
-        if (next == null) {
-          plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(sender);
-          plugin.getLogger().severe("Rankup from " + rank.getName() + " to " + rank.getNext()
-              + " is defined but " + rank.getNext() + " does not exist.");
-          return true;
-        }
-
-        plugin.sendMessage(sender, message, rank, next);
+        plugin.getMessage(sender, message, rank, next).send(sender);
       }
       rank = next;
-    } while (!rank.isLast());
-
+    }
     plugin.sendHeaderFooter(sender, playerRank, Message.RANKS_FOOTER);
     return true;
   }

@@ -1,7 +1,7 @@
 # this is used for letting you know that you need to update/change your config file
 version: 3
 
-# the ISO-639-1 locale to use for messages
+# the locale to use for messages
 # all messages can be customised but this allows you to
 # choose messages that are already translated
 # locales can be found in the locale/ folder
@@ -29,8 +29,7 @@ prestige: true
 # options are: gui, text or none
 confirmation-type: 'gui'
 
-# how long in seconds people have to wait between a /rankup and a /prestige
-# only successful rankups and prestiges start the cooldown.
+# how long, in seconds, people have to wait between a successful /rankup or a /prestige
 # set to 0 to disable.
 cooldown: 1
 
@@ -38,8 +37,8 @@ gui:
   rows: 1
   rankup:
     material: EMERALD_BLOCK
-    # index can be separated by spaces to show in multiple ways
-    # ie, 0-3 9-12 18-21
+    # index can be separated by spaces to show in multiple groups
+    # for example: 0-3 9-12 18-21
     # you can also just use a single number instead of a range.
     index: 0-3
     name: '&a&lConfirm'
@@ -56,6 +55,7 @@ gui:
     # this works for both the rankup and cancel blocks as well
     material: BLACK_STAINED_GLASS_PANE
 
+# options when using the text rankup confirmation
 text:
   # the time in seconds for a player to
   # confirm by typing /rankup again
@@ -72,8 +72,6 @@ placeholders:
   not-in-ladder: "None"
   # used in next_rank placeholders when there is no rankup
   highest-rank: "None"
-  # used in /prestiges as the {OLD_RANK} placeholder for the first prestige rank
-  first-prestige-rank: 'D'
 
 # what to shorten money by.
 # ie 1000 -> 1k

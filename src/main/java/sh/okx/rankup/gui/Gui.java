@@ -59,18 +59,18 @@ public class Gui implements InventoryHolder {
     return gui;
   }
 
+  @SuppressWarnings("deprecation")
   private static ItemStack getItem(Rankup plugin, String name, Player player, Rank oldRank, Rank rank) {
     ConfigurationSection section = plugin.getConfig().getConfigurationSection("gui").getConfigurationSection(name);
-    boolean legacy = !Bukkit.getVersion().contains("1.13");
 
     String materialName = section.getString("material").toUpperCase();
     // handle default material correctly on older versions
-    if (legacy && materialName.equals("BLACK_STAINED_GLASS_PANE")) {
+    if (plugin.isLegacy() && materialName.equals("BLACK_STAINED_GLASS_PANE")) {
       materialName = "STAINED_GLASS_PANE:15";
     }
 
     ItemStack item;
-    if (legacy) {
+    if (plugin.isLegacy()) {
       String[] parts = materialName.split(":");
       Material material = Material.valueOf(parts[0]);
 

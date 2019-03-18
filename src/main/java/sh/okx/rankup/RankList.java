@@ -32,7 +32,7 @@ public class RankList<T extends Rank> {
     for (T rank : ranks) {
       // see if anything ranks up to this
       for (T rank0 : ranks) {
-        if (!rank0.isLast() && rank0.getNext().equals(rank.getName())) {
+        if (rank0.getNext().equals(rank.getRank())) {
           continue OUTER;
         }
       }
@@ -45,21 +45,20 @@ public class RankList<T extends Rank> {
   public List<T> getOrderedList() {
     List<T> list = new ArrayList<>();
     T t = getFirst();
-    list.add(t);
-    do {
-      t = next(t);
+    while (t != null) {
       list.add(t);
-    } while (!t.isLast());
+      t = next(t);
+    }
     return list;
   }
 
   public T getByName(String name) {
     for (T rank : ranks) {
-      if (rank.getName().equalsIgnoreCase(name)) {
+      if (rank.getRank().equalsIgnoreCase(name)) {
         return rank;
       }
     }
-    throw new RuntimeException("Invalid rank: " + name);
+    return null;
   }
 
   public T getByPlayer(Player player) {
@@ -74,15 +73,11 @@ public class RankList<T extends Rank> {
   }
 
   public T next(T rank) {
-    if (rank.isLast()) {
-      return null;
-    }
-
     for (T nextRank : ranks) {
-      if (rank.getNext().equalsIgnoreCase(nextRank.getName())) {
+      if (rank.getNext().equalsIgnoreCase(nextRank.getRank())) {
         return nextRank;
       }
     }
-    throw new RuntimeException(rank.getName() + " has an invalid next rank");
+    return null;
   }
 }
