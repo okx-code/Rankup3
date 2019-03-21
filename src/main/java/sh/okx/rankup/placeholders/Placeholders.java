@@ -3,6 +3,7 @@ package sh.okx.rankup.placeholders;
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 
 import java.text.DecimalFormat;

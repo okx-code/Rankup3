@@ -35,13 +35,14 @@ public class RankupCommand implements CommandExecutor {
     if (!plugin.checkRankup(player)) {
       return true;
     }
-    Rank next = rankups.next(rank);
+    /*Rank next = rankups.next(rank);
     if (next == null) {
       plugin.getLogger().severe("Rankup from " + rank.getRank() + " to " + rank.getNext() +
           " is defined but " + rank.getNext() + " does not exist.");
       plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(player);
       return true;
-    }
+    }*/
+    String next = rank.getNext();
 
     FileConfiguration config = plugin.getConfig();
     String confirmationType = config.getString("confirmation-type").toLowerCase();

@@ -1,9 +1,8 @@
 package sh.okx.rankup.requirements;
 
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class RequirementRegistry {
@@ -24,18 +23,16 @@ public class RequirementRegistry {
     return null;
   }
 
-  public Set<Requirement> getRequirements(ConfigurationSection section) {
+  public Set<Requirement> getRequirements(List<String> list) {
     Set<Requirement> requirements = new HashSet<>();
 
-    for (Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
-      String name = entry.getKey();
-      String value = String.valueOf(entry.getValue());
+    for (String req : list) {
+      String[] parts = req.split(" ", 2);
+      String name = parts[0];
+      String value = parts[1];
       Requirement requirement = newRequirement(name, value);
-      if (requirement == null) {
-        System.err.println("Unknown requirement: " + name);
-      } else {
-        requirements.add(requirement);
-      }
+      Objects.requireNonNull(requirement, "Unknown requirement: " + name);
+      requirements.add(requirement);
     }
     return requirements;
   }

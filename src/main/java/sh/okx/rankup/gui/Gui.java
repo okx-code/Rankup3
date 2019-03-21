@@ -19,6 +19,7 @@ import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +33,7 @@ public class Gui implements InventoryHolder {
   @Getter
   private boolean prestige;
 
-  public static Gui of(Player player, Rank oldRank, Rank rank, Rankup plugin) {
+  public static Gui of(Player player, Rank oldRank, String rank, Rankup plugin) {
     ConfigurationSection config = plugin.getConfig().getConfigurationSection("gui");
     ItemStack[] items = new ItemStack[config.getInt("rows") * 9];
 
@@ -53,14 +54,14 @@ public class Gui implements InventoryHolder {
         plugin.replaceMoneyRequirements(
             plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
                 .replaceRanks(player, oldRank, rank)
-                .replaceFromTo(oldRank), player, rank).toString());
+                .replaceFromTo(oldRank), player, oldRank).toString());
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;
   }
 
   @SuppressWarnings("deprecation")
-  private static ItemStack getItem(Rankup plugin, String name, Player player, Rank oldRank, Rank rank) {
+  private static ItemStack getItem(Rankup plugin, String name, Player player, Rank oldRank, String rank) {
     ConfigurationSection section = plugin.getConfig().getConfigurationSection("gui").getConfigurationSection(name);
 
     String materialName = section.getString("material").toUpperCase();
@@ -99,13 +100,14 @@ public class Gui implements InventoryHolder {
     return item;
   }
 
-  private static String format(Rankup plugin, String message, Player player, Rank oldRank, Rank rank) {
+  private static String format(Rankup plugin, String message, Player player, Rank oldRank, String rank) {
     return plugin.replaceMoneyRequirements(new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
         .replaceRanks(player, oldRank, rank), player, oldRank)
         .toString();
   }
 
   private static void addItem(ItemStack[] items, ConfigurationSection section, ItemStack item) {
+    Objects.requireNonNull(section, "GUI configuration section not found");
     if (section.getName().equalsIgnoreCase("fill")) {
       for (int i = 0; i < items.length; i++) {
         if (items[i] == null) {

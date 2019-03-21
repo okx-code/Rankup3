@@ -14,7 +14,7 @@ Aexample:
   requirements:
     - 'money 1000'
   # the console will run these commands when a player ranks up
-  # the groups are automatically changed with vault
+  # nb: groups are automatically changed with vault
   #commands:
   # this will run when a player ranks up from A to B.
   #- 'say {PLAYER} well done for ranking up from {OLD_RANK} to {RANK}!'
@@ -30,8 +30,7 @@ Cexample:
     - 'money 5000'
     - 'xp-level 2'
   # you can have a custom messages for each rank
-  # you can use this to list the requirements needed.
-  # the paths of these messages are the exact same as in the messages for your locale
+  # the paths of these messages are the same as in the messages for your locale
   rankup:
     requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
     list:

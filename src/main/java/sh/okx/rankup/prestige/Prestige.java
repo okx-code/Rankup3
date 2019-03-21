@@ -20,23 +20,46 @@ public class Prestige extends Rank {
   @Getter
   private final String to;
 
-  private Prestige(Rankup plugin, String next, String rank, Set<Requirement> requirements, List<String> commands, String from, String to) {
-    super(plugin, next, rank, requirements, commands);
+  private Prestige(ConfigurationSection section, Rankup plugin, String next, String rank, Set<Requirement> requirements, List<String> commands, String from, String to) {
+    super(section, plugin, next, rank, requirements, commands);
     this.from = from;
     this.to = to;
   }
 
   public static Prestige deserialize(Rankup plugin, ConfigurationSection section) {
-    ConfigurationSection requirementsSection = section.getConfigurationSection("requirements");
-    Validate.notNull(requirementsSection, "No requirements defined for section " + section.getName());
-    Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsSection);
+    List<String> requirementsList = section.getStringList("requirements");
+    Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsList);
 
-    return new Prestige(plugin,
+    return new Prestige(section, plugin,
         section.getString("next"),
         section.getString("rank"),
         requirements,
         section.getStringList("commands"),
         section.getString("from"),
         section.getString("to"));
+  }
+
+  @Override
+  public boolean isIn(Player player) {
+
+    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
+    for (String group : groups) {
+      if (group.equalsIgnoreCase(from) && rank == null) {
+        for (Prestige prestige : plugin.getPrestiges().getOrderedList()) {
+          if (prestige != this && prestige.isIn(player)) {
+            return false;
+          }
+        }
+        return true;
+      } else if(group.equalsIgnoreCase(rank)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public boolean isLast() {
+    return plugin.getPrestiges().getByName(next) == null;
   }
 }

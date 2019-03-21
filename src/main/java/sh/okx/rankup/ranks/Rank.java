@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rank {
+  @Getter
+  protected final ConfigurationSection section;
   protected final Rankup plugin;
   @Getter
   protected final String next;
@@ -32,11 +34,11 @@ public class Rank {
   protected final List<String> commands;
 
   public static Rank deserialize(Rankup plugin, ConfigurationSection section) {
-    ConfigurationSection requirementsSection = section.getConfigurationSection("requirements");
-    Validate.notNull(requirementsSection, "No requirements defined for section " + section.getName());
-    Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsSection);
+    List<String> requirementsList = section.getStringList("requirements");
+    Validate.notEmpty(requirementsList, "No requirements defined for rankup section " + section.getName());
+    Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsList);
 
-    return new Rank(plugin,
+    return new Rank(section, plugin,
         section.getString("next"),
         section.getString("rank"),
         requirements,
@@ -83,10 +85,10 @@ public class Rank {
     }
   }
 
-  public void runCommands(Player player, Rank nextRank) {
+  public void runCommands(Player player, String next) {
     for (String command : commands) {
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-          new MessageBuilder(command).replaceRanks(player, this, nextRank).toString());
+          new MessageBuilder(command).replaceRanks(player, this, next).toString());
     }
   }
 }

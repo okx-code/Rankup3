@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 
 /**
  * Because mcMMO like changing the name of their skill types.
- * Singleton (not thread safe!) class to access different mcMMO versions.
+ * Singleton class to access different mcMMO versions.
  */
 public class McMMOSkillUtil {
   private static McMMOSkillUtil instance;
@@ -31,19 +31,19 @@ public class McMMOSkillUtil {
         try {
           skillTypeClass = Class.forName(pckg + "SkillType");
         } catch (ClassNotFoundException e2) {
-          throw new RuntimeException("mcMMO Skill Type class not found");
+          throw new UnsupportedOperationException("mcMMO Skill Type class not found");
         }
       }
     }
     try {
       values = skillTypeClass.getMethod("values");
     } catch (NoSuchMethodException e) {
-      throw new RuntimeException("mcMMO " + skillTypeClass + ".values() not found");
+      throw new UnsupportedOperationException("mcMMO " + skillTypeClass + ".values() not found");
     }
     try {
       valueOf = skillTypeClass.getMethod("valueOf", String.class);
     } catch (NoSuchMethodException e) {
-      throw new RuntimeException("mcMMO" + skillTypeClass + ".valueOf(String) not found");
+      throw new UnsupportedOperationException("mcMMO" + skillTypeClass + ".valueOf(String) not found");
     }
 
     /*try {
@@ -54,7 +54,7 @@ public class McMMOSkillUtil {
     try {
       getSkillLevel = McMMOPlayer.class.getMethod("getSkillLevel", skillTypeClass);
     } catch (NoSuchMethodException e) {
-      throw new RuntimeException("mcMMO UserManager.getSkillLevel(" + skillTypeClass + ") not found");
+      throw new UnsupportedOperationException("mcMMO UserManager.getSkillLevel(" + skillTypeClass + ") not found");
     }
   }
 

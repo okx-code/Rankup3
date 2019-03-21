@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.4.2'
+version '3.5-beta'
 
 repositories {
     mavenCentral()
@@ -22,17 +22,21 @@ repositories {
     maven {
         url 'https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/'
     }
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
 
-    compile('net.milkbowl.vault:VaultAPI:1.6') {
+    compile('net.milkbowl.vault:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
     compile 'me.clip:placeholderapi:2.9.2'
     compile 'com.hm.achievement:advanced-achievements-api:1.1.0'
     // if compiling this you will have to download and install mcMMO locally
-    compile 'com.gmail.nossr50.mcMMO:mcMMO:2.1.17'
+    compile 'com.gmail.nossr50.mcMMO:mcMMO:2.1.+'
+    compile 'com.github.Ben12345rocks:VotingPlugin:5.18.2'
 }

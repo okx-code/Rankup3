@@ -13,7 +13,11 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import sh.okx.rankup.commands.*;
+import sh.okx.rankup.commands.InfoCommand;
+import sh.okx.rankup.commands.PrestigeCommand;
+import sh.okx.rankup.commands.PrestigesCommand;
+import sh.okx.rankup.commands.RanksCommand;
+import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
 import sh.okx.rankup.messages.EmptyMessageBuilder;
@@ -29,8 +33,11 @@ import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
 import sh.okx.rankup.requirements.requirement.*;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
-import sh.okx.rankup.requirements.requirement.advancedachievements.*;
-import sh.okx.rankup.requirements.requirement.mcmmo.*;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
+import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
+import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillUtil;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -125,7 +132,7 @@ public class Rankup extends JavaPlugin {
 
 
 
-    if (config.getInt("version") < 3) {
+    if (config.getInt("version") < 4) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
@@ -183,7 +190,7 @@ public class Rankup extends JavaPlugin {
 
   private void saveLocales() {
     saveLocale("en");
-	saveLocale("pt-br");
+    saveLocale("pt-br");
   }
 
   private void saveLocale(String locale) {
@@ -255,8 +262,7 @@ public class Rankup extends JavaPlugin {
   }
 
   public MessageBuilder getMessage(Rank rank, Message message) {
-    ConfigurationSection messages = (rank instanceof Prestige ? prestiges : rankups).getConfig()
-        .getConfigurationSection(rank.getRank());
+    ConfigurationSection messages = rank.getSection();
     if (messages == null || !messages.isSet(message.getName())) {
       messages = this.messages;
     }
@@ -277,7 +283,7 @@ public class Rankup extends JavaPlugin {
         long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
         getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
             .failIfEmpty()
-            .replaceRanks(player, rank)
+            .replaceRanks(player, rank.getRank())
             .replaceFromTo(rank)
             .replace(Variable.SECONDS, cooldownSeconds)
             .replace(Variable.SECONDS_LEFT, secondsLeft)
@@ -302,23 +308,23 @@ public class Rankup extends JavaPlugin {
     }
 
     Rank oldRank = rankups.getByPlayer(player);
-    Rank rank = rankups.next(oldRank);
+    String next = oldRank.getNext();
 
     oldRank.applyRequirements(player);
 
     permissions.playerRemoveGroup(null, player, oldRank.getRank());
-    permissions.playerAddGroup(null, player, rank.getRank());
+    permissions.playerAddGroup(null, player, next);
 
     getMessage(oldRank, Message.SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, oldRank, rank)
+        .replaceRanks(player, oldRank, next)
         .broadcast();
     getMessage(oldRank, Message.SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, oldRank, rank)
+        .replaceRanks(player, oldRank, next)
         .send(player);
 
-    oldRank.runCommands(player, rank);
+    oldRank.runCommands(player, next);
     applyCooldown(player);
   }
 
@@ -335,23 +341,22 @@ public class Rankup extends JavaPlugin {
    */
   public boolean checkRankup(Player player, boolean message) {
     Rank rank = rankups.getByPlayer(player);
-    if (rank == null) { // check if in ladder
+    if (rankups.isLast(permissions, player)) {
+      getMessage(prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+          .failIf(!message)
+          .replaceRanks(player, rankups.getLast())
+          .send(player);
+      return false;
+    } else if (rank == null) { // check if in ladder
       getMessage(Message.NOT_IN_LADDER)
           .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (rank.isLast()) { // check if they are at the highest rank
-      getMessage(rank, prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
-          .failIf(!message)
-          .replaceRanks(player, rank)
-          .send(player);
-      return false;
     } else if (!rank.hasRequirements(player)) { // check if they can afford it
       if (message) {
         replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-            .failIf(!message)
-            .replaceRanks(player, rank, rankups.next(rank)), player, rank)
+            .replaceRanks(player, rank, rank.getNext()), player, rank)
             .send(player);
       }
       return false;
@@ -381,16 +386,16 @@ public class Rankup extends JavaPlugin {
 
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, oldPrestige, prestige)
+        .replaceRanks(player, oldPrestige, prestige.getRank())
         .replaceFromTo(oldPrestige)
         .broadcast();
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, oldPrestige, prestige)
+        .replaceRanks(player, oldPrestige, prestige.getRank())
         .replaceFromTo(oldPrestige)
         .send(player);
 
-    oldPrestige.runCommands(player, prestige);
+    oldPrestige.runCommands(player, prestige.getRank());
     applyCooldown(player);
   }
 
@@ -400,23 +405,24 @@ public class Rankup extends JavaPlugin {
 
   public boolean checkPrestige(Player player, boolean message) {
     Prestige prestige = prestiges.getByPlayer(player);
+    System.out.println(prestige.getNext() + " ..");
     if (!prestige.isIn(player)) { // check if in ladder
       getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (prestige.isLast()) { // check if they are at the highest rank
+    } else if (prestiges.getByName(prestige.getNext()) == null) { // check if they are at the highest rank
       getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
-          .replaceRanks(player, prestige)
+          .replaceRanks(player, prestige.getRank())
           .replaceFromTo(prestige)
           .send(player);
       return false;
     } else if (!prestige.hasRequirements(player)) { // check if they can afford it
       replaceMoneyRequirements(getMessage(prestige, Message.PRESTIGE_REQUIREMENTS_NOT_MET)
           .failIf(!message)
-          .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
+          .replaceRanks(player, prestige, prestiges.next(prestige).getRank()), player, prestige)
           .replaceFromTo(prestige)
           .send(player);
       return false;
@@ -476,9 +482,9 @@ public class Rankup extends JavaPlugin {
     builder.replace(variable + " " + requirement.getName(), value.get());
   }
 
-  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
+  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, String rankName) {
     return replaceMoneyRequirements(getMessage(oldRank, message)
-        .replaceRanks(player, oldRank, rank), player, oldRank)
+        .replaceRanks(player, oldRank, rankName), player, oldRank)
         .replaceFromTo(oldRank);
   }
 
@@ -491,7 +497,7 @@ public class Rankup extends JavaPlugin {
     } else {
       builder = getMessage(rank, type)
           .failIfEmpty()
-          .replaceRanks(sender, rank)
+          .replaceRanks(sender, rank.getRank())
           .replaceFromTo(rank);
     }
     builder.send(sender);

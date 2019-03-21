@@ -50,26 +50,26 @@ public class MessageBuilder {
     return this;
   }
 
-  public MessageBuilder replaceRanks(CommandSender player, Rank rank) {
+  public MessageBuilder replaceRanks(CommandSender player, String rankName) {
     replace(Variable.PLAYER, player.getName());
-    replaceRanks(rank);
+    replaceRanks(rankName);
     return this;
   }
 
-  public MessageBuilder replaceRanks(CommandSender player, Rank oldRank, Rank rank) {
+  public MessageBuilder replaceRanks(CommandSender player, Rank oldRank, String rankName) {
     replace(Variable.PLAYER, player.getName());
-    replaceRanks(oldRank, rank);
+    replaceRanks(oldRank, rankName);
     return this;
   }
 
-  public MessageBuilder replaceRanks(Rank rank) {
-    replace(Variable.RANK, rank.getRank());
-    replace(Variable.RANK_NAME, rank.getRank());
+  public MessageBuilder replaceRanks(String rankName) {
+    replace(Variable.RANK, rankName);
+    replace(Variable.RANK_NAME, rankName);
     return this;
   }
 
-  public MessageBuilder replaceRanks(Rank oldRank, Rank rank) {
-    replaceRanks(rank);
+  public MessageBuilder replaceRanks(Rank oldRank, String rankName) {
+    replaceRanks(rankName);
     replace(Variable.OLD_RANK, oldRank.getRank());
     replace(Variable.OLD_RANK_NAME, oldRank.getRank());
     return this;
@@ -104,7 +104,7 @@ public class MessageBuilder {
 
   public void send(CommandSender sender) {
     String msg = message;
-    if (sender instanceof Player) {
+    if (sender instanceof Player && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       msg = PlaceholderAPI.setPlaceholders((Player) sender, msg);
     }
     sender.sendMessage(msg);

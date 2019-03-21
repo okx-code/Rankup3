@@ -48,12 +48,12 @@ public class PrestigeCommand implements CommandExecutor {
       case "text":
         confirming.put(player, System.currentTimeMillis());
         plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.PRESTIGE_CONFIRMATION)
-            .replaceRanks(player, prestige, prestiges.next(prestige)), player, prestige)
+            .replaceRanks(player, prestige, prestiges.next(prestige).getRank()), player, prestige)
             .replaceFromTo(prestige)
             .send(player);
         break;
       case "gui":
-        Gui.of(player, prestige, prestiges.next(prestige), plugin).open(player);
+        Gui.of(player, prestige, prestige.getNext(), plugin).open(player);
         break;
       case "none":
         plugin.prestige(player);

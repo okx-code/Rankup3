@@ -1,6 +1,8 @@
 package sh.okx.rankup;
 
 import lombok.Getter;
+import net.milkbowl.vault.permission.Permission;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -53,11 +55,18 @@ public class RankList<T extends Rank> {
   }
 
   public T getByName(String name) {
+    if (name == null) {
+      System.out.println("n");
+      return null;
+    }
     for (T rank : ranks) {
-      if (rank.getRank().equalsIgnoreCase(name)) {
+      System.out.println(name + " <> " + rank.getNext());
+      if (name.equalsIgnoreCase(rank.getRank())) {
+        System.out.println("y");
         return rank;
       }
     }
+    System.out.println("l");
     return null;
   }
 
@@ -72,9 +81,25 @@ public class RankList<T extends Rank> {
     return null;
   }
 
+  public String getLast() {
+    List<T> list = getOrderedList();
+    return list.get(list.size() - 1).getNext();
+  }
+
+  public boolean isLast(Permission perms, Player player) {
+    String last = getLast();
+    String[] groups = perms.getPlayerGroups(null, player);
+    for (String group : groups) {
+      if (group.equalsIgnoreCase(last)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public T next(T rank) {
     for (T nextRank : ranks) {
-      if (rank.getNext().equalsIgnoreCase(nextRank.getRank())) {
+      if (rank.getNext() != null && rank.getNext().equalsIgnoreCase(nextRank.getRank())) {
         return nextRank;
       }
     }
