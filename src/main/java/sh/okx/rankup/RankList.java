@@ -56,17 +56,13 @@ public class RankList<T extends Rank> {
 
   public T getByName(String name) {
     if (name == null) {
-      System.out.println("n");
       return null;
     }
     for (T rank : ranks) {
-      System.out.println(name + " <> " + rank.getNext());
       if (name.equalsIgnoreCase(rank.getRank())) {
-        System.out.println("y");
         return rank;
       }
     }
-    System.out.println("l");
     return null;
   }
 

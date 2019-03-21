@@ -38,6 +38,7 @@ import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchie
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillUtil;
+import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -229,6 +230,9 @@ public class Rankup extends JavaPlugin {
       requirementRegistry.addRequirement(new AdvancedAchievementsAchievementRequirement(this));
       requirementRegistry.addRequirement(new AdvancedAchievementsTotalRequirement(this));
     }
+    if (Bukkit.getPluginManager().isPluginEnabled("VotingPlugin")) {
+      requirementRegistry.addRequirement(new VotingPluginVotesRequirement(this));
+    }
   }
 
   private void setupPermissions() {
@@ -405,7 +409,6 @@ public class Rankup extends JavaPlugin {
 
   public boolean checkPrestige(Player player, boolean message) {
     Prestige prestige = prestiges.getByPlayer(player);
-    System.out.println(prestige.getNext() + " ..");
     if (!prestige.isIn(player)) { // check if in ladder
       getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
