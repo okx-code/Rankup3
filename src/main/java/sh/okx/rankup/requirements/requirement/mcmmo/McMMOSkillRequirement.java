@@ -3,28 +3,25 @@ package sh.okx.rankup.requirements.requirement.mcmmo;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 
-public class McMMOSkillRequirement extends Requirement {
-  private String skill;
-
-  public McMMOSkillRequirement(Rankup plugin, String skill) {
-    super(plugin, "mcmmo-" + skill.toLowerCase());
-    this.skill = skill;
+public class McMMOSkillRequirement extends ProgressiveRequirement {
+  public McMMOSkillRequirement(Rankup plugin) {
+    super(plugin, "mcmmo");
   }
 
   protected McMMOSkillRequirement(McMMOSkillRequirement clone) {
     super(clone);
-    this.skill = clone.skill;
   }
 
   @Override
-  public boolean check(Player player) {
-    return getRemaining(player) <= 0;
+  public double getProgress(Player player) {
+    return McMMOSkillUtil.getInstance().getSkillLevel(player, getValueString());
   }
 
   @Override
-  public double getRemaining(Player player) {
-    return Math.max(0, getValueInt() - McMMOSkillUtil.getInstance().getSkillLevel(player, skill));
+  public boolean hasSubRequirement() {
+    return true;
   }
 
   @Override

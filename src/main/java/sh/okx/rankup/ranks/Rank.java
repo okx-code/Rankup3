@@ -15,9 +15,7 @@ import sh.okx.rankup.requirements.Requirement;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,7 +33,6 @@ public class Rank {
 
   public static Rank deserialize(Rankup plugin, ConfigurationSection section) {
     List<String> requirementsList = section.getStringList("requirements");
-    Validate.notEmpty(requirementsList, "No requirements defined for rankup section " + section.getName());
     Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsList);
 
     return new Rank(section, plugin,
@@ -70,7 +67,11 @@ public class Rank {
 
   public Requirement getRequirement(String name) {
     for (Requirement requirement : requirements) {
-      if (requirement.getName().equalsIgnoreCase(name)) {
+      String reqName = requirement.getName();
+      if (requirement.hasSubRequirement()) {
+        reqName += "#" + requirement.getSub();
+      }
+      if (reqName.equalsIgnoreCase(name)) {
         return requirement;
       }
     }

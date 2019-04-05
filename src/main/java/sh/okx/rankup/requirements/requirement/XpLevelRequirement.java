@@ -15,18 +15,13 @@ public class XpLevelRequirement extends DeductibleRequirement {
   }
 
   @Override
-  public boolean check(Player player) {
-    return player.getLevel() >= getValueInt();
-  }
-
-  @Override
   public void apply(Player player) {
     player.setLevel(player.getLevel() - getValueInt());
   }
 
   @Override
-  public double getRemaining(Player player) {
-    return Math.max(0, getValueInt() - player.getLevel());
+  public double getProgress(Player player) {
+    return player.getLevel();
   }
 
   @Override

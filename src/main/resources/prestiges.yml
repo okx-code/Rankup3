@@ -16,7 +16,3 @@ P1example:
   requirements:
     - 'money 20000'
     - 'xp-level 5'
-P2example:
-  from: 'D'
-  to: 'A'
-  rank: 'P2'

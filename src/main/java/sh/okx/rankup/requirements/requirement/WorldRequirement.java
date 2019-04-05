@@ -15,17 +15,7 @@ public class WorldRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    for (String world : getValueString().split(" ")) {
-      if (player.getWorld().getName().equalsIgnoreCase(world)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    return check(player) ? 0 : 1;
+    return player.getWorld().getName().equalsIgnoreCase(getValueString());
   }
 
   @Override

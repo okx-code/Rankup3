@@ -1,12 +1,12 @@
 package sh.okx.rankup.requirements.requirement.advancedachievements;
 
-import com.hm.achievement.api.AdvancedAchievementsAPI;
 import com.hm.achievement.api.AdvancedAchievementsAPIFetcher;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 
-public class AdvancedAchievementsTotalRequirement extends Requirement {
+public class AdvancedAchievementsTotalRequirement extends ProgressiveRequirement {
   public AdvancedAchievementsTotalRequirement(Rankup plugin) {
     super(plugin, "advancedachievements-total");
   }
@@ -16,14 +16,8 @@ public class AdvancedAchievementsTotalRequirement extends Requirement {
   }
 
   @Override
-  public boolean check(Player player) {
-    return getRemaining(player) < 1;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    AdvancedAchievementsAPI api = AdvancedAchievementsAPIFetcher.fetchInstance().get();
-    return getValueInt() - api.getPlayerTotalAchievements(player.getUniqueId());
+  public double getProgress(Player player) {
+    return AdvancedAchievementsAPIFetcher.fetchInstance().get().getPlayerTotalAchievements(player.getUniqueId());
   }
 
   @Override

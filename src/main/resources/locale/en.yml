@@ -60,5 +60,5 @@ prestige:
     plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
 
 not-high-enough: "&cYou cannot prestige at your rank!"
-not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in."
+not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in. Use /ranks to list the rankups."
 invalid-rankup: "Invalid rankup defined in config, please check console."

@@ -25,7 +25,26 @@ public class RankList<T extends Rank> {
     this.config = config;
     for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
       ConfigurationSection rankSection = (ConfigurationSection) entry.getValue();
+      validateSection(rankSection);
       ranks.add(deserializer.apply(rankSection));
+    }
+  }
+
+  protected void validateSection(ConfigurationSection section) {
+    String name = "'" + section.getName() + "'";
+    if (section.getConfigurationSection("requirements") != null) {
+      throw new IllegalArgumentException(
+          "Rankup section " + name + " is using the old requirements system.\n" +
+              "Instead of a configuration section, it is now a list of strings.\n" +
+              "For example, instead of \"requirements: money: 1000\" you should use \"requirements: - 'money 1000'\".");
+    }
+    Set<String> keys = section.getKeys(false);
+    if (keys.size() == 1 && keys.iterator().next().equalsIgnoreCase("rank")) {
+      throw new IllegalArgumentException(
+          "Having a final rank (for example: \"Z: rank: 'Z'\") from 3.4.2 or earlier should no longer be used.\n" +
+          "It is safe to just delete the final rank " + name + "");
+    } else if (section.getStringList("requirements").isEmpty()) {
+      throw new IllegalArgumentException("Rank " + name + " does not have any requirements.");
     }
   }
 

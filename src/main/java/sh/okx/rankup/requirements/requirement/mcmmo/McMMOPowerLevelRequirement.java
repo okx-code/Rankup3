@@ -4,8 +4,9 @@ import com.gmail.nossr50.util.player.UserManager;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 
-public class McMMOPowerLevelRequirement extends Requirement {
+public class McMMOPowerLevelRequirement extends ProgressiveRequirement {
   public McMMOPowerLevelRequirement(Rankup plugin) {
     super(plugin, "mcmmo-power-level");
   }
@@ -15,13 +16,8 @@ public class McMMOPowerLevelRequirement extends Requirement {
   }
 
   @Override
-  public boolean check(Player player) {
-    return getRemaining(player) <= 0;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    return Math.max(0, getValueInt() - UserManager.getPlayer(player).getPowerLevel());
+  public double getProgress(Player player) {
+    return UserManager.getPlayer(player).getPowerLevel();
   }
 
   @Override

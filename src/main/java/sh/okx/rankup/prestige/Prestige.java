@@ -41,7 +41,6 @@ public class Prestige extends Rank {
 
   @Override
   public boolean isIn(Player player) {
-
     String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
     for (String group : groups) {
       if (group.equalsIgnoreCase(from) && rank == null) {
@@ -52,6 +51,16 @@ public class Prestige extends Rank {
         }
         return true;
       } else if(group.equalsIgnoreCase(rank)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean isEligable(Player player) {
+    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
+    for (String group : groups) {
+      if (group.equalsIgnoreCase(from)) {
         return true;
       }
     }

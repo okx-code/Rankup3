@@ -15,19 +15,12 @@ public class PermissionRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    return getRemaining(player) < 1;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    int matched = 0;
-    String[] permissions = getValueString().split(" ");
-    for (String permission : permissions) {
+    for (String permission : getValuesString()) {
       if (player.hasPermission(permission)) {
-        matched++;
+        return true;
       }
     }
-    return permissions.length - matched;
+    return false;
   }
 
   @Override

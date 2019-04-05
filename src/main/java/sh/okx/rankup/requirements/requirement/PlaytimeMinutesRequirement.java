@@ -3,9 +3,10 @@ package sh.okx.rankup.requirements.requirement;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
-public class PlaytimeMinutesRequirement extends Requirement {
+public class PlaytimeMinutesRequirement extends ProgressiveRequirement {
   private static final int TICKS_PER_MINUTE = 20 * 60;
   private Statistic playOneTick;
 
@@ -25,13 +26,8 @@ public class PlaytimeMinutesRequirement extends Requirement {
   }
 
   @Override
-  public boolean check(Player player) {
-    return getRemaining(player) <= 0;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    return Math.max(0, getValueDouble() - (player.getStatistic(playOneTick) / TICKS_PER_MINUTE));
+  public double getProgress(Player player) {
+    return player.getStatistic(playOneTick) / TICKS_PER_MINUTE;
   }
 
   @Override

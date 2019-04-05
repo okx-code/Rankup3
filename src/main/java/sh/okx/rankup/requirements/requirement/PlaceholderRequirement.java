@@ -43,13 +43,10 @@ public class PlaceholderRequirement extends Requirement {
         return p < v;
       case "<=":
         return p <= v;
+      case "==":
+        return p == v;
     }
     throw new IllegalArgumentException("Invalid operation: " + parts[1]);
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    return check(player) ? 0 : 1;
   }
 
   @Override

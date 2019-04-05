@@ -17,21 +17,8 @@ public class AdvancedAchievementsAchievementRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    return getRemaining(player) < 1;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
     AdvancedAchievementsAPI api = AdvancedAchievementsAPIFetcher.fetchInstance().get();
-
-    int total = 0;
-    String[] achievements = getValueString().split(" ");
-    for (String achievement : achievements) {
-      if (api.hasPlayerReceivedAchievement(player.getUniqueId(), achievement)) {
-        total++;
-      }
-    }
-    return achievements.length - total;
+    return api.hasPlayerReceivedAchievement(player.getUniqueId(), getValueString());
   }
 
   @Override

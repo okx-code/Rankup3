@@ -9,8 +9,9 @@ public abstract class Requirement implements Cloneable {
   protected final Rankup plugin;
   @Getter
   protected final String name;
-  @Setter
   private String value;
+  @Getter
+  private String sub;
 
   public Requirement(Rankup plugin, String name) {
     this.plugin = plugin;
@@ -21,10 +22,25 @@ public abstract class Requirement implements Cloneable {
     this.plugin = clone.plugin;
     this.name = clone.name;
     this.value = clone.value;
+    this.sub = clone.sub;
+  }
+
+  public void setValue(String value) {
+    if (hasSubRequirement()) {
+      String[] parts = value.split(" ", 2);
+      this.sub = parts[0];
+      this.value = parts[1];
+    } else {
+      this.value = value;
+    }
   }
 
   public String getValueString() {
     return value;
+  }
+
+  public String[] getValuesString() {
+    return value.split(" ");
   }
 
   public double getValueDouble() {
@@ -52,7 +68,11 @@ public abstract class Requirement implements Cloneable {
    * @return the remaining amount needed. Should be non-negative.
    */
   public double getRemaining(Player player) {
-    return getValueDouble();
+    return check(player) ? 0 : 1;
+  }
+
+  public boolean hasSubRequirement() {
+    return false;
   }
 
   public abstract Requirement clone();

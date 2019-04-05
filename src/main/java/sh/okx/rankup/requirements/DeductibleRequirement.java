@@ -3,7 +3,7 @@ package sh.okx.rankup.requirements;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 
-public abstract class DeductibleRequirement extends Requirement {
+public abstract class DeductibleRequirement extends ProgressiveRequirement {
   public DeductibleRequirement(Rankup plugin, String name) {
     super(plugin, name);
   }

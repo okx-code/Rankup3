@@ -51,6 +51,7 @@ public class McMMOSkillUtil {
     } catch (ClassNotFoundException e) {
       throw new RuntimeException("mcMMO UserManager class not found");
     }*/
+
     try {
       getSkillLevel = McMMOPlayer.class.getMethod("getSkillLevel", skillTypeClass);
     } catch (NoSuchMethodException e) {
@@ -81,7 +82,7 @@ public class McMMOSkillUtil {
   public int getSkillLevel(Player player, String skill) {
     McMMOPlayer mcMMOPlayer = UserManager.getPlayer(player);
     try {
-      Object skillType = skillTypeClass.cast(valueOf.invoke(null, skill));
+      Object skillType = skillTypeClass.cast(valueOf.invoke(null, skill.toUpperCase()));
       return (int) getSkillLevel.invoke(mcMMOPlayer, skillType);
     } catch (IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);

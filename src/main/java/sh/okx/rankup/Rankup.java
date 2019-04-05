@@ -131,8 +131,6 @@ public class Rankup extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
-
-
     if (config.getInt("version") < 4) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
@@ -180,12 +178,18 @@ public class Rankup extends JavaPlugin {
   }
 
   public void refreshRanks() {
-    registerRequirements();
-    Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
+    try {
+      registerRequirements();
+      Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
 
-    rankups = new Rankups(this, loadConfig("rankups.yml"));
-    if (config.getBoolean("prestige")) {
-      prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
+      rankups = new Rankups(this, loadConfig("rankups.yml"));
+      if (config.getBoolean("prestige")) {
+        prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      Bukkit.getPluginManager().disablePlugin(this);
+      getLogger().severe("Could not finish enabling Rankup");
     }
   }
 
@@ -221,10 +225,12 @@ public class Rankup extends JavaPlugin {
     requirementRegistry.addRequirement(new GroupRequirement(this));
     requirementRegistry.addRequirement(new PermissionRequirement(this));
     requirementRegistry.addRequirement(new PlaceholderRequirement(this));
+    requirementRegistry.addRequirement(new WorldRequirement(this));
+    requirementRegistry.addRequirement(new BlockBreakRequirement(this));
+    requirementRegistry.addRequirement(new PlayerKillsRequirement(this));
+    requirementRegistry.addRequirement(new MobKillsRequirement(this));
     if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-      for (String skill : McMMOSkillUtil.getInstance().getSkills()) {
-        requirementRegistry.addRequirement(new McMMOSkillRequirement(this, skill));
-      }
+      requirementRegistry.addRequirement(new McMMOSkillRequirement(this));
       requirementRegistry.addRequirement(new McMMOPowerLevelRequirement(this));
     }
     if (Bukkit.getPluginManager().isPluginEnabled("AdvancedAchievements")) {
@@ -246,7 +252,7 @@ public class Rankup extends JavaPlugin {
     if (rsp != null) {
       economy = rsp.getProvider();
     } else {
-      getLogger().warning("No economy found.");
+      getLogger().warning("No economy found. The 'money' requirement will be disabled.");
     }
   }
 
@@ -378,7 +384,6 @@ public class Rankup extends JavaPlugin {
     }
 
     Prestige oldPrestige = prestiges.getByPlayer(player);
-    Prestige prestige = prestiges.next(oldPrestige);
 
     oldPrestige.applyRequirements(player);
 
@@ -387,20 +392,20 @@ public class Rankup extends JavaPlugin {
     if (oldPrestige.getRank() != null) {
       permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
     }
-    permissions.playerAddGroup(null, player, prestige.getRank());
+    permissions.playerAddGroup(null, player, oldPrestige.getNext());
 
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, oldPrestige, prestige.getRank())
+        .replaceRanks(player, oldPrestige,oldPrestige.getNext())
         .replaceFromTo(oldPrestige)
         .broadcast();
     getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, oldPrestige, prestige.getRank())
+        .replaceRanks(player, oldPrestige, oldPrestige.getNext())
         .replaceFromTo(oldPrestige)
         .send(player);
 
-    oldPrestige.runCommands(player, prestige.getRank());
+    oldPrestige.runCommands(player, oldPrestige.getNext());
     applyCooldown(player);
   }
 
@@ -410,13 +415,13 @@ public class Rankup extends JavaPlugin {
 
   public boolean checkPrestige(Player player, boolean message) {
     Prestige prestige = prestiges.getByPlayer(player);
-    if (!prestige.isIn(player)) { // check if in ladder
+    if (prestige == null || !prestige.isEligable(player)) { // check if in ladder
       getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (prestiges.getByName(prestige.getNext()) == null) { // check if they are at the highest rank
+    } else if (prestiges.isLast(permissions, player)) { // check if they are at the highest rank
       getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, prestige.getRank())
@@ -509,6 +514,6 @@ public class Rankup extends JavaPlugin {
 
   public boolean isLegacy() {
     String version = Bukkit.getVersion();
-    return !(version.startsWith("1.13") || version.startsWith("1.14"));
+    return !(version.contains("1.13") || version.contains("1.14"));
   }
 }

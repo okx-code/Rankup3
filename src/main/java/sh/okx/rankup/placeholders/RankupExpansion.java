@@ -1,5 +1,7 @@
 package sh.okx.rankup.placeholders;
 
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldguard.WorldGuard;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;

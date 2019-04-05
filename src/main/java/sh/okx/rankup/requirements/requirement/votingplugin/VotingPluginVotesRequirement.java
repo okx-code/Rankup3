@@ -4,8 +4,9 @@ import com.Ben12345rocks.VotingPlugin.UserManager.UserManager;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 
-public class VotingPluginVotesRequirement extends Requirement {
+public class VotingPluginVotesRequirement extends ProgressiveRequirement {
   public VotingPluginVotesRequirement(Rankup plugin) {
     super(plugin, "votingplugin-votes");
   }
@@ -15,13 +16,8 @@ public class VotingPluginVotesRequirement extends Requirement {
   }
 
   @Override
-  public boolean check(Player player) {
-    return getRemaining(player) < 1;
-  }
-
-  @Override
-  public double getRemaining(Player player) {
-    return Math.max(0, getValueDouble() - UserManager.getInstance().getVotingPluginUser(player).getPoints());
+  public double getProgress(Player player) {
+    return UserManager.getInstance().getVotingPluginUser(player).getPoints();
   }
 
   @Override
