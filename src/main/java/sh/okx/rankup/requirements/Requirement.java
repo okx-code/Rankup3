@@ -12,10 +12,16 @@ public abstract class Requirement implements Cloneable {
   private String value;
   @Getter
   private String sub;
+  private boolean subRequirement;
 
   public Requirement(Rankup plugin, String name) {
+    this(plugin, name, false);
+  }
+
+  public Requirement(Rankup plugin, String name, boolean subRequirement) {
     this.plugin = plugin;
     this.name = name;
+    this.subRequirement = subRequirement;
   }
 
   protected Requirement(Requirement clone) {
@@ -71,8 +77,8 @@ public abstract class Requirement implements Cloneable {
     return check(player) ? 0 : 1;
   }
 
-  public boolean hasSubRequirement() {
-    return false;
+  public final boolean hasSubRequirement() {
+    return subRequirement;
   }
 
   public abstract Requirement clone();

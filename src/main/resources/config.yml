@@ -61,6 +61,8 @@ text:
   # confirm by typing /rankup again
   timeout: 10
 
+# placeholders:
+# https://github.com/okx-code/Rankup3/wiki/PAPI-Placeholders
 placeholders:
   # format for money. for more information, see
   # https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
@@ -70,7 +72,9 @@ placeholders:
   simple-format: "#.##"
   # used for current_rank and next_rank placeholders when a player is not in anything in rankups.yml
   not-in-ladder: "None"
-  # used in next_rank placeholders when there is no rankup
+  # used in the current_prestige placeholders when a player hasn't prestiged yet
+  no-prestige: "None"
+  # used in the next_rank and next_prestige placeholders when there is no rankup/prestige
   highest-rank: "None"
 
 # what to shorten money by.

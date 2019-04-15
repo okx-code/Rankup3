@@ -9,7 +9,7 @@ import sh.okx.rankup.requirements.Requirement;
 
 public class BlockBreakRequirement extends ProgressiveRequirement {
   public BlockBreakRequirement(Rankup plugin) {
-    super(plugin, "block-break");
+    super(plugin, "block-break", true);
   }
 
   @Override
@@ -29,10 +29,5 @@ public class BlockBreakRequirement extends ProgressiveRequirement {
   @Override
   public Requirement clone() {
     return new BlockBreakRequirement(this);
-  }
-
-  @Override
-  public boolean hasSubRequirement() {
-    return true;
   }
 }

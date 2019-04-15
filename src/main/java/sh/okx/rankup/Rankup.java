@@ -353,7 +353,7 @@ public class Rankup extends JavaPlugin {
   public boolean checkRankup(Player player, boolean message) {
     Rank rank = rankups.getByPlayer(player);
     if (rankups.isLast(permissions, player)) {
-      getMessage(prestiges == null ? Message.NO_RANKUP : prestiges.getByPlayer(player).isLast() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+      getMessage(prestiges == null ? Message.NO_RANKUP : prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, rankups.getLast())
           .send(player);

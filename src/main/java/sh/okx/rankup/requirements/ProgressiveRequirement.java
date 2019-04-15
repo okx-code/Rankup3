@@ -9,6 +9,10 @@ public abstract class ProgressiveRequirement extends Requirement {
     super(plugin, name);
   }
 
+  public ProgressiveRequirement(Rankup plugin, String name, boolean subRequirement) {
+    super(plugin, name, subRequirement);
+  }
+
   protected ProgressiveRequirement(Requirement clone) {
     super(clone);
   }
@@ -19,8 +23,12 @@ public abstract class ProgressiveRequirement extends Requirement {
   }
 
   @Override
-  public double getRemaining(Player player) {
-    return Math.max(0, getValueDouble() - getProgress(player));
+  public final double getRemaining(Player player) {
+    return getRemaining(player, 1);
+  }
+
+  public double getRemaining(Player player, double multiplier) {
+    return Math.max(0, (multiplier * getValueDouble()) - getProgress(player));
   }
 
   public abstract double getProgress(Player player);

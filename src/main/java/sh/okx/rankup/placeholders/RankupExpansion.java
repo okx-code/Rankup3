@@ -4,6 +4,7 @@ import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldguard.WorldGuard;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.prestige.Prestige;
@@ -29,14 +30,11 @@ public class RankupExpansion extends PlaceholderExpansion {
 
     Rankups rankups = plugin.getRankups();
     Rank rank = rankups.getByPlayer(player);
-    Rank nextRank = rank == null ? null : rankups.next(rank);
 
     Prestiges prestiges = plugin.getPrestiges();
     Prestige prestige = null;
-    Prestige nextPrestige = null;
     if (prestiges != null) {
       prestige = prestiges.getByPlayer(player);
-      nextPrestige = prestiges.next(prestige);
     }
 
     if (params.startsWith("requirement_")) {
@@ -59,17 +57,30 @@ public class RankupExpansion extends PlaceholderExpansion {
 
     switch (params) {
       case "current_prestige":
-        return Objects.requireNonNull(prestige, "Using current_prestige placeholder but prestiging is disabled").getRank();
+        requirePrestiging(prestiges, params);
+        if (prestiges.isLast(plugin.getPermissions(), player)) {
+          return prestiges.getLast();
+        } else if (prestige == null || prestige.getRank() == null) {
+          return getPlaceholder("no-prestige");
+        } else {
+          return prestige.getRank();
+        }
       case "next_prestige":
-        return orElsePlaceholder(nextPrestige, Prestige::getRank, "highest-rank");
+        requirePrestiging(prestiges, params);
+        if (prestiges.isLast(plugin.getPermissions(), player)) {
+          return getPlaceholder("highest-rank");
+        }
+        return orElse(prestige, Prestige::getNext, prestiges.getFirst().getNext());
       case "prestige_money":
+        requirePrestiging(prestiges, params);
         return String.valueOf(simplify(orElse(prestige, r -> r.isIn(player) ? r.getRequirement("money").getValueDouble() : 0, 0)));
       case "prestige_money_formatted":
+        requirePrestiging(prestiges, params);
         return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement("money").getValueDouble() : 0, 0D));
       case "current_rank":
         return orElsePlaceholder(rank, Rank::getRank, "not-in-ladder");
       case "next_rank":
-        return orElsePlaceholder(rank, r -> orElsePlaceholder(nextRank, Rank::getRank, "highest-rank"), "not-in-ladder");
+        return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");
       case "money":
         return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getValueDouble()), 0));
       case "money_formatted":
@@ -89,6 +100,10 @@ public class RankupExpansion extends PlaceholderExpansion {
       default:
         return null;
     }
+  }
+
+  private void requirePrestiging(Prestiges prestiges, String params) {
+    Objects.requireNonNull(prestiges, "Using %rankup_" + params + "% prestige placeholder but prestiging is disabled.");
   }
 
   private String getPlaceholderRequirement(Player player, Rank rank, String requirementName, String params) {

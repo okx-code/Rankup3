@@ -2,18 +2,18 @@ package sh.okx.rankup.prestige;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.lang3.Validate;
+import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.requirements.Requirement;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class Prestige extends Rank {
   @Getter
   private final String from;

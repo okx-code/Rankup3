@@ -7,7 +7,7 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 
 public class McMMOSkillRequirement extends ProgressiveRequirement {
   public McMMOSkillRequirement(Rankup plugin) {
-    super(plugin, "mcmmo");
+    super(plugin, "mcmmo", true);
   }
 
   protected McMMOSkillRequirement(McMMOSkillRequirement clone) {
@@ -17,11 +17,6 @@ public class McMMOSkillRequirement extends ProgressiveRequirement {
   @Override
   public double getProgress(Player player) {
     return McMMOSkillUtil.getInstance().getSkillLevel(player, getValueString());
-  }
-
-  @Override
-  public boolean hasSubRequirement() {
-    return true;
   }
 
   @Override

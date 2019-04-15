@@ -16,9 +16,9 @@ public class MoneyRequirement extends DeductibleRequirement {
   }
 
   @Override
-  public void apply(Player player) {
+  public void apply(Player player, double multiplier) {
     Economy economy = plugin.getEconomy();
-    economy.withdrawPlayer(player, getValueDouble());
+    economy.withdrawPlayer(player, getValueDouble() * multiplier);
   }
 
   @Override

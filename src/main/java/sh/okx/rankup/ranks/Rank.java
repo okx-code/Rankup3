@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.Validate;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -13,11 +13,11 @@ import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode
+@ToString
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rank {
   @Getter

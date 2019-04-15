@@ -9,7 +9,7 @@ import sh.okx.rankup.requirements.Requirement;
 
 public class MobKillsRequirement extends ProgressiveRequirement {
   public MobKillsRequirement(Rankup plugin) {
-    super(plugin, "mob-kills");
+    super(plugin, "mob-kills", true);
   }
 
   protected MobKillsRequirement(Requirement clone) {
@@ -24,10 +24,5 @@ public class MobKillsRequirement extends ProgressiveRequirement {
   @Override
   public Requirement clone() {
     return new MobKillsRequirement(this);
-  }
-
-  @Override
-  public boolean hasSubRequirement() {
-    return true;
   }
 }

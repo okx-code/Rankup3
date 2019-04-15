@@ -19,6 +19,11 @@ public abstract class DeductibleRequirement extends ProgressiveRequirement {
    * and has returned true immediately prior to this.
    *
    * @param player the player to take from
+   * @param multiplier The multiplier for the value
    */
-  public abstract void apply(Player player);
+  public abstract void apply(Player player, double multiplier);
+
+  public final void apply(Player player) {
+    apply(player, 1);
+  }
 }

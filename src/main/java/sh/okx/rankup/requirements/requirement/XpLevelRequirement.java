@@ -15,8 +15,8 @@ public class XpLevelRequirement extends DeductibleRequirement {
   }
 
   @Override
-  public void apply(Player player) {
-    player.setLevel(player.getLevel() - getValueInt());
+  public void apply(Player player, double multiplier) {
+    player.setLevel(player.getLevel() - (int) Math.round(getValueInt() * multiplier));
   }
 
   @Override
