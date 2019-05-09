@@ -23,7 +23,7 @@ public class BlockBreakRequirement extends ProgressiveRequirement {
 
   @Override
   public double getProgress(Player player) {
-    return player.getStatistic(Statistic.MINE_BLOCK, Material.matchMaterial(getValueString()));
+    return player.getStatistic(Statistic.MINE_BLOCK, Material.matchMaterial(getSub()));
   }
 
   @Override

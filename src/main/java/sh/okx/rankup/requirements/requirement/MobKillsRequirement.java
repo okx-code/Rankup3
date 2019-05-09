@@ -18,7 +18,7 @@ public class MobKillsRequirement extends ProgressiveRequirement {
 
   @Override
   public double getProgress(Player player) {
-    return player.getStatistic(Statistic.KILL_ENTITY, EntityType.fromName(getValueString()));
+    return player.getStatistic(Statistic.KILL_ENTITY, EntityType.fromName(getSub()));
   }
 
   @Override

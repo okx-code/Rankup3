@@ -1,7 +1,6 @@
 package sh.okx.rankup.requirements;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 
@@ -29,6 +28,7 @@ public abstract class Requirement implements Cloneable {
     this.name = clone.name;
     this.value = clone.value;
     this.sub = clone.sub;
+    this.subRequirement = clone.subRequirement;
   }
 
   public void setValue(String value) {
@@ -57,6 +57,13 @@ public abstract class Requirement implements Cloneable {
     return Integer.parseInt(value);
   }
 
+  public String getFullName() {
+    if (hasSubRequirement()) {
+      return name + "#" + sub;
+    } else {
+      return name;
+    }
+  }
 
   /**
    * Check if a player meets this requirement

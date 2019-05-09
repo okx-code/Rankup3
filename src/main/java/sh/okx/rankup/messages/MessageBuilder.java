@@ -1,7 +1,6 @@
 package sh.okx.rankup.messages;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -11,6 +10,7 @@ import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +27,7 @@ public class MessageBuilder {
 
   private static MessageBuilder of(ConfigurationSection config, String message) {
     String string = config.getString(message);
-    Validate.notNull(string, "Configuration message '" + message + "' not found!");
+    Objects.requireNonNull(string, "Configuration message '" + message + "' not found!");
     return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', string));
   }
 
@@ -45,7 +45,6 @@ public class MessageBuilder {
   public MessageBuilder replaceFirstPrestige(Rank rank, Prestiges prestiges, String with) {
     if (prestiges != null && prestiges.getFirst().equals(rank)) {
       replace(Variable.OLD_RANK, with);
-      replace(Variable.OLD_RANK_NAME, with);
     }
     return this;
   }
@@ -64,14 +63,12 @@ public class MessageBuilder {
 
   public MessageBuilder replaceRanks(String rankName) {
     replace(Variable.RANK, rankName);
-    replace(Variable.RANK_NAME, rankName);
     return this;
   }
 
   public MessageBuilder replaceRanks(Rank oldRank, String rankName) {
     replaceRanks(rankName);
     replace(Variable.OLD_RANK, oldRank.getRank());
-    replace(Variable.OLD_RANK_NAME, oldRank.getRank());
     return this;
   }
 

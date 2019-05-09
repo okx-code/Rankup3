@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.5-beta.5'
+version '3.5.2'
 
 repositories {
     mavenCentral()
@@ -37,7 +37,8 @@ dependencies {
     }
     compile 'me.clip:placeholderapi:2.9.2'
     compile 'com.hm.achievement:advanced-achievements-api:1.1.0'
-    // if compiling this you will have to download and install mcMMO locally
-    compile 'com.gmail.nossr50.mcMMO:mcMMO:2.1.+'
+    compile ('com.github.mcMMO-Dev:mcMMO:ac8042f') {
+        exclude group: 'com.sk89q.worldguard'
+    }
     compile 'com.github.Ben12345rocks:VotingPlugin:5.18.2'
 }

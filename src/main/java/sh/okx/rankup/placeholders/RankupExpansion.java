@@ -1,10 +1,7 @@
 package sh.okx.rankup.placeholders;
 
-import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldguard.WorldGuard;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.prestige.Prestige;
@@ -78,8 +75,17 @@ public class RankupExpansion extends PlaceholderExpansion {
         requirePrestiging(prestiges, params);
         return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement("money").getValueDouble() : 0, 0D));
       case "current_rank":
-        return orElsePlaceholder(rank, Rank::getRank, "not-in-ladder");
+        if (rankups.isLast(plugin.getPermissions(), player)) {
+          return rankups.getLast();
+        } else if (rank == null) {
+          return getPlaceholder("not-in-ladder");
+        } else {
+          return rank.getRank();
+        }
       case "next_rank":
+        if (rankups.isLast(plugin.getPermissions(), player)) {
+          return getPlaceholder("highest-rank");
+        }
         return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");
       case "money":
         return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getValueDouble()), 0));

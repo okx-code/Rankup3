@@ -226,7 +226,7 @@ public class Rankup extends JavaPlugin {
     requirementRegistry.addRequirement(new PermissionRequirement(this));
     requirementRegistry.addRequirement(new PlaceholderRequirement(this));
     requirementRegistry.addRequirement(new WorldRequirement(this));
-    requirementRegistry.addRequirement(new BlockBreakRequirement(this));
+    //requirementRegistry.addRequirement(new BlockBreakRequirement(this));
     requirementRegistry.addRequirement(new PlayerKillsRequirement(this));
     requirementRegistry.addRequirement(new MobKillsRequirement(this));
     if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
@@ -488,12 +488,20 @@ public class Rankup extends JavaPlugin {
   }
 
   private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
-    builder.replace(variable + " " + requirement.getName(), value.get());
+    builder.replace(variable + " " + requirement.getFullName(), value.get());
   }
 
   public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, String rankName) {
+    String oldRankName;
+    if (oldRank instanceof Prestige && oldRank.getRank() == null) {
+      oldRankName = ((Prestige) oldRank).getFrom();
+    } else {
+      oldRankName = oldRank.getRank();
+    }
+
     return replaceMoneyRequirements(getMessage(oldRank, message)
-        .replaceRanks(player, oldRank, rankName), player, oldRank)
+        .replaceRanks(player, rankName)
+        .replace(Variable.OLD_RANK, oldRankName), player, oldRank)
         .replaceFromTo(oldRank);
   }
 

@@ -2,7 +2,6 @@ package sh.okx.rankup;
 
 import lombok.Getter;
 import net.milkbowl.vault.permission.Permission;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -34,7 +33,7 @@ public class RankList<T extends Rank> {
     String name = "'" + section.getName() + "'";
     if (section.getConfigurationSection("requirements") != null) {
       throw new IllegalArgumentException(
-          "Rankup section " + name + " is using the old requirements system.\n" +
+          "Rankup/prestige section " + name + " is using the old requirements system.\n" +
               "Instead of a configuration section, it is now a list of strings.\n" +
               "For example, instead of \"requirements: money: 1000\" you should use \"requirements: - 'money 1000'\".");
     }

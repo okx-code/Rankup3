@@ -17,7 +17,7 @@ public class Prestiges extends RankList<Prestige> {
         return prestige;
       }
     }
-    throw new IllegalStateException("No prestige found for first prestige (first prestige is counted as a prestige without a rank set)." +
+    throw new IllegalStateException("No prestige found for first prestige (first prestige is counted as a prestige without a rank set). " +
         "Disable prestiges in config.yml if you don't want any.");
   }
 }
