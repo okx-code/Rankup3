@@ -8,6 +8,10 @@ public abstract class DeductibleRequirement extends ProgressiveRequirement {
     super(plugin, name);
   }
 
+  public DeductibleRequirement(Rankup plugin, String name, boolean subRequirement) {
+    super(plugin, name, subRequirement);
+  }
+
   protected DeductibleRequirement(Requirement clone) {
     super(clone);
   }

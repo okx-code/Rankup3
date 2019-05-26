@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -88,8 +89,9 @@ public class Rank {
 
   public void runCommands(Player player, String next) {
     for (String command : commands) {
+      String string = new MessageBuilder(command).replaceRanks(player, this, next).toString();
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-          new MessageBuilder(command).replaceRanks(player, this, next).toString());
+          PlaceholderAPI.setPlaceholders(player, string));
     }
   }
 }

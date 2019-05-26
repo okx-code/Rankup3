@@ -37,7 +37,6 @@ import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchie
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
-import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillUtil;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
 
 import java.io.File;
@@ -185,6 +184,8 @@ public class Rankup extends JavaPlugin {
       rankups = new Rankups(this, loadConfig("rankups.yml"));
       if (config.getBoolean("prestige")) {
         prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
+      } else {
+        prestiges = null;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -226,7 +227,7 @@ public class Rankup extends JavaPlugin {
     requirementRegistry.addRequirement(new PermissionRequirement(this));
     requirementRegistry.addRequirement(new PlaceholderRequirement(this));
     requirementRegistry.addRequirement(new WorldRequirement(this));
-    //requirementRegistry.addRequirement(new BlockBreakRequirement(this));
+    requirementRegistry.addRequirement(new BlockBreakRequirement(this));
     requirementRegistry.addRequirement(new PlayerKillsRequirement(this));
     requirementRegistry.addRequirement(new MobKillsRequirement(this));
     if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
@@ -240,6 +241,10 @@ public class Rankup extends JavaPlugin {
     if (Bukkit.getPluginManager().isPluginEnabled("VotingPlugin")) {
       requirementRegistry.addRequirement(new VotingPluginVotesRequirement(this));
     }
+    requirementRegistry.addRequirement(new ItemRequirement(this));
+    requirementRegistry.addRequirement(new UseItemRequirement(this));
+    requirementRegistry.addRequirement(new TotalMobKillsRequirement(this));
+    requirementRegistry.addRequirement(new CraftItemRequirement(this));
   }
 
   private void setupPermissions() {
@@ -480,6 +485,7 @@ public class Rankup extends JavaPlugin {
               () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
           replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
               () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
+          replaceRequirements(builder, Variable.AMOUNT_DONE, requirement, () -> simpleFormat.format(requirement.getValueDouble() - requirement.getRemaining(player)));
         }
       } catch (NumberFormatException ignored) {
       }

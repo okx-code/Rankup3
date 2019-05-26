@@ -7,6 +7,8 @@ import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
+import java.util.Objects;
+
 public class MobKillsRequirement extends ProgressiveRequirement {
   public MobKillsRequirement(Rankup plugin) {
     super(plugin, "mob-kills", true);
@@ -18,7 +20,8 @@ public class MobKillsRequirement extends ProgressiveRequirement {
 
   @Override
   public double getProgress(Player player) {
-    return player.getStatistic(Statistic.KILL_ENTITY, EntityType.fromName(getSub()));
+    EntityType entity = Objects.requireNonNull(EntityType.fromName(getSub()), "Invalid entity type '" + getSub() + "' in mob-kills requirement.");
+    return player.getStatistic(Statistic.KILL_ENTITY, entity);
   }
 
   @Override

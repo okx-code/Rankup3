@@ -7,26 +7,26 @@ import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
-public class BlockBreakRequirement extends ProgressiveRequirement {
-  public BlockBreakRequirement(Rankup plugin) {
-    super(plugin, "block-break", true);
+public class CraftItemRequirement extends ProgressiveRequirement {
+  public CraftItemRequirement(Rankup plugin) {
+    super(plugin, "craft-item", true);
   }
 
-  protected BlockBreakRequirement(BlockBreakRequirement clone) {
+  protected CraftItemRequirement(CraftItemRequirement clone) {
     super(clone);
   }
 
   @Override
   public double getProgress(Player player) {
     Material material = Material.matchMaterial(getSub());
-    if (material == null || !material.isBlock()) {
-      throw new IllegalArgumentException("'" + getSub() + "' is not a valid block");
+    if (material == null) {
+      throw new IllegalArgumentException("'" + getSub() + "' is not a valid item");
     }
-    return player.getStatistic(Statistic.MINE_BLOCK, material);
+    return player.getStatistic(Statistic.CRAFT_ITEM, material);
   }
 
   @Override
   public Requirement clone() {
-    return new BlockBreakRequirement(this);
+    return new CraftItemRequirement(this);
   }
 }

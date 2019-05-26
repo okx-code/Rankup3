@@ -34,6 +34,10 @@ public abstract class Requirement implements Cloneable {
   public void setValue(String value) {
     if (hasSubRequirement()) {
       String[] parts = value.split(" ", 2);
+      if (parts.length < 2) {
+        throw new IllegalArgumentException("Amount and sub-requirement not present for requirement '" + getName() + "'. You must use the format '" + getName() + " <sub-requirement> <amount>'");
+      }
+
       this.sub = parts[0];
       this.value = parts[1];
     } else {
