@@ -66,7 +66,7 @@ public class McMMOSkillUtil {
     return instance;
   }
 
-  public String[] getSkills() {
+  /*public String[] getSkills() {
     try {
       Enum<?>[] skills = (Enum<?>[]) values.invoke(null);
       String[] stringSkills = new String[skills.length];
@@ -77,7 +77,7 @@ public class McMMOSkillUtil {
     } catch (IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
-  }
+  }*/
 
   public int getSkillLevel(Player player, String skill) {
     McMMOPlayer mcMMOPlayer = UserManager.getPlayer(player);

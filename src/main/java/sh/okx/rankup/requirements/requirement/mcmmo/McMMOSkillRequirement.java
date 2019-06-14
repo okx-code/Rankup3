@@ -16,7 +16,7 @@ public class McMMOSkillRequirement extends ProgressiveRequirement {
 
   @Override
   public double getProgress(Player player) {
-    return McMMOSkillUtil.getInstance().getSkillLevel(player, getValueString());
+    return McMMOSkillUtil.getInstance().getSkillLevel(player, getSub());
   }
 
   @Override
