@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import sh.okx.rankup.commands.InfoCommand;
@@ -20,7 +22,7 @@ import sh.okx.rankup.commands.RanksCommand;
 import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
-import sh.okx.rankup.messages.EmptyMessageBuilder;
+import sh.okx.rankup.messages.NullMessageBuilder;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.Variable;
@@ -44,7 +46,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 public class Rankup extends JavaPlugin {
@@ -56,7 +57,7 @@ public class Rankup extends JavaPlugin {
    * The registry for listing the requirements to /rankup.
    */
   @Getter
-  private RequirementRegistry requirementRegistry;
+  private RequirementRegistry requirements;
   @Getter
   private FileConfiguration messages;
   @Getter
@@ -67,10 +68,8 @@ public class Rankup extends JavaPlugin {
   private Prestiges prestiges;
   @Getter
   private Placeholders placeholders;
-  /**
-   * Players who cannot rankup/prestige for a certain amount of time.
-   */
-  private Map<Player, Long> cooldowns;
+  @Getter
+  private RankupHelper helper;
   private AutoRankup autoRankup;
 
   @Override
@@ -117,7 +116,6 @@ public class Rankup extends JavaPlugin {
   }
 
   public void reload() {
-    cooldowns = new WeakHashMap<>();
     closeInventories();
     loadConfigs();
 
@@ -139,6 +137,8 @@ public class Rankup extends JavaPlugin {
       getLogger().severe("You may then copy in your config values from the old config.");
       getLogger().severe("Check the changelog on the Rankup spigot page to see the changes.");
     }
+
+    helper = new RankupHelper(this);
   }
 
   private void addAll(Map<String, Integer> map, RankList<? extends Rank> ranks) {
@@ -191,6 +191,7 @@ public class Rankup extends JavaPlugin {
       e.printStackTrace();
       Bukkit.getPluginManager().disablePlugin(this);
       getLogger().severe("Could not finish enabling Rankup");
+      Bukkit.broadcast(ChatColor.RED + "Could not reload rankup successfully, please check console for more information.", "rankup.reload");
     }
   }
 
@@ -217,34 +218,36 @@ public class Rankup extends JavaPlugin {
   }
 
   private void registerRequirements() {
-    requirementRegistry = new RequirementRegistry();
+    requirements = new RequirementRegistry();
+    requirements.addRequirement(new XpLevelRequirement(this));
+    requirements.addRequirement(new PlaytimeMinutesRequirement(this));
+    requirements.addRequirement(new GroupRequirement(this));
+    requirements.addRequirement(new PermissionRequirement(this));
+    requirements.addRequirement(new PlaceholderRequirement(this));
+    requirements.addRequirement(new WorldRequirement(this));
+    requirements.addRequirement(new BlockBreakRequirement(this));
+    requirements.addRequirement(new PlayerKillsRequirement(this));
+    requirements.addRequirement(new MobKillsRequirement(this));
+    requirements.addRequirement(new ItemRequirement(this));
+    requirements.addRequirement(new UseItemRequirement(this));
+    requirements.addRequirement(new TotalMobKillsRequirement(this));
+    requirements.addRequirement(new CraftItemRequirement(this));
     if (economy != null) {
-      requirementRegistry.addRequirement(new MoneyRequirement(this));
+      requirements.addRequirement(new MoneyRequirement(this));
     }
-    requirementRegistry.addRequirement(new XpLevelRequirement(this));
-    requirementRegistry.addRequirement(new PlaytimeMinutesRequirement(this));
-    requirementRegistry.addRequirement(new GroupRequirement(this));
-    requirementRegistry.addRequirement(new PermissionRequirement(this));
-    requirementRegistry.addRequirement(new PlaceholderRequirement(this));
-    requirementRegistry.addRequirement(new WorldRequirement(this));
-    requirementRegistry.addRequirement(new BlockBreakRequirement(this));
-    requirementRegistry.addRequirement(new PlayerKillsRequirement(this));
-    requirementRegistry.addRequirement(new MobKillsRequirement(this));
-    if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-      requirementRegistry.addRequirement(new McMMOSkillRequirement(this));
-      requirementRegistry.addRequirement(new McMMOPowerLevelRequirement(this));
+
+    PluginManager pluginManager = Bukkit.getPluginManager();
+    if (pluginManager.isPluginEnabled("mcMMO")) {
+      requirements.addRequirement(new McMMOSkillRequirement(this));
+      requirements.addRequirement(new McMMOPowerLevelRequirement(this));
     }
-    if (Bukkit.getPluginManager().isPluginEnabled("AdvancedAchievements")) {
-      requirementRegistry.addRequirement(new AdvancedAchievementsAchievementRequirement(this));
-      requirementRegistry.addRequirement(new AdvancedAchievementsTotalRequirement(this));
+    if (pluginManager.isPluginEnabled("AdvancedAchievements")) {
+      requirements.addRequirement(new AdvancedAchievementsAchievementRequirement(this));
+      requirements.addRequirement(new AdvancedAchievementsTotalRequirement(this));
     }
-    if (Bukkit.getPluginManager().isPluginEnabled("VotingPlugin")) {
-      requirementRegistry.addRequirement(new VotingPluginVotesRequirement(this));
+    if (pluginManager.isPluginEnabled("VotingPlugin")) {
+      requirements.addRequirement(new VotingPluginVotesRequirement(this));
     }
-    requirementRegistry.addRequirement(new ItemRequirement(this));
-    requirementRegistry.addRequirement(new UseItemRequirement(this));
-    requirementRegistry.addRequirement(new TotalMobKillsRequirement(this));
-    requirementRegistry.addRequirement(new CraftItemRequirement(this));
   }
 
   private void setupPermissions() {
@@ -289,166 +292,8 @@ public class Rankup extends JavaPlugin {
     return MessageBuilder.of(messages, message);
   }
 
-  private boolean checkCooldown(Player player, Rank rank) {
-    if (cooldowns.containsKey(player)) {
-      long time = System.currentTimeMillis() - cooldowns.get(player);
-      // if time passed is less than the cooldown
-      long cooldownSeconds = config.getInt("cooldown");
-      long timeLeft = (cooldownSeconds * 1000) - time;
-      if (timeLeft > 0) {
-        long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
-        getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
-            .failIfEmpty()
-            .replaceRanks(player, rank.getRank())
-            .replaceFromTo(rank)
-            .replace(Variable.SECONDS, cooldownSeconds)
-            .replace(Variable.SECONDS_LEFT, secondsLeft)
-            .send(player);
-        return true;
-      }
-      // cooldown has expired so remove it
-      cooldowns.remove(player);
-    }
-    return false;
-  }
-
-  private void applyCooldown(Player player) {
-    if (config.getInt("cooldown") > 0) {
-      cooldowns.put(player, System.currentTimeMillis());
-    }
-  }
-
-  public void rankup(Player player) {
-    if (!checkRankup(player)) {
-      return;
-    }
-
-    Rank oldRank = rankups.getByPlayer(player);
-    String next = oldRank.getNext();
-
-    oldRank.applyRequirements(player);
-
-    permissions.playerRemoveGroup(null, player, oldRank.getRank());
-    permissions.playerAddGroup(null, player, next);
-
-    getMessage(oldRank, Message.SUCCESS_PUBLIC)
-        .failIfEmpty()
-        .replaceRanks(player, oldRank, next)
-        .broadcast();
-    getMessage(oldRank, Message.SUCCESS_PRIVATE)
-        .failIfEmpty()
-        .replaceRanks(player, oldRank, next)
-        .send(player);
-
-    oldRank.runCommands(player, next);
-    applyCooldown(player);
-  }
-
-  public boolean checkRankup(Player player) {
-    return checkRankup(player, true);
-  }
-
-  /**
-   * Checks if a player can rankup,
-   * and if they can't, sends the player a message and returns false
-   *
-   * @param player the player to check if they can rankup
-   * @return true if the player can rankup, false otherwise
-   */
-  public boolean checkRankup(Player player, boolean message) {
-    Rank rank = rankups.getByPlayer(player);
-    if (rankups.isLast(permissions, player)) {
-      getMessage(prestiges == null ? Message.NO_RANKUP : prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
-          .failIf(!message)
-          .replaceRanks(player, rankups.getLast())
-          .send(player);
-      return false;
-    } else if (rank == null) { // check if in ladder
-      getMessage(Message.NOT_IN_LADDER)
-          .failIf(!message)
-          .replace(Variable.PLAYER, player.getName())
-          .send(player);
-      return false;
-    } else if (!rank.hasRequirements(player)) { // check if they can afford it
-      if (message) {
-        replaceMoneyRequirements(getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-            .replaceRanks(player, rank, rank.getNext()), player, rank)
-            .send(player);
-      }
-      return false;
-    } else if (message && checkCooldown(player, rank)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public void prestige(Player player) {
-    if (!checkPrestige(player)) {
-      return;
-    }
-
-    Prestige oldPrestige = prestiges.getByPlayer(player);
-
-    oldPrestige.applyRequirements(player);
-
-    permissions.playerRemoveGroup(null, player, oldPrestige.getFrom());
-    permissions.playerAddGroup(null, player, oldPrestige.getTo());
-    if (oldPrestige.getRank() != null) {
-      permissions.playerRemoveGroup(null, player, oldPrestige.getRank());
-    }
-    permissions.playerAddGroup(null, player, oldPrestige.getNext());
-
-    getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PUBLIC)
-        .failIfEmpty()
-        .replaceRanks(player, oldPrestige,oldPrestige.getNext())
-        .replaceFromTo(oldPrestige)
-        .broadcast();
-    getMessage(oldPrestige, Message.PRESTIGE_SUCCESS_PRIVATE)
-        .failIfEmpty()
-        .replaceRanks(player, oldPrestige, oldPrestige.getNext())
-        .replaceFromTo(oldPrestige)
-        .send(player);
-
-    oldPrestige.runCommands(player, oldPrestige.getNext());
-    applyCooldown(player);
-  }
-
-  public boolean checkPrestige(Player player) {
-    return checkPrestige(player, true);
-  }
-
-  public boolean checkPrestige(Player player, boolean message) {
-    Prestige prestige = prestiges.getByPlayer(player);
-    if (prestige == null || !prestige.isEligable(player)) { // check if in ladder
-      getMessage(Message.NOT_HIGH_ENOUGH)
-          .failIf(!message)
-          .replace(Variable.PLAYER, player.getName())
-          .send(player);
-      return false;
-    } else if (prestiges.isLast(permissions, player)) { // check if they are at the highest rank
-      getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
-          .failIf(!message)
-          .replaceRanks(player, prestige.getRank())
-          .replaceFromTo(prestige)
-          .send(player);
-      return false;
-    } else if (!prestige.hasRequirements(player)) { // check if they can afford it
-      replaceMoneyRequirements(getMessage(prestige, Message.PRESTIGE_REQUIREMENTS_NOT_MET)
-          .failIf(!message)
-          .replaceRanks(player, prestige, prestiges.next(prestige).getRank()), player, prestige)
-          .replaceFromTo(prestige)
-          .send(player);
-      return false;
-    } else if (checkCooldown(player, prestige)) {
-      return false;
-    }
-
-    return true;
-  }
-
   public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
-    if (builder instanceof EmptyMessageBuilder) {
+    if (builder instanceof NullMessageBuilder) {
       return builder;
     }
 

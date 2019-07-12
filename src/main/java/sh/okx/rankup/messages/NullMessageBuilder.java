@@ -2,13 +2,13 @@ package sh.okx.rankup.messages;
 
 import org.bukkit.command.CommandSender;
 
-public class EmptyMessageBuilder extends MessageBuilder {
-  EmptyMessageBuilder() {
+public class NullMessageBuilder extends MessageBuilder {
+  NullMessageBuilder() {
     super(null);
   }
 
   @Override
-  public MessageBuilder failIfEmpty() {
+  public MessageBuilder failIf(boolean value) {
     return this;
   }
 

@@ -28,7 +28,7 @@ public class Prestige extends Rank {
 
   public static Prestige deserialize(Rankup plugin, ConfigurationSection section) {
     List<String> requirementsList = section.getStringList("requirements");
-    Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsList);
+    Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
 
     return new Prestige(section, plugin,
         section.getString("next"),

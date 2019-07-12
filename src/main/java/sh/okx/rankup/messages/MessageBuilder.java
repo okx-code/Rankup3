@@ -84,8 +84,7 @@ public class MessageBuilder {
   /**
    * Fails the MessageBuilder if the message is empty.
    * if this fails, all subsequent calls to that MessageBuilder will do nothing
-   *
-   * @return an EmptyMessageBuilder if the message is empty, itself otherwise
+   * @return a NullMessageBuilder if the message is empty, itself otherwise
    */
   public MessageBuilder failIfEmpty() {
     return failIf(message.isEmpty());
@@ -93,7 +92,7 @@ public class MessageBuilder {
 
   public MessageBuilder failIf(boolean value) {
     if (value) {
-      return new EmptyMessageBuilder();
+      return new NullMessageBuilder();
     } else {
       return this;
     }

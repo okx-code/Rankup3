@@ -185,4 +185,9 @@ public class RankupExpansion extends PlaceholderExpansion {
   public String getVersion() {
     return plugin.getDescription().getVersion();
   }
+
+  @Override
+  public boolean persist() {
+    return true;
+  }
 }

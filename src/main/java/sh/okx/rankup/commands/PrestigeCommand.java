@@ -30,7 +30,7 @@ public class PrestigeCommand implements CommandExecutor {
 
     Prestiges prestiges = plugin.getPrestiges();
     Prestige prestige = prestiges.getByPlayer(player);
-    if (!plugin.checkPrestige(player)) {
+    if (!plugin.getHelper().checkPrestige(player)) {
       return true;
     }
 
@@ -39,7 +39,7 @@ public class PrestigeCommand implements CommandExecutor {
     if (confirmationType.equals("text") && confirming.containsKey(player)) {
       long time = System.currentTimeMillis() - confirming.remove(player);
       if (time < config.getInt("text.timeout") * 1000) {
-        plugin.prestige(player);
+        plugin.getHelper().prestige(player);
         return true;
       }
     }
@@ -59,7 +59,7 @@ public class PrestigeCommand implements CommandExecutor {
         Gui.of(player, prestige, prestige.getNext(), plugin).open(player);
         break;
       case "none":
-        plugin.prestige(player);
+        plugin.getHelper().prestige(player);
         break;
       default:
         throw new IllegalArgumentException("Invalid confirmation type " + confirmationType);
