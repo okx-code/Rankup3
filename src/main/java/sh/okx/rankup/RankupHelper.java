@@ -32,7 +32,9 @@ public class RankupHelper {
     rank.runCommands(player);
     applyCooldown(player);
 
-    permissions.playerRemoveGroup(null, player, rank.getRank());
+    if (rank.getRank() != null) {
+      permissions.playerRemoveGroup(null, player, rank.getRank());
+    }
     permissions.playerAddGroup(null, player, rank.getNext());
   }
 
