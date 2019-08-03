@@ -11,6 +11,10 @@ public class AutoRankup extends BukkitRunnable {
 
   @Override
   public void run() {
+    if (rankup.error()) {
+      return;
+    }
+
     RankupHelper helper = rankup.getHelper();
     for (Player player : Bukkit.getOnlinePlayers()) {
       if (player.hasPermission("rankup.auto")) {

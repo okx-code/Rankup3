@@ -41,7 +41,7 @@ public class RankList<T extends Rank> {
     if (keys.size() == 1 && keys.iterator().next().equalsIgnoreCase("rank")) {
       throw new IllegalArgumentException(
           "Having a final rank (for example: \"Z: rank: 'Z'\") from 3.4.2 or earlier should no longer be used.\n" +
-          "It is safe to just delete the final rank " + name + "");
+              "It is safe to just delete the final rank " + name + "");
     } else if (section.getStringList("requirements").isEmpty()) {
       throw new IllegalArgumentException("Rank " + name + " does not have any requirements.");
     }
@@ -59,13 +59,19 @@ public class RankList<T extends Rank> {
       // nothing ranks up to this
       return rank;
     }
-    return null;
+    throw new IllegalArgumentException("Could not find a first rank. First ranks must not have anything that ranks up to them.");
   }
 
   public List<T> getOrderedList() {
     List<T> list = new ArrayList<>();
     T t = getFirst();
     while (t != null) {
+      for (T existing : list) {
+        if (existing.equals(t)) {
+          throw new IllegalArgumentException("Infinite rankup loop detected at rank " + t.getRank() + " to " + t.getNext()
+              + "\nMake sure no there are no rankups to previous ranks or to the same rank");
+        }
+      }
       list.add(t);
       t = next(t);
     }

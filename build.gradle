@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id "io.freefair.lombok" version "3.8.0"
 }
 
 group 'sh.okx'
-version '3.5.6'
+version '3.5.7-alpha'
 
 repositories {
     mavenCentral()
@@ -26,9 +27,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.6'
-    annotationProcessor 'org.projectlombok:lombok:1.18.6'
-    
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
 
@@ -41,4 +39,18 @@ dependencies {
         exclude group: 'com.sk89q.worldguard'
     }
     compile 'com.github.Ben12345rocks:VotingPlugin:5.18.2'
+}
+
+// automatically copy the version to plugin.yml
+processResources {
+    inputs.property 'version', project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'plugin.yml'
+        expand 'version':project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'plugin.yml'
+    }
 }

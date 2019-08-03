@@ -22,6 +22,10 @@ public class PrestigeCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    if (plugin.error(sender)) {
+      return true;
+    }
+
     // check if player
     if (!(sender instanceof Player)) {
       return false;

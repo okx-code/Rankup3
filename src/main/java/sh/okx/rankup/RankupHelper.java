@@ -1,6 +1,5 @@
 package sh.okx.rankup;
 
-import lombok.RequiredArgsConstructor;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

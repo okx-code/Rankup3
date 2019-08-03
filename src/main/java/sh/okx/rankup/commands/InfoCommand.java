@@ -24,27 +24,36 @@ public class InfoCommand implements CommandExecutor {
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     if (args.length > 0) {
       if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("rankup.reload")) {
-        plugin.reload();
-        sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Rankup " + ChatColor.YELLOW + "Reloaded configuration files.");
+        plugin.reload(false);
+        if (!plugin.error(sender)) {
+          sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Rankup " + ChatColor.YELLOW + "Reloaded configuration files.");
+        }
         return true;
       }
     }
 
+
     PluginDescriptionFile description = plugin.getDescription();
+    String version = description.getVersion();
     sender.sendMessage(
-        ChatColor.GREEN + "" + ChatColor.BOLD + description.getName() + " " + description.getVersion() +
+        ChatColor.GREEN + "" + ChatColor.BOLD + description.getName() + " " + version +
             ChatColor.YELLOW + " by " + ChatColor.BLUE + ChatColor.BOLD + String.join(", ", description.getAuthors()));
     if (sender.hasPermission("rankup.reload")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " reload " + ChatColor.YELLOW + "Reloads configuration files.");
     }
     if (sender.hasPermission("rankup.checkversion")) {
       if (versionMessage == null) {
+        if (version.contains("alpha") || version.contains("beta") || version.contains("rc")) {
+          versionMessage = ChatColor.YELLOW + "You are on a pre-release version.";
+          sender.sendMessage(versionMessage);
+          return true;
+        }
         sender.sendMessage(ChatColor.YELLOW + "Checking version...");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
           String message;
           try {
             String latest = getLatestVersion();
-            if (description.getVersion().equals(latest)) {
+            if (version.equals(latest)) {
               message = ChatColor.GREEN + "You are on the latest version.";
             } else {
               message = ChatColor.YELLOW + "A new version is available: " + ChatColor.GOLD + latest

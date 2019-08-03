@@ -71,12 +71,11 @@ public class Rankup extends JavaPlugin {
   @Getter
   private RankupHelper helper;
   private AutoRankup autoRankup;
+  private String errorMessage;
 
   @Override
   public void onEnable() {
-    setupPermissions();
-    setupEconomy();
-    reload();
+    reload(true);
 
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("confirmation",
@@ -112,12 +111,20 @@ public class Rankup extends JavaPlugin {
   @Override
   public void onDisable() {
     closeInventories();
-    placeholders.unregister();
+    if (placeholders != null) {
+      placeholders.unregister();
+    }
   }
 
-  public void reload() {
+  public void reload(boolean init) {
+    errorMessage = null;
+    if(!setupPermissions()) {
+      errorMessage = "No permission plugin found";
+    }
+    setupEconomy();
+
     closeInventories();
-    loadConfigs();
+    loadConfigs(init);
 
     if (autoRankup != null) {
       autoRankup.cancel();
@@ -139,6 +146,30 @@ public class Rankup extends JavaPlugin {
     }
 
     helper = new RankupHelper(this);
+  }
+
+  public boolean error() {
+    return error(null);
+  }
+
+  /**
+   * Notify the player of an error if there is one
+   * @return true if there was an error and action was taken
+   */
+  public boolean error(CommandSender sender) {
+    if (errorMessage == null) {
+      return false;
+    }
+
+    if (!(sender instanceof Player)) {
+      getLogger().severe("Failed to load Rankup");
+    } else {
+      sender.sendMessage(ChatColor.RED + "Could not load Rankup, check console for more information.");
+    }
+    for (String line : errorMessage.split("\n")) {
+      getLogger().severe(line);
+    }
+    return true;
   }
 
   private void addAll(Map<String, Integer> map, RankList<? extends Rank> ranks) {
@@ -165,7 +196,7 @@ public class Rankup extends JavaPlugin {
     }
   }
 
-  private void loadConfigs() {
+  private void loadConfigs(boolean init) {
     saveLocales();
 
     config = loadConfig("config.yml");
@@ -173,7 +204,14 @@ public class Rankup extends JavaPlugin {
     File localeFile = new File(new File(getDataFolder(), "locale"), locale + ".yml");
     messages = YamlConfiguration.loadConfiguration(localeFile);
 
-    Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::refreshRanks);
+    if (init) {
+      Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+        refreshRanks();
+        error();
+      });
+    } else {
+      refreshRanks();
+    }
   }
 
   public void refreshRanks() {
@@ -187,11 +225,13 @@ public class Rankup extends JavaPlugin {
       } else {
         prestiges = null;
       }
+
+      // check rankups are not in an infinite loop
+      rankups.getOrderedList();
+      prestiges.getOrderedList();
     } catch (Exception e) {
+      this.errorMessage = e.getMessage();
       e.printStackTrace();
-      Bukkit.getPluginManager().disablePlugin(this);
-      getLogger().severe("Could not finish enabling Rankup");
-      Bukkit.broadcast(ChatColor.RED + "Could not reload rankup successfully, please check console for more information.", "rankup.reload");
     }
   }
 
@@ -229,6 +269,7 @@ public class Rankup extends JavaPlugin {
     requirements.addRequirement(new PlayerKillsRequirement(this));
     requirements.addRequirement(new MobKillsRequirement(this));
     requirements.addRequirement(new ItemRequirement(this));
+    requirements.addRequirement(new ItemhRequirement(this));
     requirements.addRequirement(new UseItemRequirement(this));
     requirements.addRequirement(new TotalMobKillsRequirement(this));
     requirements.addRequirement(new CraftItemRequirement(this));
@@ -250,9 +291,13 @@ public class Rankup extends JavaPlugin {
     }
   }
 
-  private void setupPermissions() {
+  private boolean setupPermissions() {
     RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+    if (rsp == null) {
+      return false;
+    }
     permissions = rsp.getProvider();
+    return permissions.hasGroupSupport();
   }
 
   private void setupEconomy() {

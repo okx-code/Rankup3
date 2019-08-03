@@ -16,6 +16,10 @@ public class RanksCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    if (plugin.error(sender)) {
+      return true;
+    }
+
     Rankups rankups = plugin.getRankups();
     Rank playerRank = null;
     if (sender instanceof Player) {
