@@ -134,7 +134,12 @@ public class RankupHelper {
 
     Prestige prestige = plugin.getPrestiges().getByPlayer(player);
     prestige.applyRequirements(player);
-    doRankup(player, prestige);
+
+    prestige.runCommands(player);
+    applyCooldown(player);
+
+    permissions.playerRemoveGroup(null, player, prestige.getFrom());
+    permissions.playerAddGroup(null, player, prestige.getTo());
 
     if (prestige.getRank() != null) {
       permissions.playerRemoveGroup(null, player, prestige.getRank());
@@ -143,7 +148,7 @@ public class RankupHelper {
 
     plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, prestige,prestige.getNext())
+        .replaceRanks(player, prestige, prestige.getNext())
         .replaceFromTo(prestige)
         .broadcast();
     plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PRIVATE)

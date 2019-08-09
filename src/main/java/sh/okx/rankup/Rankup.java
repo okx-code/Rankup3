@@ -375,7 +375,8 @@ public class Rankup extends JavaPlugin {
               () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
           replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
               () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
-          replaceRequirements(builder, Variable.AMOUNT_DONE, requirement, () -> simpleFormat.format(requirement.getValueDouble() - requirement.getRemaining(player)));
+          replaceRequirements(builder, Variable.AMOUNT_DONE, requirement,
+              () -> simpleFormat.format(requirement.getValueDouble() - requirement.getRemaining(player)));
         }
       } catch (NumberFormatException ignored) {
       }
@@ -418,6 +419,6 @@ public class Rankup extends JavaPlugin {
 
   public boolean isLegacy() {
     String version = Bukkit.getVersion();
-    return !(version.contains("1.13") || version.contains("1.14"));
+    return !(version.contains("1.13") || version.contains("1.14") || version.contains("1.15"));
   }
 }

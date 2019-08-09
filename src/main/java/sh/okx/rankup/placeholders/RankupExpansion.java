@@ -88,9 +88,9 @@ public class RankupExpansion extends PlaceholderExpansion {
         }
         return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");
       case "money":
-        return String.valueOf(orElse(rank, r -> simplify(r.getRequirement("money").getValueDouble()), 0));
+        return String.valueOf(getMoney(rank));
       case "money_formatted":
-        return plugin.formatMoney(orElse(rank, r -> r.getRequirement("money").getValueDouble(), 0D));
+        return plugin.formatMoney(getMoney(rank).doubleValue());
       case "money_left":
         return String.valueOf(Math.max(0, orElse(rank, r -> simplify(plugin.getEconomy().getBalance(player) - r.getRequirement("money").getValueDouble()), 0).doubleValue()));
       case "money_left_formatted":
@@ -103,9 +103,17 @@ public class RankupExpansion extends PlaceholderExpansion {
         return String.valueOf(Math.min(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getValueDouble()) * 100, 0).doubleValue()));
       case "percent_done_formatted":
         return placeholders.getPercentFormat().format(Math.min(100D, orElse(rank, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getValueDouble()) * 100, 0).doubleValue()));
+      case "prestige_percent_left_formatted":
+        return placeholders.getPercentFormat().format(Math.max(0D, orElse(prestige, r -> (1 - (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getValueDouble())) * 100, 0).doubleValue()));
+      case "prestige_percent_done_formatted":
+        return placeholders.getPercentFormat().format(Math.min(100D, orElse(prestige, r -> (plugin.getEconomy().getBalance(player) / r.getRequirement("money").getValueDouble()) * 100, 0).doubleValue()));
       default:
         return null;
     }
+  }
+
+  private Number getMoney(Rank rank) {
+    return orElse(rank, r -> simplify(r.getRequirement("money").getValueDouble()), 0);
   }
 
   private void requirePrestiging(Prestiges prestiges, String params) {

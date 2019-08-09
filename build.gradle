@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id "io.freefair.lombok" version "3.8.0"
+    id 'maven-publish'
 }
 
 group 'sh.okx'
-version '3.5.7-alpha.1'
+version '3.5.7-alpha.2'
 
 repositories {
     mavenCentral()
@@ -52,5 +53,13 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude 'plugin.yml'
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
     }
 }
