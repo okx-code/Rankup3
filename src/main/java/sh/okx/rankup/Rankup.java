@@ -198,6 +198,7 @@ public class Rankup extends JavaPlugin {
     saveLocale("en");
     saveLocale("pt-br");
     saveLocale("ru");
+    saveLocale("zh_CN");
   }
 
   private void saveLocale(String locale) {
