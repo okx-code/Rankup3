@@ -1,17 +1,17 @@
 # the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
-  requirements-not-met: "&cYou need {MONEY} money to rankup."
-  no-rankup: "&eYou are at the highest rank."
+  requirements-not-met: "&c 你还需要 {MONEY} 才能够升级。"
+  no-rankup: "&e你已经处在最高的等级了。"
   # set to an empty string, ie: success-public: ""
   # to hide that message.
-  success-public: "&a{PLAYER} &ehas ranked up to: &d{RANK}"
-  success-private: "&aYou have ranked up to: &d{RANK}"
+  success-public: "&a玩家 {PLAYER} &e升级到: &d{RANK}"
+  success-private: "&a你已经升级到: &d{RANK}"
   # used for the text confirmation
   confirmation: |-
-    &eAre you sure you want to rankup to &a{RANK}&e?
-    &eType &c/rankup &eagain to confirm.
+    &e你确定要升级到 &a{RANK}&e？
+    &e再次输入 &c/rankup &e来确定。
   # used for the GUI confirmation
-  title: "Rankup to {RANK}"
+  title: "升级到 {RANK}"
 
   must-prestige: "&cYou must prestige to /rankup further!"
 
@@ -34,8 +34,8 @@ rankup:
     footer: ""
   # sent when a player tries to rankup when they are on cooldown
   cooldown:
-    singular: "&cYou must wait {SECONDS_LEFT} more second to rankup again."
-    plural: "&cYou must wait {SECONDS_LEFT} more seconds to rankup again."
+    singular: "&c你必须等候 {SECONDS_LEFT} 才能够再次升级！"
+    plural: "&c你必须等候 {SECONDS_LEFT} 才能够再次升级！"
 # prestige messages can also be customised
 prestige:
   requirements-not-met: "&cYou need {MONEY} money to prestige."
@@ -60,5 +60,5 @@ prestige:
     plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
 
 not-high-enough: "&cYou cannot prestige at your rank!"
-not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in. Use /ranks to list the rankups."
-invalid-rankup: "&cInvalid rankup defined in config, please check console."
+not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in. 使用 /ranks 指令去查看所有等级的列表。"
+invalid-rankup: "&c配置中定义的等级无效，请联系管理员检查后台。"
