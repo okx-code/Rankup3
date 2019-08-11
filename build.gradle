@@ -41,4 +41,5 @@ dependencies {
         exclude group: 'com.sk89q.worldguard'
     }
     compile 'com.github.Ben12345rocks:VotingPlugin:5.18.2'
+    compile 'com.github.LlmDl:Towny:25fc18a'
 }
