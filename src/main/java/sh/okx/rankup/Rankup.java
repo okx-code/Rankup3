@@ -37,6 +37,7 @@ import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchie
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
+import sh.okx.rankup.requirements.requirement.towny.*;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
 
 import java.io.File;
@@ -241,6 +242,14 @@ public class Rankup extends JavaPlugin {
     }
     if (Bukkit.getPluginManager().isPluginEnabled("VotingPlugin")) {
       requirementRegistry.addRequirement(new VotingPluginVotesRequirement(this));
+    }
+    if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
+      requirementRegistry.addRequirement(new TownyResidentRequirement(this));
+      requirementRegistry.addRequirement(new TownyMayorRequirement(this));
+      requirementRegistry.addRequirement(new TownyMayorNumberResidentsRequirement(this));
+      requirementRegistry.addRequirement(new TownyKingRequirement(this));
+      requirementRegistry.addRequirement(new TownyKingNumberResidentsRequirement(this));
+      requirementRegistry.addRequirement(new TownyKingNumberTownsRequirement(this));
     }
     requirementRegistry.addRequirement(new ItemRequirement(this));
     requirementRegistry.addRequirement(new UseItemRequirement(this));

@@ -3,7 +3,7 @@ version: 3.5.4
 main: sh.okx.rankup.Rankup
 author: Okx
 depend: [Vault]
-softdepend: [PlaceholderAPI, mcMMO, AdvancedAchievements]
+softdepend: [PlaceholderAPI, mcMMO, AdvancedAchievements, Towny]
 api-version: 1.13
 
 commands:

@@ -61,6 +61,10 @@ public abstract class Requirement implements Cloneable {
     return Integer.parseInt(value);
   }
 
+  public boolean getValueBoolean() {
+    return Boolean.parseBoolean(value);
+  }
+
   public String getFullName() {
     if (hasSubRequirement()) {
       return name + "#" + sub;
