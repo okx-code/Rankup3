@@ -9,17 +9,13 @@ public class TownyResidentRequirement extends Requirement {
     super(plugin, "towny-resident");
   }
 
-  public TownyResidentRequirement(Rankup plugin, String name) {
-    super(plugin, name);
-  }
-
   protected TownyResidentRequirement(Requirement clone) {
     super(clone);
   }
 
   @Override
   public boolean check(Player player) {
-    return  TownyUtils.getInstance().isResident(player);
+    return TownyUtils.getInstance().isResident(player) == getValueBoolean();
   }
 
   @Override
