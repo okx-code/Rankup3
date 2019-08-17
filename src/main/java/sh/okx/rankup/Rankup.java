@@ -31,6 +31,8 @@ import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
+import sh.okx.rankup.requirements.DeductibleRequirement;
+import sh.okx.rankup.requirements.NonDeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
 import sh.okx.rankup.requirements.requirement.*;
@@ -259,7 +261,7 @@ public class Rankup extends JavaPlugin {
 
   private void registerRequirements() {
     requirements = new RequirementRegistry();
-    requirements.addRequirement(new XpLevelRequirement(this));
+    registerDeductible(new XpLevelRequirement(this));
     requirements.addRequirement(new PlaytimeMinutesRequirement(this));
     requirements.addRequirement(new GroupRequirement(this));
     requirements.addRequirement(new PermissionRequirement(this));
@@ -268,13 +270,12 @@ public class Rankup extends JavaPlugin {
     requirements.addRequirement(new BlockBreakRequirement(this));
     requirements.addRequirement(new PlayerKillsRequirement(this));
     requirements.addRequirement(new MobKillsRequirement(this));
-    requirements.addRequirement(new ItemRequirement(this));
-    requirements.addRequirement(new ItemhRequirement(this));
+    registerDeductible(new ItemRequirement(this));
     requirements.addRequirement(new UseItemRequirement(this));
     requirements.addRequirement(new TotalMobKillsRequirement(this));
     requirements.addRequirement(new CraftItemRequirement(this));
     if (economy != null) {
-      requirements.addRequirement(new MoneyRequirement(this));
+      registerDeductible(new MoneyRequirement(this));
     }
 
     PluginManager pluginManager = Bukkit.getPluginManager();
@@ -289,6 +290,11 @@ public class Rankup extends JavaPlugin {
     if (pluginManager.isPluginEnabled("VotingPlugin")) {
       requirements.addRequirement(new VotingPluginVotesRequirement(this));
     }
+  }
+
+  private void registerDeductible(DeductibleRequirement requirement) {
+    requirements.addRequirement(requirement);
+    requirements.addRequirement(new NonDeductibleRequirement(requirement, requirement.getName() + "h"));
   }
 
   private boolean setupPermissions() {

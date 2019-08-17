@@ -11,7 +11,7 @@ public class TotalMobKillsRequirement extends ProgressiveRequirement {
     super(plugin, "total-mob-kills");
   }
 
-  protected TotalMobKillsRequirement(Requirement clone) {
+  private TotalMobKillsRequirement(Requirement clone) {
     super(clone);
   }
 
