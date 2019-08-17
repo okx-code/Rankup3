@@ -16,6 +16,8 @@ public class Placeholders {
   private final DecimalFormat percentFormat;
   @Getter
   private final DecimalFormat simpleFormat;
+  @Getter
+  private RankupExpansion expansion;
   private boolean registered;
 
   public Placeholders(Rankup plugin) {
@@ -27,7 +29,8 @@ public class Placeholders {
 
   public void register() {
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      new RankupExpansion(plugin, this).register();
+      expansion = new RankupExpansion(plugin, this);
+      expansion.register();
       registered = true;
     } else {
       registered = false;

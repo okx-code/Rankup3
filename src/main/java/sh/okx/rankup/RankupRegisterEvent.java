@@ -24,11 +24,11 @@ public class RankupRegisterEvent extends Event {
   }
 
   public RequirementRegistry getRequirementRegistry() {
-    return plugin.getRequirementRegistry();
+    return plugin.getRequirements();
   }
 
   public void addRequirement(Requirement requirement) {
-    plugin.getRequirementRegistry().addRequirement(requirement);
+    plugin.getRequirements().addRequirement(requirement);
   }
 
   @Override

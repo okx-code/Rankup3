@@ -4,7 +4,7 @@ first:
   # the rank to change it to
   to: 'A'
   next: 'P1'
-  # see rankups.yml for more information on requirements, operations, commands and messages
+  # see rankups.yml for more information on requirements, commands, and messages
   requirements:
     - 'money 10000'
 P1example:

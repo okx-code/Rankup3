@@ -16,6 +16,10 @@ public class RanksCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    if (plugin.error(sender)) {
+      return true;
+    }
+
     Rankups rankups = plugin.getRankups();
     Rank playerRank = null;
     if (sender instanceof Player) {
@@ -24,7 +28,8 @@ public class RanksCommand implements CommandExecutor {
 
     plugin.sendHeaderFooter(sender, playerRank, Message.RANKS_HEADER);
 
-    Message message = playerRank == null ? Message.RANKS_INCOMPLETE : Message.RANKS_COMPLETE;
+    Message message = !(sender instanceof Player && rankups.isLast(plugin.getPermissions(), (Player) sender))
+        && playerRank == null ? Message.RANKS_INCOMPLETE : Message.RANKS_COMPLETE;
     Rank rank = rankups.getFirst();
     while (rank != null) {
       String name = rank.getNext();

@@ -31,7 +31,7 @@ public class RequirementRegistry {
       String name = parts[0];
       String value = parts[1];
       Requirement requirement = newRequirement(name, value);
-      Objects.requireNonNull(requirement, name.equalsIgnoreCase("money") ? "Money requirement disabled because no economy was found." : "Unknown requirement: " + name);
+      Objects.requireNonNull(requirement, name.equalsIgnoreCase("money") ? "The 'money' requirement is being used but no economy is found" : "Unknown requirement: " + name);
       requirements.add(requirement);
     }
     return requirements;

@@ -24,6 +24,10 @@ public class RankupCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    if (plugin.error(sender)) {
+      return true;
+    }
+
     // check if player
     if (!(sender instanceof Player)) {
       return false;
@@ -32,7 +36,7 @@ public class RankupCommand implements CommandExecutor {
 
     Rankups rankups = plugin.getRankups();
     Rank rank = rankups.getByPlayer(player);
-    if (!plugin.checkRankup(player)) {
+    if (!plugin.getHelper().checkRankup(player)) {
       return true;
     }
     /*Rank next = rankups.next(rank);
@@ -51,7 +55,7 @@ public class RankupCommand implements CommandExecutor {
     if (confirmationType.equals("text") && confirming.containsKey(player)) {
       long time = System.currentTimeMillis() - confirming.remove(player);
       if (time < config.getInt("text.timeout") * 1000) {
-        plugin.rankup(player);
+        plugin.getHelper().rankup(player);
         return true;
       }
     }
@@ -67,7 +71,7 @@ public class RankupCommand implements CommandExecutor {
         Gui.of(player, rank, next, plugin).open(player);
         break;
       case "none":
-        plugin.rankup(player);
+        plugin.getHelper().rankup(player);
         break;
       default:
         throw new IllegalArgumentException("Invalid confirmation type " + confirmationType);

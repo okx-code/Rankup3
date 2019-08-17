@@ -18,7 +18,7 @@ public class GuiListener implements Listener {
     Inventory inventory = e.getInventory();
     if (inventory == null
         || !(inventory.getHolder() instanceof Gui)
-        || !e.getInventory().equals(e.getClickedInventory())) {
+        || !inventory.equals(e.getClickedInventory())) {
       return;
     }
     e.setCancelled(true);
@@ -29,9 +29,9 @@ public class GuiListener implements Listener {
     if (gui.getRankup().isSimilar(e.getCurrentItem())) {
       Bukkit.getScheduler().runTask(plugin, player::closeInventory);
       if (gui.isPrestige()) {
-        plugin.prestige(player);
+        plugin.getHelper().prestige(player);
       } else {
-        plugin.rankup(player);
+        plugin.getHelper().rankup(player);
       }
     } else if (gui.getCancel().isSimilar(e.getCurrentItem())) {
       Bukkit.getScheduler().runTask(plugin, player::closeInventory);

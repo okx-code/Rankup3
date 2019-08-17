@@ -18,6 +18,7 @@ public class MobKillsRequirement extends ProgressiveRequirement {
     super(clone);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public double getProgress(Player player) {
     EntityType entity = Objects.requireNonNull(EntityType.fromName(getSub()), "Invalid entity type '" + getSub() + "' in mob-kills requirement.");

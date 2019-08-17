@@ -34,7 +34,7 @@ public class Rank {
 
   public static Rank deserialize(Rankup plugin, ConfigurationSection section) {
     List<String> requirementsList = section.getStringList("requirements");
-    Set<Requirement> requirements = plugin.getRequirementRegistry().getRequirements(requirementsList);
+    Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
 
     return new Rank(section, plugin,
         section.getString("next"),
@@ -87,11 +87,13 @@ public class Rank {
     }
   }
 
-  public void runCommands(Player player, String next) {
+  public void runCommands(Player player) {
     for (String command : commands) {
       String string = new MessageBuilder(command).replaceRanks(player, this, next).toString();
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-          PlaceholderAPI.setPlaceholders(player, string));
+      if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        string = PlaceholderAPI.setPlaceholders(player, string);
+      }
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
     }
   }
 }
