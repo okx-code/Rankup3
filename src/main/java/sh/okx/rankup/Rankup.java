@@ -223,15 +223,16 @@ public class Rankup extends JavaPlugin {
       Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
 
       rankups = new Rankups(this, loadConfig("rankups.yml"));
+      // check rankups are not in an infinite loop
+      rankups.getOrderedList();
+
       if (config.getBoolean("prestige")) {
         prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
+        prestiges.getOrderedList();
       } else {
         prestiges = null;
       }
 
-      // check rankups are not in an infinite loop
-      rankups.getOrderedList();
-      prestiges.getOrderedList();
     } catch (Exception e) {
       this.errorMessage = e.getMessage();
       e.printStackTrace();
