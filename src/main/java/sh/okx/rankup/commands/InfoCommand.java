@@ -31,8 +31,7 @@ public class InfoCommand implements CommandExecutor {
         return true;
       }
     }
-
-
+    
     PluginDescriptionFile description = plugin.getDescription();
     String version = description.getVersion();
     sender.sendMessage(

@@ -37,7 +37,7 @@ public class ItemRequirement extends DeductibleRequirement {
   @Override
   public double getProgress(Player player) {
     Material material = Material.matchMaterial(getSub());
-    return Arrays.stream(player.getInventory().getStorageContents())
+    return Arrays.stream(player.getInventory().getContents())
         .filter(item -> item != null && item.getType() == material)
         .mapToInt(ItemStack::getAmount).sum();
   }

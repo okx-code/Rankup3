@@ -50,6 +50,12 @@ public class PlaceholderRequirement extends Requirement {
   }
 
   @Override
+  public String getFullName() {
+    String[] parts = getValueString().split(" ");
+    return parts[0];
+  }
+
+  @Override
   public Requirement clone() {
     return new PlaceholderRequirement(this);
   }

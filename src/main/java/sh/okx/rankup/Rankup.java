@@ -164,10 +164,10 @@ public class Rankup extends JavaPlugin {
       return false;
     }
 
-    if (!(sender instanceof Player)) {
-      getLogger().severe("Failed to load Rankup");
-    } else {
+    if (sender instanceof Player) {
       sender.sendMessage(ChatColor.RED + "Could not load Rankup, check console for more information.");
+    } else {
+      getLogger().severe("Failed to load Rankup");
     }
     for (String line : errorMessage.split("\n")) {
       getLogger().severe(line);

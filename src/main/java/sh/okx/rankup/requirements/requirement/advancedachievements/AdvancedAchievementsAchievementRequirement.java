@@ -22,6 +22,11 @@ public class AdvancedAchievementsAchievementRequirement extends Requirement {
   }
 
   @Override
+  public String getFullName() {
+    return super.getFullName() + "#" + getValueString();
+  }
+
+  @Override
   public Requirement clone() {
     return new AdvancedAchievementsAchievementRequirement(this);
   }
