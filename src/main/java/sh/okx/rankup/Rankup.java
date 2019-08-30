@@ -244,6 +244,7 @@ public class Rankup extends JavaPlugin {
     saveLocale("pt-br");
     saveLocale("ru");
     saveLocale("zh_CN");
+    saveLocale("fr");
   }
 
   private void saveLocale(String locale) {
@@ -385,15 +386,15 @@ public class Rankup extends JavaPlugin {
     DecimalFormat percentFormat = placeholders.getPercentFormat();
     for (Requirement requirement : rank.getRequirements()) {
       try {
-        replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getValueDouble()));
+        replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getTotal(player)));
         if (rank.isIn(player)) {
           replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
           replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
-              () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getValueDouble()) * 100)));
+              () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getTotal(player)) * 100)));
           replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
-              () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getValueDouble())) * 100)));
+              () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getTotal(player))) * 100)));
           replaceRequirements(builder, Variable.AMOUNT_DONE, requirement,
-              () -> simpleFormat.format(requirement.getValueDouble() - requirement.getRemaining(player)));
+              () -> simpleFormat.format(requirement.getTotal(player) - requirement.getRemaining(player)));
         }
       } catch (NumberFormatException ignored) {
       }
@@ -402,7 +403,13 @@ public class Rankup extends JavaPlugin {
   }
 
   private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
-    builder.replace(variable + " " + requirement.getFullName(), value.get());
+    Object get;
+    try {
+      get = value.get();
+      builder.replace(variable + " " + requirement.getFullName(), value.get());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, String rankName) {

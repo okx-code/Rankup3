@@ -19,7 +19,7 @@ public abstract class ProgressiveRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    return getRemaining(player) == 0;
+    return getRemaining(player) <= 0;
   }
 
   @Override
@@ -28,7 +28,7 @@ public abstract class ProgressiveRequirement extends Requirement {
   }
 
   public double getRemaining(Player player, double multiplier) {
-    return Math.max(0, (multiplier * getValueDouble()) - getProgress(player));
+    return Math.max(0, (multiplier * getTotal(player)) - getProgress(player));
   }
 
   public abstract double getProgress(Player player);

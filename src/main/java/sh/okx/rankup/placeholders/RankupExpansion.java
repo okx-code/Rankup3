@@ -37,7 +37,7 @@ public class RankupExpansion extends PlaceholderExpansion {
     if (params.startsWith("requirement_")) {
       String[] parts = params.split("_", 3);
       return getPlaceholderRequirement(player, rank,
-          parts[1], parts.length > 2 ? parts[2] : "");
+          parts[1].replace("-", "_"), parts.length > 2 ? parts[2] : "");
     } else if (params.startsWith("rank_requirement_")) {
       String[] parts = params.split("_", 5);
       return getPlaceholderRequirement(player, rankups.getByName(parts[2]),

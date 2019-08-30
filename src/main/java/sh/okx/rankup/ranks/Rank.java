@@ -68,11 +68,7 @@ public class Rank {
 
   public Requirement getRequirement(String name) {
     for (Requirement requirement : requirements) {
-      String reqName = requirement.getName();
-      if (requirement.hasSubRequirement()) {
-        reqName += "#" + requirement.getSub();
-      }
-      if (reqName.equalsIgnoreCase(name)) {
+      if (requirement.getFullName().equalsIgnoreCase(name)) {
         return requirement;
       }
     }
