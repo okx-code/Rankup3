@@ -12,9 +12,13 @@ import sh.okx.rankup.requirements.Requirement;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 public class RankupExpansion extends PlaceholderExpansion {
+  private static final Pattern PATTERN = Pattern.compile("(.*)#(.*)");
+
   private final Rankup plugin;
   private final Placeholders placeholders;
 
@@ -37,11 +41,11 @@ public class RankupExpansion extends PlaceholderExpansion {
     if (params.startsWith("requirement_")) {
       String[] parts = params.split("_", 3);
       return getPlaceholderRequirement(player, rank,
-          parts[1].replace("-", "_"), parts.length > 2 ? parts[2] : "");
+          replacePattern(parts[1]), parts.length > 2 ? parts[2] : "");
     } else if (params.startsWith("rank_requirement_")) {
       String[] parts = params.split("_", 5);
       return getPlaceholderRequirement(player, rankups.getByName(parts[2]),
-          parts[3], parts.length > 4 ? parts[4] : "");
+          replacePattern(parts[3]), parts.length > 4 ? parts[4] : "");
 //      return placeholders.getSimpleFormat().format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
     } else if (params.startsWith("rank_money_")) {
       String[] parts = params.split("_", 4);
@@ -172,6 +176,15 @@ public class RankupExpansion extends PlaceholderExpansion {
       return value.apply(t);
     } catch (NullPointerException ex) {
       return fallback;
+    }
+  }
+
+  private String replacePattern(String string) {
+    Matcher matcher = PATTERN.matcher(string);
+    if (matcher.matches()) {
+      return matcher.group(1) + "#" + matcher.group(2).replace("-", "_");
+    } else {
+      return string;
     }
   }
 
