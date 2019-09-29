@@ -23,7 +23,7 @@ prestiges: true
 # whether or not /prestige and /prestiges should be enabled.
 # you can alternatively negate the permission rankup.prestige
 # this will also make the command not autocomplete in 1.13
-prestige: true
+prestige: false
 
 # how people should confirm ranking up
 # options are: gui, text or none

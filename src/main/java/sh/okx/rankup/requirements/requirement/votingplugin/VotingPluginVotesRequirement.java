@@ -11,7 +11,7 @@ public class VotingPluginVotesRequirement extends ProgressiveRequirement {
     super(plugin, "votingplugin-votes");
   }
 
-  protected VotingPluginVotesRequirement(VotingPluginVotesRequirement clone) {
+  protected VotingPluginVotesRequirement(Requirement clone) {
     super(clone);
   }
 

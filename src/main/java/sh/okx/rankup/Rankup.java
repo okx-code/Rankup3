@@ -33,6 +33,7 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.NonDeductibleRequirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
 import sh.okx.rankup.requirements.requirement.*;
@@ -41,6 +42,7 @@ import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchie
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
+import sh.okx.rankup.requirements.requirement.tokenmanager.TokensRequirement;
 import sh.okx.rankup.requirements.requirement.towny.*;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
 
@@ -302,9 +304,15 @@ public class Rankup extends JavaPlugin {
       requirements.addRequirement(new TownyKingNumberResidentsRequirement(this));
       requirements.addRequirement(new TownyKingNumberTownsRequirement(this));
     }
+    if (Bukkit.getPluginManager().isPluginEnabled("TokenManager")) {
+      registerDeductible(new TokensRequirement(this));
+    }
   }
 
-  private void registerDeductible(DeductibleRequirement requirement) {
+  private void registerDeductible(ProgressiveRequirement requirement) {
+    if (!(requirement instanceof DeductibleRequirement)) {
+      throw new IllegalArgumentException("Requirement is not DeductibleRequirement");
+    }
     requirements.addRequirement(requirement);
     requirements.addRequirement(new NonDeductibleRequirement(requirement, requirement.getName() + "h"));
   }

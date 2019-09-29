@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
  * Proxy requirement for a deductible requirement that is exactly the same but is not deductible
  */
 public class NonDeductibleRequirement extends ProgressiveRequirement {
-  private final DeductibleRequirement requirement;
+  private final ProgressiveRequirement requirement;
 
-  public NonDeductibleRequirement(DeductibleRequirement requirement, String name) {
+  public NonDeductibleRequirement(ProgressiveRequirement requirement, String name) {
     super(requirement.plugin, name, requirement.hasSubRequirement());
     this.requirement = requirement;
   }

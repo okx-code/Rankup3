@@ -4,9 +4,10 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.DeductibleRequirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
-public class MoneyRequirement extends DeductibleRequirement {
+public class MoneyRequirement extends ProgressiveRequirement implements DeductibleRequirement {
   public MoneyRequirement(Rankup plugin) {
     super(plugin, "money");
   }

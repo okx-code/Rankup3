@@ -1,3 +1,5 @@
+# !!! To use prestiges, you must first enable it in config.yml
+
 first:
   # the rank people must be to use this prestige
   from: 'D'

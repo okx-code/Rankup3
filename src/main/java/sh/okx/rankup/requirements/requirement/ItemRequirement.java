@@ -11,7 +11,7 @@ import sh.okx.rankup.requirements.Requirement;
 
 import java.util.Arrays;
 
-public class ItemRequirement extends DeductibleRequirement {
+public class ItemRequirement extends ProgressiveRequirement implements DeductibleRequirement {
   public ItemRequirement(Rankup plugin) {
     super(plugin, "item", true);
   }
