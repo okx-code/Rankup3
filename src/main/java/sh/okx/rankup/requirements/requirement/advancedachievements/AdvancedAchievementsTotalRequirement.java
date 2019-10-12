@@ -11,7 +11,7 @@ public class AdvancedAchievementsTotalRequirement extends ProgressiveRequirement
     super(plugin, "advancedachievements-total");
   }
 
-  protected AdvancedAchievementsTotalRequirement(Requirement clone) {
+  private AdvancedAchievementsTotalRequirement(Requirement clone) {
     super(clone);
   }
 

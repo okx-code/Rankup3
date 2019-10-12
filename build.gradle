@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.5.8-beta'
+version '3.5.8'
 
 repositories {
     mavenCentral()

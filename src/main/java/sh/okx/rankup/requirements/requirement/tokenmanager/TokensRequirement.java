@@ -6,15 +6,18 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
+import sh.okx.rankup.requirements.Requirement;
+
+import java.util.Objects;
 
 public class TokensRequirement extends ProgressiveRequirement implements DeductibleRequirement {
-  private final TokenManager manager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
+  private final TokenManager manager = (TokenManager) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("TokenManager"));
 
   public TokensRequirement(Rankup plugin) {
     super(plugin, "tokenmanager-tokens");
   }
 
-  private TokensRequirement(TokensRequirement clone) {
+  private TokensRequirement(Requirement clone) {
     super(clone);
   }
 

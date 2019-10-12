@@ -23,6 +23,7 @@ prestiges: true
 # whether or not /prestige and /prestiges should be enabled.
 # you can alternatively negate the permission rankup.prestige
 # this will also make the command not autocomplete in 1.13
+# if enabled, a prestiges.yml file will be generated with some example prestiges
 prestige: false
 
 # how people should confirm ranking up
