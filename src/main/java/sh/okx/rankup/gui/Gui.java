@@ -21,6 +21,7 @@ import sh.okx.rankup.ranks.Rank;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import sh.okx.rankup.util.ItemUtil;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Gui implements InventoryHolder {
@@ -66,20 +67,20 @@ public class Gui implements InventoryHolder {
 
     String materialName = section.getString("material").toUpperCase();
     // handle default material correctly on older versions
-    if (plugin.isLegacy() && materialName.equals("BLACK_STAINED_GLASS_PANE")) {
+    if (!ItemUtil.isServerFlattened() && materialName.equals("BLACK_STAINED_GLASS_PANE")) {
       materialName = "STAINED_GLASS_PANE:15";
     }
 
     ItemStack item;
-    if (plugin.isLegacy()) {
+    if (ItemUtil.isServerFlattened()) {
+      Material material = Material.valueOf(materialName);
+      item = new ItemStack(material);
+    } else {
       String[] parts = materialName.split(":");
       Material material = Material.valueOf(parts[0]);
 
       short type = parts.length > 1 ? Short.parseShort(parts[1]) : 0;
       item = new ItemStack(material, 1, type);
-    } else {
-      Material material = Material.valueOf(materialName);
-      item = new ItemStack(material);
     }
 
     if (item.getType() == Material.AIR && section.getName().equalsIgnoreCase("fill")) {

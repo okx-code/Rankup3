@@ -1,5 +1,11 @@
 package sh.okx.rankup;
 
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -22,38 +28,52 @@ import sh.okx.rankup.commands.RanksCommand;
 import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
-import sh.okx.rankup.messages.NullMessageBuilder;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
+import sh.okx.rankup.messages.NullMessageBuilder;
 import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
-import sh.okx.rankup.requirements.DeductibleRequirement;
-import sh.okx.rankup.requirements.NonDeductibleRequirement;
-import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
-import sh.okx.rankup.requirements.requirement.*;
+import sh.okx.rankup.requirements.XpLevelDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.BlockBreakRequirement;
+import sh.okx.rankup.requirements.requirement.CraftItemRequirement;
+import sh.okx.rankup.requirements.requirement.GroupRequirement;
+import sh.okx.rankup.requirements.requirement.ItemDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.ItemRequirement;
+import sh.okx.rankup.requirements.requirement.MobKillsRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyRequirement;
+import sh.okx.rankup.requirements.requirement.PermissionRequirement;
+import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
+import sh.okx.rankup.requirements.requirement.PlayerKillsRequirement;
+import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
+import sh.okx.rankup.requirements.requirement.TokensDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.TotalMobKillsRequirement;
+import sh.okx.rankup.requirements.requirement.UseItemRequirement;
+import sh.okx.rankup.requirements.requirement.WorldRequirement;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensRequirement;
-import sh.okx.rankup.requirements.requirement.towny.*;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberResidentsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberTownsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyMayorNumberResidentsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyMayorRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyResidentRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
-
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import sh.okx.rankup.util.UpdateNotifier;
+import sh.okx.rankup.util.VersionChecker;
 
 public class Rankup extends JavaPlugin {
+
   @Getter
   private Permission permissions;
   @Getter
@@ -77,9 +97,12 @@ public class Rankup extends JavaPlugin {
   private RankupHelper helper;
   private AutoRankup autoRankup;
   private String errorMessage;
+  private UpdateNotifier notifier;
 
   @Override
   public void onEnable() {
+    notifier = new UpdateNotifier(new VersionChecker(this));
+
     reload(true);
 
     Metrics metrics = new Metrics(this);
@@ -105,8 +128,10 @@ public class Rankup extends JavaPlugin {
     }
 
     getCommand("rankup").setExecutor(new RankupCommand(this));
-    getCommand("rankup3").setExecutor(new InfoCommand(this));
+    getCommand("rankup3").setExecutor(new InfoCommand(this, notifier));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
+    getServer().getPluginManager().registerEvents(
+        new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update")), this);
 
     placeholders = new Placeholders(this);
     placeholders.register();
@@ -123,7 +148,7 @@ public class Rankup extends JavaPlugin {
 
   public void reload(boolean init) {
     errorMessage = null;
-    if(!setupPermissions()) {
+    if (!setupPermissions()) {
       errorMessage = "No permission plugin found";
     }
     setupEconomy();
@@ -140,7 +165,7 @@ public class Rankup extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
-    if (config.getInt("version") < 4) {
+    if (config.getInt("version") < 5) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
@@ -159,6 +184,7 @@ public class Rankup extends JavaPlugin {
 
   /**
    * Notify the player of an error if there is one
+   *
    * @return true if there was an error and action was taken
    */
   public boolean error(CommandSender sender) {
@@ -187,9 +213,8 @@ public class Rankup extends JavaPlugin {
   }
 
   /**
-   * Closes all rankup inventories on disable
-   * so players cannot grab items from the inventory
-   * on a plugin reload.
+   * Closes all rankup inventories on disable so players cannot grab items from the inventory on a
+   * plugin reload.
    */
   private void closeInventories() {
     for (Player player : Bukkit.getOnlinePlayers()) {
@@ -267,58 +292,62 @@ public class Rankup extends JavaPlugin {
 
   private void registerRequirements() {
     requirements = new RequirementRegistry();
-    registerDeductible(new XpLevelRequirement(this));
-    requirements.addRequirement(new PlaytimeMinutesRequirement(this));
-    requirements.addRequirement(new GroupRequirement(this));
-    requirements.addRequirement(new PermissionRequirement(this));
-    requirements.addRequirement(new PlaceholderRequirement(this));
-    requirements.addRequirement(new WorldRequirement(this));
-    requirements.addRequirement(new BlockBreakRequirement(this));
-    requirements.addRequirement(new PlayerKillsRequirement(this));
-    requirements.addRequirement(new MobKillsRequirement(this));
-    registerDeductible(new ItemRequirement(this));
-    requirements.addRequirement(new UseItemRequirement(this));
-    requirements.addRequirement(new TotalMobKillsRequirement(this));
-    requirements.addRequirement(new CraftItemRequirement(this));
+    requirements.addRequirements(
+        new XpLevelRequirement(this, "xp-levelh"),
+        new XpLevelDeductibleRequirement(this, "xp-level"),
+        new PlaytimeMinutesRequirement(this),
+        new GroupRequirement(this),
+        new PermissionRequirement(this),
+        new PlaceholderRequirement(this),
+        new WorldRequirement(this),
+        new BlockBreakRequirement(this),
+        new PlayerKillsRequirement(this),
+        new MobKillsRequirement(this),
+        new ItemRequirement(this, "itemh"),
+        new ItemDeductibleRequirement(this, "item"),
+        new UseItemRequirement(this),
+        new TotalMobKillsRequirement(this),
+        new CraftItemRequirement(this));
     if (economy != null) {
-      registerDeductible(new MoneyRequirement(this));
+      requirements.addRequirements(
+          new MoneyRequirement(this, "moneyh"),
+          new MoneyDeductibleRequirement(this, "money"));
     }
 
     PluginManager pluginManager = Bukkit.getPluginManager();
     if (pluginManager.isPluginEnabled("mcMMO")) {
-      requirements.addRequirement(new McMMOSkillRequirement(this));
-      requirements.addRequirement(new McMMOPowerLevelRequirement(this));
+      requirements.addRequirements(
+          new McMMOSkillRequirement(this),
+          new McMMOPowerLevelRequirement(this));
     }
     if (pluginManager.isPluginEnabled("AdvancedAchievements")) {
-      requirements.addRequirement(new AdvancedAchievementsAchievementRequirement(this));
-      requirements.addRequirement(new AdvancedAchievementsTotalRequirement(this));
+      requirements.addRequirements(
+          new AdvancedAchievementsAchievementRequirement(this),
+          new AdvancedAchievementsTotalRequirement(this));
     }
     if (pluginManager.isPluginEnabled("VotingPlugin")) {
-      requirements.addRequirement(new VotingPluginVotesRequirement(this));
+      requirements.addRequirements(
+          new VotingPluginVotesRequirement(this));
     }
     if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
-      requirements.addRequirement(new TownyResidentRequirement(this));
-      requirements.addRequirement(new TownyMayorRequirement(this));
-      requirements.addRequirement(new TownyMayorNumberResidentsRequirement(this));
-      requirements.addRequirement(new TownyKingRequirement(this));
-      requirements.addRequirement(new TownyKingNumberResidentsRequirement(this));
-      requirements.addRequirement(new TownyKingNumberTownsRequirement(this));
+      requirements.addRequirements(
+          new TownyResidentRequirement(this),
+          new TownyMayorRequirement(this),
+          new TownyMayorNumberResidentsRequirement(this),
+          new TownyKingRequirement(this),
+          new TownyKingNumberResidentsRequirement(this),
+          new TownyKingNumberTownsRequirement(this));
     }
     if (Bukkit.getPluginManager().isPluginEnabled("TokenManager")) {
-      registerDeductible(new TokensRequirement(this));
+      requirements.addRequirements(
+          new TokensRequirement(this, "tokenmanager-tokensh"),
+          new TokensDeductibleRequirement(this, "tokenmanager-tokens"));
     }
-  }
-
-  private void registerDeductible(ProgressiveRequirement requirement) {
-    if (!(requirement instanceof DeductibleRequirement)) {
-      throw new IllegalArgumentException("Requirement is not DeductibleRequirement");
-    }
-    requirements.addRequirement(requirement);
-    requirements.addRequirement(new NonDeductibleRequirement(requirement, requirement.getName() + "h"));
   }
 
   private boolean setupPermissions() {
-    RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+    RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager()
+        .getRegistration(Permission.class);
     if (rsp == null) {
       return false;
     }
@@ -327,7 +356,8 @@ public class Rankup extends JavaPlugin {
   }
 
   private void setupEconomy() {
-    RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+    RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager()
+        .getRegistration(Economy.class);
     if (rsp != null) {
       economy = rsp.getProvider();
     } else {
@@ -363,7 +393,8 @@ public class Rankup extends JavaPlugin {
     return MessageBuilder.of(messages, message);
   }
 
-  public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender, Rank rank) {
+  public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender,
+      Rank rank) {
     if (builder instanceof NullMessageBuilder) {
       return builder;
     }
@@ -394,15 +425,20 @@ public class Rankup extends JavaPlugin {
     DecimalFormat percentFormat = placeholders.getPercentFormat();
     for (Requirement requirement : rank.getRequirements()) {
       try {
-        replaceRequirements(builder, Variable.AMOUNT, requirement, () -> simpleFormat.format(requirement.getTotal(player)));
+        replaceRequirements(builder, Variable.AMOUNT, requirement,
+            () -> simpleFormat.format(requirement.getTotal(player)));
         if (rank.isIn(player)) {
-          replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement, () -> simpleFormat.format(requirement.getRemaining(player)));
+          replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement,
+              () -> simpleFormat.format(requirement.getRemaining(player)));
           replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
-              () -> percentFormat.format(Math.max(0, (requirement.getRemaining(player) / requirement.getTotal(player)) * 100)));
+              () -> percentFormat.format(Math.max(0,
+                  (requirement.getRemaining(player) / requirement.getTotal(player)) * 100)));
           replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
-              () -> percentFormat.format(Math.min(100, (1 - (requirement.getRemaining(player) / requirement.getTotal(player))) * 100)));
+              () -> percentFormat.format(Math.min(100,
+                  (1 - (requirement.getRemaining(player) / requirement.getTotal(player))) * 100)));
           replaceRequirements(builder, Variable.AMOUNT_DONE, requirement,
-              () -> simpleFormat.format(requirement.getTotal(player) - requirement.getRemaining(player)));
+              () -> simpleFormat
+                  .format(requirement.getTotal(player) - requirement.getRemaining(player)));
         }
       } catch (NumberFormatException ignored) {
       }
@@ -410,7 +446,8 @@ public class Rankup extends JavaPlugin {
     return builder;
   }
 
-  private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
+  private void replaceRequirements(MessageBuilder builder, Variable variable,
+      Requirement requirement, Supplier<Object> value) {
     Object get;
     try {
       get = value.get();
@@ -420,7 +457,8 @@ public class Rankup extends JavaPlugin {
     }
   }
 
-  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, String rankName) {
+  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank,
+      String rankName) {
     String oldRankName;
     if (oldRank instanceof Prestige && oldRank.getRank() == null) {
       oldRankName = ((Prestige) oldRank).getFrom();
@@ -447,10 +485,5 @@ public class Rankup extends JavaPlugin {
           .replaceFromTo(rank);
     }
     builder.send(sender);
-  }
-
-  public boolean isLegacy() {
-    String version = Bukkit.getVersion();
-    return !(version.contains("1.13") || version.contains("1.14") || version.contains("1.15"));
   }
 }

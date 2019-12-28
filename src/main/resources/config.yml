@@ -1,5 +1,5 @@
 # this is used for letting you know that you need to update/change your config file
-version: 4
+version: 5
 
 # the locale to use for messages
 # all messages can be customised but this allows you to
@@ -21,16 +21,23 @@ ranks: true
 prestiges: true
 
 # whether or not /prestige and /prestiges should be enabled.
-# you can alternatively negate the permission rankup.prestige
-# this will also make the command not autocomplete in 1.13
+# when a player reaches the top rank, they can do /prestige to return to the first rank,
+# but you will be able to grant them an additional "prestige" group or additional items.
+#
+# if you do not want this command to autocomplete, make sure
+# you negate the permission rankup.prestige with your permissions plugin.
 # if enabled, a prestiges.yml file will be generated with some example prestiges
 prestige: false
+
+# if true, players with the permission rankup.notify will receive notifications when they join
+# to update if they are on an older version of Rankup.
+notify-update: true
 
 # how people should confirm ranking up
 # options are: gui, text or none
 confirmation-type: 'gui'
 
-# how long, in seconds, people have to wait between a successful /rankup or a /prestige
+# how long, in seconds, people have to wait between a successful /rankup or /prestige
 # set to 0 to disable.
 cooldown: 1
 
@@ -81,6 +88,8 @@ placeholders:
 # what to shorten money by.
 # ie 1000 -> 1k
 # set to an empty list to disable
+# for each entry here, it counts as increasing by a factor of 1,000
+# the first represents thousands (1000, 1e3) then millions (1000000, 1e6) then billions (1000000000, 1e9) etc.
 shorten:
 - 'k'
 - 'M'

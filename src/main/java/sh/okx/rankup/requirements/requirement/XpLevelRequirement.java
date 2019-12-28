@@ -2,22 +2,16 @@ package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
-import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
-public class XpLevelRequirement extends ProgressiveRequirement implements DeductibleRequirement {
-  public XpLevelRequirement(Rankup plugin) {
-    super(plugin, "xp-level");
+public class XpLevelRequirement extends ProgressiveRequirement {
+  public XpLevelRequirement(Rankup plugin, String name) {
+    super(plugin, name);
   }
 
-  protected XpLevelRequirement(Requirement clone) {
+  protected XpLevelRequirement(XpLevelRequirement clone) {
     super(clone);
-  }
-
-  @Override
-  public void apply(Player player, double multiplier) {
-    player.setLevel(player.getLevel() - (int) Math.round(getValueInt() * multiplier));
   }
 
   @Override

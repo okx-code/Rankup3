@@ -1,7 +1,6 @@
 package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.Material;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import sh.okx.rankup.Rankup;
@@ -11,22 +10,13 @@ import sh.okx.rankup.requirements.Requirement;
 
 import java.util.Arrays;
 
-public class ItemRequirement extends ProgressiveRequirement implements DeductibleRequirement {
-  public ItemRequirement(Rankup plugin) {
-    super(plugin, "item", true);
+public class ItemRequirement extends ProgressiveRequirement {
+  public ItemRequirement(Rankup plugin, String name) {
+    super(plugin, name, true);
   }
 
   protected ItemRequirement(ItemRequirement clone) {
     super(clone);
-  }
-
-  @Override
-  public void apply(Player player, double multiplier) {
-    Material type = Material.matchMaterial(getSub());
-    if (type == null) {
-      throw new IllegalArgumentException("Invalid item " + getSub());
-    }
-    player.getInventory().removeItem(new ItemStack(type, (int) (getValueInt() * multiplier)));
   }
 
   @Override
