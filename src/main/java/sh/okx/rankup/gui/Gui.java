@@ -66,16 +66,17 @@ public class Gui implements InventoryHolder {
     ConfigurationSection section = plugin.getConfig().getConfigurationSection("gui").getConfigurationSection(name);
 
     String materialName = section.getString("material").toUpperCase();
-    // handle default material correctly on older versions
-    if (!ItemUtil.isServerFlattened() && materialName.equals("BLACK_STAINED_GLASS_PANE")) {
-      materialName = "STAINED_GLASS_PANE:15";
-    }
 
     ItemStack item;
     if (ItemUtil.isServerFlattened()) {
       Material material = Material.valueOf(materialName);
       item = new ItemStack(material);
     } else {
+      // handle default material correctly on older vesions
+      if (materialName.equals("BLACK_STAINED_GLASS_PANE")) {
+        materialName = "STAINED_GLASS_PANE:15";
+      }
+
       String[] parts = materialName.split(":");
       Material material = Material.valueOf(parts[0]);
 

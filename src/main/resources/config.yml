@@ -27,6 +27,7 @@ prestiges: true
 # if you do not want this command to autocomplete, make sure
 # you negate the permission rankup.prestige with your permissions plugin.
 # if enabled, a prestiges.yml file will be generated with some example prestiges
+# You must restart your server when you change this for it to work!
 prestige: false
 
 # if true, players with the permission rankup.notify will receive notifications when they join
@@ -40,6 +41,19 @@ confirmation-type: 'gui'
 # how long, in seconds, people have to wait between a successful /rankup or /prestige
 # set to 0 to disable.
 cooldown: 1
+
+# if enabled, players can run /maxrankup to rankup as many times as possible,
+# before they fail the requirements for the next rank.
+# the permission rankup.maxrankup is used for this command, but it is usually given by default.
+# note that /maxrankup, if enabled, has no confirmation.
+max-rankup:
+  # You must restart your server if you enable or disable /maxrankup!
+  enabled: false
+  # whether to send a message for each rankup a player does
+  # if set to true, the chat may be spammed for each rankup a player goes through with /maxrankup
+  # if set to false, only the last rankup will be shown (if a player starts on rank A, then does
+  # /maxrankup and ranks up to B and then C, it will just say "player has ranked up to C")
+  individual-messages: true
 
 gui:
   rows: 1
@@ -82,14 +96,14 @@ placeholders:
   not-in-ladder: "None"
   # used in the current_prestige placeholders when a player hasn't prestiged yet
   no-prestige: "None"
-  # used in the next_rank and next_prestige placeholders when there is no rankup/prestige
+  # used in the next_rank and next_prestige placeholders when a player is at the highest rank or prestige
   highest-rank: "None"
 
 # what to shorten money by.
 # ie 1000 -> 1k
 # set to an empty list to disable
 # for each entry here, it counts as increasing by a factor of 1,000
-# the first represents thousands (1000, 1e3) then millions (1000000, 1e6) then billions (1000000000, 1e9) etc.
+# the first represents thousands (1,000) then millions (1,000,000) then billions (1,000,000,000) etc.
 shorten:
 - 'k'
 - 'M'

@@ -22,6 +22,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import sh.okx.rankup.commands.InfoCommand;
+import sh.okx.rankup.commands.MaxRankupCommand;
 import sh.okx.rankup.commands.PrestigeCommand;
 import sh.okx.rankup.commands.PrestigesCommand;
 import sh.okx.rankup.commands.RanksCommand;
@@ -126,6 +127,9 @@ public class Rankup extends JavaPlugin {
         getCommand("prestiges").setExecutor(new PrestigesCommand(this));
       }
     }
+    if (config.getBoolean("max-rankup.enabled")) {
+      getCommand("maxrankup").setExecutor(new MaxRankupCommand(this));
+    }
 
     getCommand("rankup").setExecutor(new RankupCommand(this));
     getCommand("rankup3").setExecutor(new InfoCommand(this, notifier));
@@ -168,7 +172,8 @@ public class Rankup extends JavaPlugin {
     if (config.getInt("version") < 5) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
-      getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
+      getLogger()
+          .severe("To update, please rename ALL your config files (or the folder they are in),");
       getLogger().severe("and run /rankup3 reload to generate a new config file.");
       getLogger().severe("If that does not work, restart your server.");
       getLogger().severe("You may then copy in your config values from the old config.");
@@ -193,7 +198,8 @@ public class Rankup extends JavaPlugin {
     }
 
     if (sender instanceof Player) {
-      sender.sendMessage(ChatColor.RED + "Could not load Rankup, check console for more information.");
+      sender.sendMessage(
+          ChatColor.RED + "Could not load Rankup, check console for more information.");
     } else {
       getLogger().severe("Failed to load Rankup");
     }
@@ -278,7 +284,7 @@ public class Rankup extends JavaPlugin {
     String name = "locale/" + locale + ".yml";
     File file = new File(getDataFolder(), name);
     if (!file.exists()) {
-      saveResource("locale/" + locale + ".yml", false);
+      saveResource(name, false);
     }
   }
 

@@ -40,7 +40,7 @@ public class UpdateNotifier {
       @Override
       public void onFailure() {
         if (!join) {
-          send(sender, join, ChatColor.RED + "Error while checking version.");
+          send(sender, false, ChatColor.RED + "Error while checking version.");
         }
       }
     });

@@ -24,6 +24,9 @@ commands:
   prestiges:
     permission: rankup.prestiges
     description: List all the prestiges.
+  maxrankup:
+    permission: rankup.maxrankup
+    description: Rankup as much as possible.
 permissions:
   rankup.*:
     children:
@@ -34,6 +37,7 @@ permissions:
       rankup.prestige: true
       rankup.prestiges: true
       rankup.auto: true
+      rankup.maxrankup: true
   rankup.admin:
     children:
       # if a player can see if the plugin needs updating when they run /pru
@@ -42,7 +46,7 @@ permissions:
       rankup.reload: true
       # if a player can force rankup or prestige someone
       rankup.force: true
-      # if a player receives notifications to update rankup when the log in.
+      # if a player receives notifications to update rankup when they log in.
       rankup.notify: true
     default: op
   rankup.info:
@@ -56,4 +60,6 @@ permissions:
   rankup.prestiges:
     default: true
   rankup.auto:
+    default: true
+  rankup.maxrankup:
     default: true

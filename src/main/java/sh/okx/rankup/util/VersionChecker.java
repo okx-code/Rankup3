@@ -25,6 +25,7 @@ public class VersionChecker {
   /**
    * Checks if the version checker has already made an asynchronous call to the web server to check
    * the version, so future checks will run instantly.
+   *
    * @return true if the version checker already knows the latest version, false otherwise
    */
   public boolean hasChecked() {
@@ -38,21 +39,19 @@ public class VersionChecker {
       } else {
         callback.onOutdatedVersion(currentVersion, latestVersion);
       }
-    } else {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin,
-          () -> checkVersionSync(new SyncVersionCheckerCallback(plugin, callback)));
-    }
-  }
-
-  private void checkVersionSync(VersionCheckerCallback callback) {
-    if (currentVersion.contains("alpha")
+    } else if (currentVersion.contains("alpha")
         || currentVersion.contains("beta")
         || currentVersion.contains("rc")) {
       checked = true;
       callback.onPreReleaseVersion(currentVersion);
-      return;
+    } else {
+      Bukkit.getScheduler().runTaskAsynchronously(plugin,
+//          () -> checkVersionSync(new SyncVersionCheckerCallback(plugin, callback)));
+          () -> checkVersionSync(callback));
     }
+  }
 
+  private void checkVersionSync(VersionCheckerCallback callback) {
     try {
       latestVersion = getLatestVersion();
       checked = true;
@@ -94,6 +93,7 @@ public class VersionChecker {
 
     /**
      * Called when the plugin is on a pre-release version and is exempt to the usual update system.
+     *
      * @param version the current version of the plugin
      */
     void onPreReleaseVersion(String version);
@@ -106,9 +106,11 @@ public class VersionChecker {
 
   /**
    * An implementation of {@link VersionCheckerCallback} that is called asynchronously, and then
-   * forwards the calls an underlying VersionCheckerCallback synchronously on the main Bukkit thread.
+   * forwards the calls an underlying VersionCheckerCallback synchronously on the main Bukkit
+   * thread.
    */
-  class SyncVersionCheckerCallback implements VersionCheckerCallback {
+  static class SyncVersionCheckerCallback implements VersionCheckerCallback {
+
     private final Plugin plugin;
     private final VersionCheckerCallback callback;
 
