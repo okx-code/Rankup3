@@ -1,11 +1,11 @@
 plugins {
     id 'java'
-    id "io.freefair.lombok" version "3.8.0"
+    id "io.freefair.lombok" version "4.1.6"
     id 'maven'
 }
 
 group 'sh.okx'
-version '3.5.8'
+version '3.6'
 
 repositories {
     mavenCentral()
@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT'
     compile('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }
@@ -39,7 +39,7 @@ dependencies {
     }
     compile 'me.clip:placeholderapi:2.9.2'
     compile 'com.hm.achievement:advanced-achievements-api:1.1.0'
-    compile ('com.github.mcMMO-Dev:mcMMO:ac8042f') {
+    compile ('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
     compile 'com.github.Ben12345rocks:VotingPlugin:5.18.2'

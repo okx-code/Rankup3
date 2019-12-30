@@ -13,7 +13,12 @@ import sh.okx.rankup.ranks.Rankups;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Actually performs the ranking up and prestiging for the plugin and also manages the cooldowns
+ * between ranking up.
+ */
 public class RankupHelper {
+
   private final Rankup plugin;
   private final ConfigurationSection config;
   private final Permission permissions;
@@ -28,14 +33,49 @@ public class RankupHelper {
     this.permissions = plugin.getPermissions();
   }
 
-  private void doRankup(Player player, Rank rank) {
+  public void doRankup(Player player, Rank rank) {
     rank.runCommands(player);
-    applyCooldown(player);
 
     if (rank.getRank() != null) {
       permissions.playerRemoveGroup(null, player, rank.getRank());
     }
     permissions.playerAddGroup(null, player, rank.getNext());
+  }
+
+  public void sendRankupMessages(Player player, Rank rank) {
+    plugin.getMessage(rank, Message.SUCCESS_PUBLIC)
+        .failIfEmpty()
+        .replaceRanks(player, rank, rank.getNext())
+        .broadcast();
+    plugin.getMessage(rank, Message.SUCCESS_PRIVATE)
+        .failIfEmpty()
+        .replaceRanks(player, rank, rank.getNext())
+        .send(player);
+  }
+
+  public void doPrestige(Player player, Prestige prestige) {
+    prestige.runCommands(player);
+
+    permissions.playerRemoveGroup(null, player, prestige.getFrom());
+    permissions.playerAddGroup(null, player, prestige.getTo());
+
+    if (prestige.getRank() != null) {
+      permissions.playerRemoveGroup(null, player, prestige.getRank());
+    }
+    permissions.playerAddGroup(null, player, prestige.getNext());
+  }
+
+  public void sendPrestigeMessages(Player player, Prestige prestige) {
+    plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PUBLIC)
+        .failIfEmpty()
+        .replaceRanks(player, prestige, prestige.getNext())
+        .replaceFromTo(prestige)
+        .broadcast();
+    plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PRIVATE)
+        .failIfEmpty()
+        .replaceRanks(player, prestige, prestige.getNext())
+        .replaceFromTo(prestige)
+        .send(player);
   }
 
   private boolean checkCooldown(Player player, Rank rank) {
@@ -46,7 +86,8 @@ public class RankupHelper {
       long timeLeft = (cooldownSeconds * 1000) - time;
       if (timeLeft > 0) {
         long secondsLeft = (long) Math.ceil(timeLeft / 1000f);
-        plugin.getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
+        plugin
+            .getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
             .failIfEmpty()
             .replaceRanks(player, rank.getRank())
             .replaceFromTo(rank)
@@ -74,16 +115,10 @@ public class RankupHelper {
 
     Rank rank = plugin.getRankups().getByPlayer(player);
     rank.applyRequirements(player);
-    doRankup(player, rank);
+    applyCooldown(player);
 
-    plugin.getMessage(rank, Message.SUCCESS_PUBLIC)
-        .failIfEmpty()
-        .replaceRanks(player, rank, rank.getNext())
-        .broadcast();
-    plugin.getMessage(rank, Message.SUCCESS_PRIVATE)
-        .failIfEmpty()
-        .replaceRanks(player, rank, rank.getNext())
-        .send(player);
+    doRankup(player, rank);
+    sendRankupMessages(player, rank);
   }
 
   public boolean checkRankup(Player player) {
@@ -91,8 +126,7 @@ public class RankupHelper {
   }
 
   /**
-   * Checks if a player can rankup,
-   * and if they can't, sends the player a message and returns false
+   * Checks if a player can rankup, and if they can't, sends the player a message and returns false
    *
    * @param player the player to check if they can rankup
    * @return true if the player can rankup, false otherwise
@@ -102,7 +136,8 @@ public class RankupHelper {
     Rank rank = rankups.getByPlayer(player);
     if (rankups.isLast(permissions, player)) {
       Prestiges prestiges = plugin.getPrestiges();
-      plugin.getMessage(prestiges == null ? Message.NO_RANKUP : prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+      plugin.getMessage(prestiges == null ? Message.NO_RANKUP
+          : prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, rankups.getLast())
           .send(player);
@@ -135,27 +170,9 @@ public class RankupHelper {
     Prestige prestige = plugin.getPrestiges().getByPlayer(player);
     prestige.applyRequirements(player);
 
-    prestige.runCommands(player);
     applyCooldown(player);
-
-    permissions.playerRemoveGroup(null, player, prestige.getFrom());
-    permissions.playerAddGroup(null, player, prestige.getTo());
-
-    if (prestige.getRank() != null) {
-      permissions.playerRemoveGroup(null, player, prestige.getRank());
-    }
-    permissions.playerAddGroup(null, player, prestige.getNext());
-
-    plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PUBLIC)
-        .failIfEmpty()
-        .replaceRanks(player, prestige, prestige.getNext())
-        .replaceFromTo(prestige)
-        .broadcast();
-    plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PRIVATE)
-        .failIfEmpty()
-        .replaceRanks(player, prestige, prestige.getNext())
-        .replaceFromTo(prestige)
-        .send(player);
+    doPrestige(player, prestige);
+    sendPrestigeMessages(player, prestige);
   }
 
   public boolean checkPrestige(Player player) {
@@ -171,7 +188,8 @@ public class RankupHelper {
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (prestiges.isLast(plugin.getPermissions(), player)) { // check if they are at the highest rank
+    } else if (prestiges
+        .isLast(plugin.getPermissions(), player)) { // check if they are at the highest rank
       plugin.getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, prestige.getRank())
@@ -179,9 +197,10 @@ public class RankupHelper {
           .send(player);
       return false;
     } else if (!prestige.hasRequirements(player)) { // check if they can afford it
-      plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.PRESTIGE_REQUIREMENTS_NOT_MET)
-          .failIf(!message)
-          .replaceRanks(player, prestige, prestiges.next(prestige).getRank()), player, prestige)
+      plugin.replaceMoneyRequirements(
+          plugin.getMessage(prestige, Message.PRESTIGE_REQUIREMENTS_NOT_MET)
+              .failIf(!message)
+              .replaceRanks(player, prestige, prestiges.next(prestige).getRank()), player, prestige)
           .replaceFromTo(prestige)
           .send(player);
       return false;

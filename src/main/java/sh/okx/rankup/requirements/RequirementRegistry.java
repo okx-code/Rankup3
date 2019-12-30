@@ -1,5 +1,6 @@
 package sh.okx.rankup.requirements;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +11,10 @@ public class RequirementRegistry {
 
   public void addRequirement(Requirement requirement) {
     requirements.add(requirement);
+  }
+
+  public void addRequirements(Requirement... requirements) {
+    Collections.addAll(this.requirements, requirements);
   }
 
   public Requirement newRequirement(String name, String value) {

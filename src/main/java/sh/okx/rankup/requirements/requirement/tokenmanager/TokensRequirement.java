@@ -1,29 +1,21 @@
 package sh.okx.rankup.requirements.requirement.tokenmanager;
 
+import java.util.Objects;
 import me.realized.tokenmanager.api.TokenManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
-import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
-import sh.okx.rankup.requirements.Requirement;
 
-import java.util.Objects;
+public class TokensRequirement extends ProgressiveRequirement {
+  protected final TokenManager manager = (TokenManager) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("TokenManager"));
 
-public class TokensRequirement extends ProgressiveRequirement implements DeductibleRequirement {
-  private final TokenManager manager = (TokenManager) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("TokenManager"));
-
-  public TokensRequirement(Rankup plugin) {
-    super(plugin, "tokenmanager-tokens");
+  public TokensRequirement(Rankup plugin, String name) {
+    super(plugin, name);
   }
 
-  private TokensRequirement(Requirement clone) {
+  protected TokensRequirement(TokensRequirement clone) {
     super(clone);
-  }
-
-  @Override
-  public void apply(Player player, double multiplier) {
-    manager.removeTokens(player, (long) (getValueInt() * multiplier));
   }
 
   @Override

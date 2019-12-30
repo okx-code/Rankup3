@@ -1,25 +1,17 @@
 package sh.okx.rankup.requirements.requirement;
 
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.Rankup;
-import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
-public class MoneyRequirement extends ProgressiveRequirement implements DeductibleRequirement {
-  public MoneyRequirement(Rankup plugin) {
-    super(plugin, "money");
+public class MoneyRequirement extends ProgressiveRequirement {
+  public MoneyRequirement(Rankup plugin, String name) {
+    super(plugin, name);
   }
 
-  protected MoneyRequirement(Requirement clone) {
+  protected MoneyRequirement(MoneyRequirement clone) {
     super(clone);
-  }
-
-  @Override
-  public void apply(Player player, double multiplier) {
-    Economy economy = plugin.getEconomy();
-    economy.withdrawPlayer(player, getValueDouble() * multiplier);
   }
 
   @Override

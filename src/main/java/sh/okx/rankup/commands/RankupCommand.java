@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
 @RequiredArgsConstructor
 public class RankupCommand implements CommandExecutor {
   // weak hash maps so players going offline are automatically removed.
-  // otherwise there is a potential (but small) memory leak.
+  // otherwise there is a potential (albeit small) memory leak.
   private final Map<Player, Long> confirming = new WeakHashMap<>();
   private final Rankup plugin;
 

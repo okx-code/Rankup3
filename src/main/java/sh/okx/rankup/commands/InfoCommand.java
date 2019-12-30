@@ -1,24 +1,29 @@
 package sh.okx.rankup.commands;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import sh.okx.rankup.Rankup;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import sh.okx.rankup.prestige.Prestige;
+import sh.okx.rankup.prestige.Prestiges;
+import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.Rankups;
+import sh.okx.rankup.util.UpdateNotifier;
 
-@RequiredArgsConstructor
 public class InfoCommand implements CommandExecutor {
   private final Rankup plugin;
-  private String versionMessage;
+
+  private final UpdateNotifier notifier;
+
+  public InfoCommand(Rankup plugin, UpdateNotifier notifier) {
+    this.plugin = plugin;
+    this.notifier = notifier;
+  }
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -28,6 +33,75 @@ public class InfoCommand implements CommandExecutor {
         if (!plugin.error(sender)) {
           sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Rankup " + ChatColor.YELLOW + "Reloaded configuration files.");
         }
+        return true;
+      } else if (args[0].equalsIgnoreCase("forcerankup") && sender.hasPermission("rankup.force")) {
+        if (args.length < 2) {
+          sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " forcerankup <player>");
+          return true;
+        }
+
+        Player player = Bukkit.getPlayer(args[1]);
+        if (player == null) {
+          sender.sendMessage(ChatColor.YELLOW + "Player not found.");
+          return true;
+        }
+
+        Rankups rankups = plugin.getRankups();
+        if (rankups.isLast(plugin.getPermissions(), player)) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is at the last rank.");
+          return true;
+        }
+
+        Rank rank = rankups.getByPlayer(player);
+        if (rank == null) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is not in any rankup groups.");
+          return true;
+        }
+
+        plugin.getHelper().doRankup(player, rank);
+        plugin.getHelper().sendRankupMessages(player, rank);
+        sender.sendMessage(ChatColor.GREEN + "Successfully forced "
+            + ChatColor.GOLD + player.getName()
+            + ChatColor.GREEN + " to rankup from " + ChatColor.GOLD + rank.getRank()
+            + ChatColor.GREEN + " to " + ChatColor.GOLD + rank.getNext());
+        return true;
+      } else if (args[0].equalsIgnoreCase("forceprestige") && sender.hasPermission("rankup.force")) {
+        if (plugin.getPrestiges() == null) {
+          sender.sendMessage(ChatColor.RED + "Prestige is disabled.");
+          return true;
+        }
+
+        if (args.length < 2) {
+          sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " forceprestige <player>");
+          return true;
+        }
+
+        Player player = Bukkit.getPlayer(args[1]);
+        if (player == null) {
+          sender.sendMessage(ChatColor.YELLOW + "Player not found.");
+          return true;
+        }
+
+        Prestiges prestiges = plugin.getPrestiges();
+        if (prestiges.isLast(plugin.getPermissions(), player)) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is at the last prestige.");
+          return true;
+        }
+
+        Prestige prestige = prestiges.getByPlayer(player);
+        if (prestige == null) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is not in any prestige groups.");
+          return true;
+        }
+
+        plugin.getHelper().doPrestige(player, prestige);
+        plugin.getHelper().sendPrestigeMessages(player, prestige);
+        sender.sendMessage(ChatColor.GREEN + "Successfully forced "
+            + ChatColor.GOLD + player.getName()
+            + ChatColor.GREEN + " to prestige "
+            + ChatColor.GOLD + prestige.getRank()
+            + ChatColor.GREEN + " from " + ChatColor.GOLD + prestige.getFrom()
+            + ChatColor.GREEN + " to " + ChatColor.GOLD + prestige.getTo());
         return true;
       }
     }
@@ -39,41 +113,18 @@ public class InfoCommand implements CommandExecutor {
             ChatColor.YELLOW + " by " + ChatColor.BLUE + ChatColor.BOLD + String.join(", ", description.getAuthors()));
     if (sender.hasPermission("rankup.reload")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " reload " + ChatColor.YELLOW + "Reloads configuration files.");
-    }
-    if (sender.hasPermission("rankup.checkversion")) {
-      if (versionMessage == null) {
-        if (version.contains("alpha") || version.contains("beta") || version.contains("rc")) {
-          versionMessage = ChatColor.YELLOW + "You are on a pre-release version.";
-          sender.sendMessage(versionMessage);
-          return true;
-        }
-        sender.sendMessage(ChatColor.YELLOW + "Checking version...");
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-          String message;
-          try {
-            String latest = getLatestVersion();
-            if (version.equals(latest)) {
-              message = ChatColor.GREEN + "You are on the latest version.";
-            } else {
-              message = ChatColor.YELLOW + "A new version is available: " + ChatColor.GOLD + latest
-                  + "\nhttps://www.spigotmc.org/resources/rankup.17933/";
-            }
-          } catch (IOException e) {
-            message = ChatColor.RED + "Error while checking version.";
-          }
-          versionMessage = message;
-          Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(versionMessage));
-        });
-      } else {
-        sender.sendMessage(versionMessage);
+      sender.sendMessage(ChatColor.GREEN + "/" + label + " forcerankup <player> " + ChatColor.YELLOW + "Force a player to rankup, bypassing requirements.");
+      if (plugin.getPrestiges() != null) {
+        sender.sendMessage(
+            ChatColor.GREEN + "/" + label + " forceprestige <player> " + ChatColor.YELLOW
+                + "Force a player to prestige, bypassing requirements.");
       }
     }
 
-    return true;
-  }
+    if (sender.hasPermission("rankup.checkversion")) {
+      notifier.notify(sender, false);
+    }
 
-  private String getLatestVersion() throws IOException {
-    URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=17933");
-    return CharStreams.toString(new InputStreamReader(url.openStream(), Charsets.UTF_8));
+    return true;
   }
 }

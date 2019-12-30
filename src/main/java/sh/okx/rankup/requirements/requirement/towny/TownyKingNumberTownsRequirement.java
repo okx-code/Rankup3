@@ -10,7 +10,7 @@ public class TownyKingNumberTownsRequirement extends ProgressiveRequirement {
     super(plugin, "towny-king-towns");
   }
 
-  protected TownyKingNumberTownsRequirement(Requirement clone) {
+  protected TownyKingNumberTownsRequirement(TownyKingNumberTownsRequirement clone) {
     super(clone);
   }
 
