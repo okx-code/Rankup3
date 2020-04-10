@@ -1,5 +1,9 @@
 # Rankup3
 
+## Installation
+
+Rankup can be compiled with the `gradle build` command. The compiled plugin jar will be in the `/build/libs` directory.
+
 ## Translation
 
 If you would like to contribute to translating the plugin, you can fork it.
