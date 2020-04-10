@@ -10,10 +10,31 @@ rankup:
   confirmation: |-
     &eVocê tem certeza que deseja subir para &a{RANK}&e?
     &eDigite &c/rankup &enovamente para confirmar.
-  # Utilizado para confirmação em GUI.
-  title: "Rankup to {RANK}"
 
   must-prestige: "&cVocê deve subir de prestígio para dar /rankup a frente!"
+
+  gui:
+    rows: 1
+    title: "Rankup to {RANK}"
+    rankup:
+      material: EMERALD_BLOCK
+      # index can be separated by spaces to show in multiple groups
+      # for example: 0-3 9-12 18-21
+      # you can also just use a single number instead of a range.
+      index: 0-3
+      name: '&a&lConfirm'
+      # lore is optional
+      lore: '&6Rankup to &b{RANK}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lCancel'
+    fill:
+      name: ' '
+      # if you are using a 1.8-1.12 and you want to change this
+      # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
+      # this works for both the rankup and cancel blocks as well
+      material: BLACK_STAINED_GLASS_PANE
 
   # Você pode (e deveria) substituir isto em rankups.yml
   # para mostrar os requerimentos específicos para cada rank.
@@ -51,6 +72,25 @@ prestige:
     &eVocê tem certeza que deseja subir de prestígio para &a{RANK}&e?
     &eDigite &c/prestige &enovamente para confimar.
   title: "Subiu de prestígio para {RANK}"
+
+  gui:
+    rows: 1
+    title: "Prestige to {RANK}"
+    rankup:
+      material: GOLD_BLOCK
+      index: 0-3
+      name: '&a&lConfirm'
+      lore: '&6Prestige to &b{RANK}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lCancel'
+    fill:
+      name: ' '
+      # if you are using a 1.8-1.12 and you want to change this
+      # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
+      # this works for both the rankup and cancel blocks as well
+      material: BLACK_STAINED_GLASS_PANE
 
   list:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"

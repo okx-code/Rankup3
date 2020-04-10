@@ -1,15 +1,14 @@
 package sh.okx.rankup.requirements;
 
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
-import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.RankupPlugin;
 
 public abstract class ProgressiveRequirement extends Requirement {
-  public ProgressiveRequirement(Rankup plugin, String name) {
+  public ProgressiveRequirement(RankupPlugin plugin, String name) {
     super(plugin, name);
   }
 
-  public ProgressiveRequirement(Rankup plugin, String name, boolean subRequirement) {
+  public ProgressiveRequirement(RankupPlugin plugin, String name, boolean subRequirement) {
     super(plugin, name, subRequirement);
   }
 

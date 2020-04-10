@@ -1,11 +1,11 @@
 package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class WorldRequirement extends Requirement {
-  public WorldRequirement(Rankup plugin) {
+  public WorldRequirement(RankupPlugin plugin) {
     super(plugin, "world");
   }
 

@@ -2,7 +2,7 @@ package sh.okx.rankup.requirements.requirement;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
@@ -10,7 +10,7 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
 
   public static final double DELTA = 0.00001D;
 
-  public PlaceholderRequirement(Rankup plugin) {
+  public PlaceholderRequirement(RankupPlugin plugin) {
     super(plugin, "placeholder");
   }
 

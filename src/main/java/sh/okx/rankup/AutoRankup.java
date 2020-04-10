@@ -7,7 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
 public class AutoRankup extends BukkitRunnable {
-  private final Rankup rankup;
+  private final RankupPlugin rankup;
 
   @Override
   public void run() {

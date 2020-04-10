@@ -1,11 +1,11 @@
 package sh.okx.rankup.requirements.requirement.towny;
 
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class TownyKingRequirement extends Requirement {
-  public TownyKingRequirement(Rankup plugin) {
+  public TownyKingRequirement(RankupPlugin plugin) {
     super(plugin, "towny-king");
   }
 

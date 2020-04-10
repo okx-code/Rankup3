@@ -4,13 +4,13 @@ import java.util.Objects;
 import me.realized.tokenmanager.api.TokenManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 
 public class TokensRequirement extends ProgressiveRequirement {
   protected final TokenManager manager = (TokenManager) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("TokenManager"));
 
-  public TokensRequirement(Rankup plugin, String name) {
+  public TokensRequirement(RankupPlugin plugin, String name) {
     super(plugin, name);
   }
 

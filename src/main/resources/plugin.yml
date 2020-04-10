@@ -1,6 +1,6 @@
 name: Rankup
 version: ${version}
-main: sh.okx.rankup.Rankup
+main: sh.okx.rankup.RankupPlugin
 author: Okx
 depend: [Vault]
 softdepend: [PlaceholderAPI, mcMMO, AdvancedAchievements, Towny]

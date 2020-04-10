@@ -3,12 +3,12 @@ package sh.okx.rankup.requirements.requirement;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class UseItemRequirement extends ProgressiveRequirement {
-  public UseItemRequirement(Rankup plugin) {
+  public UseItemRequirement(RankupPlugin plugin) {
     super(plugin, "use-item", true);
   }
 

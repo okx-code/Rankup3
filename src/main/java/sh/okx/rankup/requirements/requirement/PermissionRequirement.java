@@ -1,11 +1,11 @@
 package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class PermissionRequirement extends Requirement {
-  public PermissionRequirement(Rankup plugin) {
+  public PermissionRequirement(RankupPlugin plugin) {
     super(plugin, "permission");
   }
 

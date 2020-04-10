@@ -5,11 +5,12 @@ import org.bukkit.command.CommandSender;
 import sh.okx.rankup.util.VersionChecker.VersionCheckerCallback;
 
 public class UpdateNotifier {
-  private static final String PREFIX = ChatColor.GREEN + "" + ChatColor.BOLD + "Rankup " + ChatColor.RESET;
+  private final String prefix;
 
   private final VersionChecker checker;
 
   public UpdateNotifier(VersionChecker checker) {
+    this.prefix = ChatColor.GREEN + "" + ChatColor.BOLD + checker.getPlugin().getName() + ChatColor.RESET + " ";
     this.checker = checker;
   }
 
@@ -29,7 +30,7 @@ public class UpdateNotifier {
       public void onOutdatedVersion(String currentVersion, String latestVersion) {
         send(sender, join, ChatColor.YELLOW + "A new version is available: " + ChatColor.GOLD + latestVersion
             + ChatColor.YELLOW + ". You are on: " + ChatColor.GOLD + currentVersion
-            + ChatColor.GOLD + "\nhttps://www.spigotmc.org/resources/rankup.17933/");
+            + ChatColor.GOLD + "\nhttps://www.spigotmc.org/resources/" + VersionChecker.RESOURCE_ID + "/");
       }
 
       @Override
@@ -48,7 +49,7 @@ public class UpdateNotifier {
 
   private void send(CommandSender sender, boolean prefix, String message) {
     if (prefix) {
-      sender.sendMessage(PREFIX + message);
+      sender.sendMessage(this.prefix + message);
     } else {
       sender.sendMessage(message);
     }

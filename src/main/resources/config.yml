@@ -1,5 +1,5 @@
 # this is used for letting you know that you need to update/change your config file
-version: 5
+version: 6
 
 # the locale to use for messages
 # all messages can be customised but this allows you to
@@ -31,7 +31,7 @@ prestiges: true
 prestige: false
 
 # if true, players with the permission rankup.notify will receive notifications when they join
-# to update if they are on an older version of Rankup.
+# to update if the server is on an older version of Rankup.
 notify-update: true
 
 # how people should confirm ranking up
@@ -54,28 +54,6 @@ max-rankup:
   # if set to false, only the last rankup will be shown (if a player starts on rank A, then does
   # /maxrankup and ranks up to B and then C, it will just say "player has ranked up to C")
   individual-messages: true
-
-gui:
-  rows: 1
-  rankup:
-    material: EMERALD_BLOCK
-    # index can be separated by spaces to show in multiple groups
-    # for example: 0-3 9-12 18-21
-    # you can also just use a single number instead of a range.
-    index: 0-3
-    name: '&a&lConfirm'
-    # lore is optional
-    lore: '&6Rankup to &b{RANK}'
-  cancel:
-    material: REDSTONE_BLOCK
-    index: 5-8
-    name: '&c&lCancel'
-  fill:
-    name: ' '
-    # if you are using a 1.8-1.12 and you want to change this
-    # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
-    # this works for both the rankup and cancel blocks as well
-    material: BLACK_STAINED_GLASS_PANE
 
 # options when using the text rankup confirmation
 text:

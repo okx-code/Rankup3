@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class RankupHelper {
 
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
   private final ConfigurationSection config;
   private final Permission permissions;
   /**
@@ -27,7 +27,7 @@ public class RankupHelper {
    */
   private Map<Player, Long> cooldowns = new HashMap<>();
 
-  public RankupHelper(Rankup plugin) {
+  public RankupHelper(RankupPlugin plugin) {
     this.plugin = plugin;
     this.config = plugin.getConfig();
     this.permissions = plugin.getPermissions();
@@ -136,8 +136,7 @@ public class RankupHelper {
     Rank rank = rankups.getByPlayer(player);
     if (rankups.isLast(permissions, player)) {
       Prestiges prestiges = plugin.getPrestiges();
-      plugin.getMessage(prestiges == null ? Message.NO_RANKUP
-          : prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+      plugin.getMessage(prestiges == null || prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, rankups.getLast())
           .send(player);

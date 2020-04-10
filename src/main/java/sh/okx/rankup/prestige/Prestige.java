@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.requirements.Requirement;
 
@@ -20,13 +20,13 @@ public class Prestige extends Rank {
   @Getter
   private final String to;
 
-  private Prestige(ConfigurationSection section, Rankup plugin, String next, String rank, Set<Requirement> requirements, List<String> commands, String from, String to) {
+  private Prestige(ConfigurationSection section, RankupPlugin plugin, String next, String rank, Set<Requirement> requirements, List<String> commands, String from, String to) {
     super(section, plugin, next, rank, requirements, commands);
     this.from = from;
     this.to = to;
   }
 
-  public static Prestige deserialize(Rankup plugin, ConfigurationSection section) {
+  public static Prestige deserialize(RankupPlugin plugin, ConfigurationSection section) {
     List<String> requirementsList = section.getStringList("requirements");
     Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
 

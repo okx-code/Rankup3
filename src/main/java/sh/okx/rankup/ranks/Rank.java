@@ -1,5 +1,6 @@
 package sh.okx.rankup.ranks;
 
+import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
@@ -23,7 +24,7 @@ import java.util.Set;
 public class Rank {
   @Getter
   protected final ConfigurationSection section;
-  protected final Rankup plugin;
+  protected final RankupPlugin plugin;
   @Getter
   protected final String next;
   @Getter
@@ -32,13 +33,26 @@ public class Rank {
   protected final Set<Requirement> requirements;
   protected final List<String> commands;
 
-  public static Rank deserialize(Rankup plugin, ConfigurationSection section) {
-    List<String> requirementsList = section.getStringList("requirements");
+  public static Rank deserialize(RankupPlugin plugin, ConfigurationSection section) {
+    List<String> requirementsList;
+    if (section.isList("requirements")) {
+      requirementsList = section.getStringList("requirements");
+    } else {
+      requirementsList = Collections.singletonList(section.getString("requirements"));
+    }
     Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
 
+    String next = section.getString("next");
+    String rank = section.getString("rank");
+
+    if (next != null && next.isEmpty()) {
+      plugin.getLogger().warning("Rankup section '" + section.getName() + "' has a blank 'next' field, will be ignored.");
+      return null;
+    }
+
     return new Rank(section, plugin,
-        section.getString("next"),
-        section.getString("rank"),
+        next,
+        rank,
         requirements,
         section.getStringList("commands"));
   }

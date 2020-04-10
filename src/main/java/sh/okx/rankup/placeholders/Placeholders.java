@@ -3,13 +3,12 @@ package sh.okx.rankup.placeholders;
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 
 import java.text.DecimalFormat;
 
 public class Placeholders {
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
   @Getter
   private final DecimalFormat moneyFormat;
   @Getter
@@ -20,7 +19,7 @@ public class Placeholders {
   private RankupExpansion expansion;
   private boolean registered;
 
-  public Placeholders(Rankup plugin) {
+  public Placeholders(RankupPlugin plugin) {
     this.plugin = plugin;
     this.moneyFormat = new DecimalFormat(plugin.getConfig().getString("placeholders.money-format"));
     this.percentFormat = new DecimalFormat(plugin.getConfig().getString("placeholders.percent-format"));

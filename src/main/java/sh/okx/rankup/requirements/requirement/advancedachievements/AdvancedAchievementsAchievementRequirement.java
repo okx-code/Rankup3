@@ -3,11 +3,11 @@ package sh.okx.rankup.requirements.requirement.advancedachievements;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 import com.hm.achievement.api.AdvancedAchievementsAPIFetcher;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class AdvancedAchievementsAchievementRequirement extends Requirement {
-  public AdvancedAchievementsAchievementRequirement(Rankup plugin) {
+  public AdvancedAchievementsAchievementRequirement(RankupPlugin plugin) {
     super(plugin, "advancedachievements-achievement");
   }
 

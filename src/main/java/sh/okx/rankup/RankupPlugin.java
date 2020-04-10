@@ -1,11 +1,5 @@
 package sh.okx.rankup;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -73,7 +67,14 @@ import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequ
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
 
-public class Rankup extends JavaPlugin {
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+public class RankupPlugin extends JavaPlugin {
 
   @Getter
   private Permission permissions;
@@ -108,7 +109,7 @@ public class Rankup extends JavaPlugin {
 
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("confirmation",
-        () -> config.getString("confirmation.type")));
+        () -> config.getString("confirmation-type", "unknown")));
     metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
       Map<String, Integer> map = new HashMap<>();
       addAll(map, rankups);
@@ -117,6 +118,8 @@ public class Rankup extends JavaPlugin {
       }
       return map;
     }));
+    metrics.addCustomChart(new Metrics.SimplePie("prestige",
+        () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
 
     if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RanksCommand(this));
@@ -135,7 +138,7 @@ public class Rankup extends JavaPlugin {
     getCommand("rankup3").setExecutor(new InfoCommand(this, notifier));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
     getServer().getPluginManager().registerEvents(
-        new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update")), this);
+        new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update"), "rankup.notify"), this);
 
     placeholders = new Placeholders(this);
     placeholders.register();
@@ -169,15 +172,15 @@ public class Rankup extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
-    if (config.getInt("version") < 5) {
+    if (config.getInt("version") < 6) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
-      getLogger()
-          .severe("To update, please rename ALL your config files (or the folder they are in),");
-      getLogger().severe("and run /rankup3 reload to generate a new config file.");
+      getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
+      getLogger().severe("and run /pru reload to generate a new config file.");
       getLogger().severe("If that does not work, restart your server.");
-      getLogger().severe("You may then copy in your config values from the old config.");
+      getLogger().severe("You may then copy in your config values manually from the old config.");
       getLogger().severe("Check the changelog on the Rankup spigot page to see the changes.");
+      getLogger().severe("https://www.spigotmc.org/resources/rankup.17933/updates");
     }
 
     helper = new RankupHelper(this);
@@ -206,6 +209,7 @@ public class Rankup extends JavaPlugin {
     for (String line : errorMessage.split("\n")) {
       getLogger().severe(line);
     }
+    getLogger().severe("More information can be found in the console log at startup");
     return true;
   }
 
@@ -257,26 +261,26 @@ public class Rankup extends JavaPlugin {
 
       rankups = new Rankups(this, loadConfig("rankups.yml"));
       // check rankups are not in an infinite loop
-      rankups.getOrderedList();
+//      rankups.getOrderedList();
 
       if (config.getBoolean("prestige")) {
         prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
-        prestiges.getOrderedList();
+//        prestiges.getOrderedList();
       } else {
         prestiges = null;
       }
 
     } catch (Exception e) {
-      this.errorMessage = e.getMessage();
+      this.errorMessage = e.getClass().getName() + ": " + e.getMessage();
       e.printStackTrace();
     }
   }
 
   private void saveLocales() {
     saveLocale("en");
-    saveLocale("pt-br");
+    saveLocale("pt_br");
     saveLocale("ru");
-    saveLocale("zh_CN");
+    saveLocale("zh_cn");
     saveLocale("fr");
   }
 
@@ -385,6 +389,14 @@ public class Rankup extends JavaPlugin {
     }
 
     return placeholders.getMoneyFormat().format(money) + suffix;
+  }
+
+  public ConfigurationSection getSection(Rank rank, String path) {
+    ConfigurationSection messages = rank.getSection();
+    if (messages == null || !messages.isConfigurationSection(path)) {
+      return this.messages.getConfigurationSection(path);
+    }
+    return messages.getConfigurationSection(path);
   }
 
   public MessageBuilder getMessage(Rank rank, Message message) {

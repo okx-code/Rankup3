@@ -3,7 +3,7 @@ package sh.okx.rankup.placeholders;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class RankupExpansion extends PlaceholderExpansion {
   private static final Pattern PATTERN = Pattern.compile("(.*)#(.*)");
 
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
   private final Placeholders placeholders;
 
   @Override
@@ -209,6 +209,11 @@ public class RankupExpansion extends PlaceholderExpansion {
 
   @Override
   public boolean persist() {
+    return true;
+  }
+
+  @Override
+  public boolean canRegister() {
     return true;
   }
 }

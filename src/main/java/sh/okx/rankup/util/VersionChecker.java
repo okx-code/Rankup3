@@ -9,10 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public class VersionChecker {
+  public static final int RESOURCE_ID = 76964;
 
-  private static final int RESOURCE_ID = 17933;
-
-  private final Plugin plugin; // used exclusively for scheduling
+  private final Plugin plugin;
   private final String currentVersion;
   private String latestVersion;
   private boolean checked = false;
@@ -20,6 +19,10 @@ public class VersionChecker {
   public VersionChecker(Plugin plugin) {
     this.currentVersion = plugin.getDescription().getVersion();
     this.plugin = plugin;
+  }
+
+  public Plugin getPlugin() {
+    return plugin;
   }
 
   /**
@@ -45,13 +48,11 @@ public class VersionChecker {
       checked = true;
       callback.onPreReleaseVersion(currentVersion);
     } else {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin,
-//          () -> checkVersionSync(new SyncVersionCheckerCallback(plugin, callback)));
-          () -> checkVersionSync(callback));
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> checkVersionAsync(callback));
     }
   }
 
-  private void checkVersionSync(VersionCheckerCallback callback) {
+  private void checkVersionAsync(VersionCheckerCallback callback) {
     try {
       latestVersion = getLatestVersion();
       checked = true;
@@ -78,6 +79,7 @@ public class VersionChecker {
 
     /**
      * Called when the plugin is already on the latest version
+     * May be called asynchronously
      *
      * @param version the current, and latest, version of the plugin
      */
@@ -85,6 +87,7 @@ public class VersionChecker {
 
     /**
      * Called when the plugin is on a version other than the latest on the SpigotMC plugin page.
+     * May be called asynchronously.
      *
      * @param currentVersion the current version of the plugin specified in plugin.yml
      * @param latestVersion the latest version of the plugin specified on SpigotMC.
@@ -99,7 +102,8 @@ public class VersionChecker {
     void onPreReleaseVersion(String version);
 
     /**
-     * Called when the version checker was unable to retrieve the latest version
+     * Called when the version checker was unable to retrieve the latest version.
+     * May be called asynchronously.
      */
     void onFailure();
   }

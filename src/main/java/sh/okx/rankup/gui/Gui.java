@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.prestige.Prestige;
@@ -34,20 +34,22 @@ public class Gui implements InventoryHolder {
   @Getter
   private boolean prestige;
 
-  public static Gui of(Player player, Rank oldRank, String rank, Rankup plugin) {
-    ConfigurationSection config = plugin.getConfig().getConfigurationSection("gui");
-    ItemStack[] items = new ItemStack[config.getInt("rows") * 9];
+  public static Gui of(Player player, Rank oldRank, String rank, RankupPlugin plugin) {
+    Gui gui = new Gui();
+    gui.prestige = oldRank instanceof Prestige;
 
-    ItemStack fill = getItem(plugin, "fill", player, oldRank, rank);
-    ItemStack cancel = getItem(plugin, "cancel", player, oldRank, rank);
-    ItemStack rankup = getItem(plugin, "rankup", player, oldRank, rank);
+    String type = gui.prestige ? "prestige" : "rankup";
+    ConfigurationSection config = plugin.getSection(oldRank, type + ".gui");
+    ItemStack[] items = new ItemStack[config.getInt("rows", 1) * 9];
+
+    ItemStack fill = getItem(plugin,  config, "fill", player, oldRank, rank);
+    ItemStack cancel = getItem(plugin, config, "cancel", player, oldRank, rank);
+    ItemStack rankup = getItem(plugin, config, "rankup", player, oldRank, rank);
 
     addItem(items, config.getConfigurationSection("rankup"), rankup);
     addItem(items, config.getConfigurationSection("cancel"), cancel);
     addItem(items, config.getConfigurationSection("fill"), fill);
 
-    Gui gui = new Gui();
-    gui.prestige = oldRank instanceof Prestige;
     gui.rankup = rankup;
     gui.cancel = cancel;
 
@@ -62,8 +64,8 @@ public class Gui implements InventoryHolder {
   }
 
   @SuppressWarnings("deprecation")
-  private static ItemStack getItem(Rankup plugin, String name, Player player, Rank oldRank, String rank) {
-    ConfigurationSection section = plugin.getConfig().getConfigurationSection("gui").getConfigurationSection(name);
+  private static ItemStack getItem(RankupPlugin plugin, ConfigurationSection parent, String name, Player player, Rank oldRank, String rank) {
+    ConfigurationSection section = parent.getConfigurationSection(name);
 
     String materialName = section.getString("material").toUpperCase();
 
@@ -102,7 +104,7 @@ public class Gui implements InventoryHolder {
     return item;
   }
 
-  private static String format(Rankup plugin, String message, Player player, Rank oldRank, String rank) {
+  private static String format(RankupPlugin plugin, String message, Player player, Rank oldRank, String rank) {
     return plugin.replaceMoneyRequirements(new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
         .replaceRanks(player, oldRank, rank), player, oldRank)
         .toString();

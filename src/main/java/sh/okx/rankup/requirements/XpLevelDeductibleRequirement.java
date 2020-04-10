@@ -1,12 +1,12 @@
 package sh.okx.rankup.requirements;
 
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 
 public class XpLevelDeductibleRequirement extends XpLevelRequirement implements DeductibleRequirement {
 
-  public XpLevelDeductibleRequirement(Rankup plugin, String name) {
+  public XpLevelDeductibleRequirement(RankupPlugin plugin, String name) {
     super(plugin, name);
   }
 

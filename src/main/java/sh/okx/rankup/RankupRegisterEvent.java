@@ -17,7 +17,7 @@ import sh.okx.rankup.requirements.RequirementRegistry;
 public class RankupRegisterEvent extends Event {
   private static final HandlerList handlers = new HandlerList();
   @Getter
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
 
   public static HandlerList getHandlerList() {
     return handlers;

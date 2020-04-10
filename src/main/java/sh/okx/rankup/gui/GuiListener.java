@@ -7,11 +7,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 
 @RequiredArgsConstructor
 public class GuiListener implements Listener {
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
 
   @EventHandler
   public void on(InventoryClickEvent e) {

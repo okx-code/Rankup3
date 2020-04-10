@@ -2,7 +2,6 @@ package sh.okx.rankup.requirements;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,11 +27,17 @@ public class RequirementRegistry {
     return null;
   }
 
-  public Set<Requirement> getRequirements(List<String> list) {
+  public Set<Requirement> getRequirements(Iterable<String> list) {
     Set<Requirement> requirements = new HashSet<>();
 
     for (String req : list) {
       String[] parts = req.split(" ", 2);
+      if (parts.length < 2) {
+        throw new IllegalArgumentException("For requirement: '" + req + "'. Requirements must contain a space between" +
+            " the name of the requirement and the value of the requirement. If it already looks like it has a space, " +
+            "make sure it is not a tab or has an invisible character.");
+      }
+
       String name = parts[0];
       String value = parts[1];
       Requirement requirement = newRequirement(name, value);

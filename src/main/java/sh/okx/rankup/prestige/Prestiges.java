@@ -1,12 +1,11 @@
 package sh.okx.rankup.prestige;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import sh.okx.rankup.RankList;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 
 public class Prestiges extends RankList<Prestige> {
-  public Prestiges(Rankup plugin, FileConfiguration config) {
+  public Prestiges(RankupPlugin plugin, FileConfiguration config) {
     super(config, section -> Prestige.deserialize(plugin, section));
   }
 

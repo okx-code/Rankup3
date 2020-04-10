@@ -5,14 +5,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 
 @RequiredArgsConstructor
 public class PrestigesCommand implements CommandExecutor {
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

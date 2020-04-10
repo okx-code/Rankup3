@@ -2,12 +2,12 @@ package sh.okx.rankup.requirements.requirement.mcmmo;
 
 import com.gmail.nossr50.util.player.UserManager;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 
 public class McMMOPowerLevelRequirement extends ProgressiveRequirement {
-  public McMMOPowerLevelRequirement(Rankup plugin) {
+  public McMMOPowerLevelRequirement(RankupPlugin plugin) {
     super(plugin, "mcmmo-power-level");
   }
 

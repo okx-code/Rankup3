@@ -7,7 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
@@ -16,11 +16,11 @@ import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.util.UpdateNotifier;
 
 public class InfoCommand implements CommandExecutor {
-  private final Rankup plugin;
+  private final RankupPlugin plugin;
 
   private final UpdateNotifier notifier;
 
-  public InfoCommand(Rankup plugin, UpdateNotifier notifier) {
+  public InfoCommand(RankupPlugin plugin, UpdateNotifier notifier) {
     this.plugin = plugin;
     this.notifier = notifier;
   }

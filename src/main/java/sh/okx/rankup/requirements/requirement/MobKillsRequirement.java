@@ -3,14 +3,14 @@ package sh.okx.rankup.requirements.requirement;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 import java.util.Objects;
 
 public class MobKillsRequirement extends ProgressiveRequirement {
-  public MobKillsRequirement(Rankup plugin) {
+  public MobKillsRequirement(RankupPlugin plugin) {
     super(plugin, "mob-kills", true);
   }
 

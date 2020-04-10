@@ -2,13 +2,13 @@ package sh.okx.rankup.requirements.requirement;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class MoneyDeductibleRequirement extends MoneyRequirement implements DeductibleRequirement {
 
-  public MoneyDeductibleRequirement(Rankup plugin, String name) {
+  public MoneyDeductibleRequirement(RankupPlugin plugin, String name) {
     super(plugin, name);
   }
 

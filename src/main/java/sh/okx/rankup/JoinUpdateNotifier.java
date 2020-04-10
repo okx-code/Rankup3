@@ -10,18 +10,20 @@ import sh.okx.rankup.util.UpdateNotifier;
 public class JoinUpdateNotifier implements Listener {
   private final UpdateNotifier notifier;
   private final Supplier<Boolean> enabledSupplier;
+  private final String permission;
 
   public JoinUpdateNotifier(UpdateNotifier notifier,
-      Supplier<Boolean> enabledSupplier) {
+      Supplier<Boolean> enabledSupplier, String permission) {
     this.notifier = notifier;
     this.enabledSupplier = enabledSupplier;
+    this.permission = permission;
   }
 
   @EventHandler
   public void on(PlayerJoinEvent e) {
     if (enabledSupplier.get()) {
       Player player = e.getPlayer();
-      if (player.hasPermission("rankup.notify")) {
+      if (player.hasPermission(permission)) {
         notifier.notify(player, true);
       }
     }

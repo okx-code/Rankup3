@@ -25,8 +25,15 @@ public class RankList<T extends Rank> {
     for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
       ConfigurationSection rankSection = (ConfigurationSection) entry.getValue();
       validateSection(rankSection);
-      ranks.add(deserializer.apply(rankSection));
+      T apply = deserializer.apply(rankSection);
+      if (apply != null) {
+        ranks.add(apply);
+      }
     }
+    List<T> ordered = getOrderedList();
+    Set<T> provisionalRanks = new HashSet<>(ordered);
+    this.ranks.clear();
+    this.ranks.addAll(provisionalRanks);
   }
 
   protected void validateSection(ConfigurationSection section) {

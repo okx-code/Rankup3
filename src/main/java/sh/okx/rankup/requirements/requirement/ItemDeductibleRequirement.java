@@ -1,15 +1,14 @@
 package sh.okx.rankup.requirements.requirement;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import sh.okx.rankup.Rankup;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class ItemDeductibleRequirement extends ItemRequirement implements DeductibleRequirement {
 
-  public ItemDeductibleRequirement(Rankup plugin, String name) {
+  public ItemDeductibleRequirement(RankupPlugin plugin, String name) {
     super(plugin, name);
   }
 
@@ -19,11 +18,28 @@ public class ItemDeductibleRequirement extends ItemRequirement implements Deduct
 
   @Override
   public void apply(Player player, double multiplier) {
-    Material type = Material.matchMaterial(getSub());
-    if (type == null) {
-      throw new IllegalArgumentException("Invalid item " + getSub());
+    int count = (int) (getTotal(player) * multiplier);
+
+    ItemStack[] contents = player.getInventory().getStorageContents();
+    for (int i = 0; i < contents.length && count > 0; i++) {
+      ItemStack item = contents[i];
+
+      if (matchItem(item)) {
+        if (count < item.getAmount()) {
+          item.setAmount(item.getAmount() - count);
+          count = 0;
+        } else {
+          count -= item.getAmount();
+          contents[i] = null;
+        }
+      }
     }
-    player.getInventory().removeItem(new ItemStack(type, (int) (getValueInt() * multiplier)));
+
+    player.getInventory().setStorageContents(contents);
+
+    if (count > 0) {
+      throw new IllegalStateException("REPORT THIS ERROR TO THE DEV - COULD NOT DEDUCT ALL ITEMS");
+    }
   }
 
   @Override
