@@ -2,7 +2,7 @@
 
 ## Installation
 
-Rankup can be compiled with the `gradle build` command. The compiled plugin jar will be in the `/build/libs` directory.
+Rankup can be compiled with the `gradlew build` command. The compiled plugin jar will be in the `/build/libs` directory. A gradle wrapper is included, so installation of Gradle is not necessary.
 
 ## Translation
 
