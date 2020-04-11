@@ -15,11 +15,9 @@ public class GroupRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    for (String group : plugin.getPermissions().getPlayerGroups(null, player)) {
-      for (String value : getValuesString()) {
-        if (group.equalsIgnoreCase(value)) {
-          return true;
-        }
+    for (String group : getValuesString()) {
+      if (plugin.getPermissions().inGroup(player.getUniqueId(), group)) {
+        return true;
       }
     }
     return false;

@@ -1,17 +1,16 @@
 package sh.okx.rankup;
 
-import net.milkbowl.vault.permission.Permission;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import sh.okx.rankup.hook.PermissionProvider;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.Rankups;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Actually performs the ranking up and prestiging for the plugin and also manages the cooldowns
@@ -21,7 +20,7 @@ public class RankupHelper {
 
   private final RankupPlugin plugin;
   private final ConfigurationSection config;
-  private final Permission permissions;
+  private final PermissionProvider permissions;
   /**
    * Players who cannot rankup/prestige for a certain amount of time.
    */
@@ -37,9 +36,9 @@ public class RankupHelper {
     rank.runCommands(player);
 
     if (rank.getRank() != null) {
-      permissions.playerRemoveGroup(null, player, rank.getRank());
+      permissions.removeGroup(player.getUniqueId(), rank.getRank());
     }
-    permissions.playerAddGroup(null, player, rank.getNext());
+    permissions.addGroup(player.getUniqueId(), rank.getNext());
   }
 
   public void sendRankupMessages(Player player, Rank rank) {
@@ -56,13 +55,13 @@ public class RankupHelper {
   public void doPrestige(Player player, Prestige prestige) {
     prestige.runCommands(player);
 
-    permissions.playerRemoveGroup(null, player, prestige.getFrom());
-    permissions.playerAddGroup(null, player, prestige.getTo());
+    permissions.removeGroup(player.getUniqueId(), prestige.getFrom());
+    permissions.addGroup(player.getUniqueId(), prestige.getTo());
 
     if (prestige.getRank() != null) {
-      permissions.playerRemoveGroup(null, player, prestige.getRank());
+      permissions.removeGroup(player.getUniqueId(), prestige.getRank());
     }
-    permissions.playerAddGroup(null, player, prestige.getNext());
+    permissions.addGroup(player.getUniqueId(), prestige.getNext());
   }
 
   public void sendPrestigeMessages(Player player, Prestige prestige) {

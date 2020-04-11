@@ -30,6 +30,7 @@ public class ItemRequirement extends ProgressiveRequirement {
         .mapToInt(ItemStack::getAmount).sum();
   }
 
+  @SuppressWarnings("deprecation")
   protected boolean matchItem(ItemStack item) {
     if (item == null) {
       return false;

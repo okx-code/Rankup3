@@ -39,16 +39,17 @@ public class Gui implements InventoryHolder {
     gui.prestige = oldRank instanceof Prestige;
 
     String type = gui.prestige ? "prestige" : "rankup";
-    ConfigurationSection config = plugin.getSection(oldRank, type + ".gui");
+    String basePath = type + ".gui";
+    ConfigurationSection config = plugin.getSection(oldRank, basePath);
     ItemStack[] items = new ItemStack[config.getInt("rows", 1) * 9];
 
-    ItemStack fill = getItem(plugin,  config, "fill", player, oldRank, rank);
-    ItemStack cancel = getItem(plugin, config, "cancel", player, oldRank, rank);
-    ItemStack rankup = getItem(plugin, config, "rankup", player, oldRank, rank);
+    ItemStack fill = getItem(plugin, plugin.getSection(oldRank, basePath + ".fill"), player, oldRank, rank);
+    ItemStack cancel = getItem(plugin, plugin.getSection(oldRank, basePath + ".cancel"), player, oldRank, rank);
+    ItemStack rankup = getItem(plugin, plugin.getSection(oldRank, basePath + ".rankup"), player, oldRank, rank);
 
-    addItem(items, config.getConfigurationSection("rankup"), rankup);
-    addItem(items, config.getConfigurationSection("cancel"), cancel);
-    addItem(items, config.getConfigurationSection("fill"), fill);
+    addItem(items, plugin.getSection(oldRank, basePath + ".rankup"), rankup);
+    addItem(items, plugin.getSection(oldRank, basePath + ".cancel"), cancel);
+    addItem(items, plugin.getSection(oldRank, basePath + ".fill"), fill);
 
     gui.rankup = rankup;
     gui.cancel = cancel;
@@ -64,9 +65,7 @@ public class Gui implements InventoryHolder {
   }
 
   @SuppressWarnings("deprecation")
-  private static ItemStack getItem(RankupPlugin plugin, ConfigurationSection parent, String name, Player player, Rank oldRank, String rank) {
-    ConfigurationSection section = parent.getConfigurationSection(name);
-
+  private static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, Rank oldRank, String rank) {
     String materialName = section.getString("material").toUpperCase();
 
     ItemStack item;

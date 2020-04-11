@@ -1,6 +1,6 @@
 package sh.okx.rankup.ranks;
 
-import java.util.Collections;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,11 +12,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.MessageBuilder;
-import sh.okx.rankup.requirements.DeductibleRequirement;
+import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
-
-import java.util.List;
-import java.util.Set;
 
 @EqualsAndHashCode
 @ToString
@@ -30,72 +27,29 @@ public class Rank {
   @Getter
   protected final String rank;
   @Getter
-  protected final Set<Requirement> requirements;
+  protected final RankRequirements requirements;
   protected final List<String> commands;
 
-  public static Rank deserialize(RankupPlugin plugin, ConfigurationSection section) {
-    List<String> requirementsList;
-    if (section.isList("requirements")) {
-      requirementsList = section.getStringList("requirements");
-    } else {
-      requirementsList = Collections.singletonList(section.getString("requirements"));
-    }
-    Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
-
-    String next = section.getString("next");
-    String rank = section.getString("rank");
-
-    if (next != null && next.isEmpty()) {
-      plugin.getLogger().warning("Rankup section '" + section.getName() + "' has a blank 'next' field, will be ignored.");
-      return null;
-    }
-
-    return new Rank(section, plugin,
-        next,
-        rank,
-        requirements,
-        section.getStringList("commands"));
-  }
-
-  public boolean hasRequirements(Player player) {
-    for (Requirement requirement : requirements) {
-      if (!requirement.check(player)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   public boolean isIn(Player player) {
-    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
-    for (String group : groups) {
-      if (group.equalsIgnoreCase(rank)) {
-        return true;
-      }
-    }
-    return false;
+    return plugin.getPermissions().inGroup(player.getUniqueId(), rank);
   }
 
   public boolean isLast() {
     return plugin.getRankups().getByName(next) == null;
   }
 
-  public Requirement getRequirement(String name) {
-    for (Requirement requirement : requirements) {
-      if (requirement.getFullName().equalsIgnoreCase(name)) {
-        return requirement;
-      }
-    }
-    return null;
+  public boolean hasRequirements(Player player) {
+    return requirements.hasRequirements(player);
+  }
+
+  public Requirement getRequirement(Player player, String name) {
+    return requirements.getRequirement(player, name);
   }
 
   public void applyRequirements(Player player) {
-    for (Requirement requirement : requirements) {
-      if (requirement instanceof DeductibleRequirement) {
-        ((DeductibleRequirement) requirement).apply(player);
-      }
-    }
+    requirements.applyRequirements(player);
   }
+
 
   public void runCommands(Player player) {
     for (String command : commands) {

@@ -1,8 +1,13 @@
 package sh.okx.rankup;
 
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +28,8 @@ import sh.okx.rankup.commands.RanksCommand;
 import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
+import sh.okx.rankup.hook.PermissionManager;
+import sh.okx.rankup.hook.PermissionProvider;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.NullMessageBuilder;
@@ -67,17 +74,10 @@ import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequ
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
 public class RankupPlugin extends JavaPlugin {
 
   @Getter
-  private Permission permissions;
+  private PermissionProvider permissions;
   @Getter
   private Economy economy;
   /**
@@ -155,7 +155,11 @@ public class RankupPlugin extends JavaPlugin {
 
   public void reload(boolean init) {
     errorMessage = null;
-    if (!setupPermissions()) {
+
+    PermissionManager permissionManager = new PermissionManager(this);
+
+    permissions = permissionManager.findPermissionProvider();
+    if (permissions == null) {
       errorMessage = "No permission plugin found";
     }
     setupEconomy();
@@ -215,7 +219,7 @@ public class RankupPlugin extends JavaPlugin {
 
   private void addAll(Map<String, Integer> map, RankList<? extends Rank> ranks) {
     for (Rank rank : ranks.ranks) {
-      for (Requirement requirement : rank.getRequirements()) {
+      for (Requirement requirement : rank.getRequirements().getRequirements(null)) {
         String name = requirement.getName();
         map.put(name, map.getOrDefault(name, 0) + 1);
       }
@@ -259,16 +263,18 @@ public class RankupPlugin extends JavaPlugin {
       registerRequirements();
       Bukkit.getPluginManager().callEvent(new RankupRegisterEvent(this));
 
-      rankups = new Rankups(this, loadConfig("rankups.yml"));
-      // check rankups are not in an infinite loop
-//      rankups.getOrderedList();
-
       if (config.getBoolean("prestige")) {
         prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
 //        prestiges.getOrderedList();
       } else {
         prestiges = null;
       }
+
+      rankups = new Rankups(this, loadConfig("rankups.yml"));
+      // check rankups are not in an infinite loop
+//      rankups.getOrderedList();
+
+
 
     } catch (Exception e) {
       this.errorMessage = e.getClass().getName() + ": " + e.getMessage();
@@ -354,17 +360,6 @@ public class RankupPlugin extends JavaPlugin {
           new TokensDeductibleRequirement(this, "tokenmanager-tokens"));
     }
   }
-
-  private boolean setupPermissions() {
-    RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager()
-        .getRegistration(Permission.class);
-    if (rsp == null) {
-      return false;
-    }
-    permissions = rsp.getProvider();
-    return permissions.hasGroupSupport();
-  }
-
   private void setupEconomy() {
     RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager()
         .getRegistration(Economy.class);
@@ -392,11 +387,11 @@ public class RankupPlugin extends JavaPlugin {
   }
 
   public ConfigurationSection getSection(Rank rank, String path) {
-    ConfigurationSection messages = rank.getSection();
-    if (messages == null || !messages.isConfigurationSection(path)) {
+    ConfigurationSection rankSection = rank.getSection();
+    if (rankSection == null || !rankSection.isConfigurationSection(path)) {
       return this.messages.getConfigurationSection(path);
     }
-    return messages.getConfigurationSection(path);
+    return rankSection.getConfigurationSection(path);
   }
 
   public MessageBuilder getMessage(Rank rank, Message message) {
@@ -417,7 +412,7 @@ public class RankupPlugin extends JavaPlugin {
       return builder;
     }
 
-    Requirement money = rank.getRequirement("money");
+    Requirement money = rank.getRequirement(sender instanceof Player ? (Player) sender : null, "money");
     if (money != null) {
       Double amount = null;
       if (sender instanceof Player && rank.isIn((Player) sender)) {
@@ -441,7 +436,7 @@ public class RankupPlugin extends JavaPlugin {
   public MessageBuilder replaceRequirements(MessageBuilder builder, Player player, Rank rank) {
     DecimalFormat simpleFormat = placeholders.getSimpleFormat();
     DecimalFormat percentFormat = placeholders.getPercentFormat();
-    for (Requirement requirement : rank.getRequirements()) {
+    for (Requirement requirement : rank.getRequirements().getRequirements(player)) {
       try {
         replaceRequirements(builder, Variable.AMOUNT, requirement,
             () -> simpleFormat.format(requirement.getTotal(player)));

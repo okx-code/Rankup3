@@ -1,12 +1,5 @@
 package sh.okx.rankup;
 
-import lombok.Getter;
-import net.milkbowl.vault.permission.Permission;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import sh.okx.rankup.ranks.Rank;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import lombok.Getter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import sh.okx.rankup.hook.PermissionProvider;
+import sh.okx.rankup.ranks.Rank;
 
 public class RankList<T extends Rank> {
   @Getter
@@ -38,18 +37,18 @@ public class RankList<T extends Rank> {
 
   protected void validateSection(ConfigurationSection section) {
     String name = "'" + section.getName() + "'";
-    if (section.getConfigurationSection("requirements") != null) {
+    /*if (section.getConfigurationSection("requirements") != null) {
       throw new IllegalArgumentException(
           "Rankup/prestige section " + name + " is using the old requirements system.\n" +
               "Instead of a configuration section, it is now a list of strings.\n" +
               "For example, instead of \"requirements: money: 1000\" you should use \"requirements: - 'money 1000'\".");
-    }
+    }*/
     Set<String> keys = section.getKeys(false);
     if (keys.size() == 1 && keys.iterator().next().equalsIgnoreCase("rank")) {
       throw new IllegalArgumentException(
           "Having a final rank (for example: \"Z: rank: 'Z'\") from 3.4.2 or earlier should no longer be used.\n" +
               "It is safe to just delete the final rank " + name + "");
-    } else if (section.getStringList("requirements").isEmpty()) {
+    } else if (!section.contains("requirements")) {
       throw new IllegalArgumentException("Rank " + name + " does not have any requirements.");
     }
   }
@@ -113,15 +112,9 @@ public class RankList<T extends Rank> {
     return list.get(list.size() - 1).getNext();
   }
 
-  public boolean isLast(Permission perms, Player player) {
+  public boolean isLast(PermissionProvider perms, Player player) {
     String last = getLast();
-    String[] groups = perms.getPlayerGroups(null, player);
-    for (String group : groups) {
-      if (group.equalsIgnoreCase(last)) {
-        return true;
-      }
-    }
-    return false;
+    return perms.inGroup(player.getUniqueId(), last);
   }
 
   public T next(T rank) {

@@ -7,6 +7,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.requirements.ListRankRequirements;
+import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class Prestige extends Rank {
   @Getter
   private final String to;
 
-  private Prestige(ConfigurationSection section, RankupPlugin plugin, String next, String rank, Set<Requirement> requirements, List<String> commands, String from, String to) {
+  private Prestige(ConfigurationSection section, RankupPlugin plugin, String next, String rank, RankRequirements requirements, List<String> commands, String from, String to) {
     super(section, plugin, next, rank, requirements, commands);
     this.from = from;
     this.to = to;
@@ -33,7 +35,7 @@ public class Prestige extends Rank {
     return new Prestige(section, plugin,
         section.getString("next"),
         section.getString("rank"),
-        requirements,
+        new ListRankRequirements(requirements),
         section.getStringList("commands"),
         section.getString("from"),
         section.getString("to"));
@@ -41,30 +43,33 @@ public class Prestige extends Rank {
 
   @Override
   public boolean isIn(Player player) {
-    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
-    for (String group : groups) {
-      if (group.equalsIgnoreCase(from) && rank == null) {
-        for (Prestige prestige : plugin.getPrestiges().getOrderedList()) {
-          if (prestige != this && prestige.isIn(player)) {
-            return false;
-          }
+    // first prestige does not have a rank
+    boolean inFrom = plugin.getPermissions().inGroup(player.getUniqueId(), from);
+    if (rank == null && inFrom) {
+      // not in any other prestiges
+      for (Prestige prestige : plugin.getPrestiges().getOrderedList()) {
+        if (prestige != this && prestige.isIn(player)) {
+          return false;
         }
-        return true;
-      } else if(group.equalsIgnoreCase(rank)) {
-        return true;
       }
+      return true;
     }
+
+    if (rank == null) {
+      return false;
+    }
+
+    // subsequent prestiges
+    boolean inRank = plugin.getPermissions().inGroup(player.getUniqueId(), rank);
+    if (inRank) {
+      return true;
+    }
+
     return false;
   }
 
   public boolean isEligable(Player player) {
-    String[] groups = plugin.getPermissions().getPlayerGroups(null, player);
-    for (String group : groups) {
-      if (group.equalsIgnoreCase(from)) {
-        return true;
-      }
-    }
-    return false;
+    return plugin.getPermissions().inGroup(player.getUniqueId(), from);
   }
 
   @Override
