@@ -44,8 +44,7 @@ public class RankRequirementsFactory {
 
   private static RankRequirements getPrestigeListRequirements(RankupPlugin plugin, ConfigurationSection section) {
     if (plugin.getPrestiges() == null) {
-      // don't know what to do here
-      return null;
+      throw new IllegalArgumentException("Prestige requirements are being used but prestiging is not enabled.");
     }
 
     RankRequirements defaultRequirements = null;

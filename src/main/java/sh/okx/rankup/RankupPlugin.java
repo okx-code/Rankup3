@@ -184,7 +184,7 @@ public class RankupPlugin extends JavaPlugin {
       getLogger().severe("If that does not work, restart your server.");
       getLogger().severe("You may then copy in your config values manually from the old config.");
       getLogger().severe("Check the changelog on the Rankup spigot page to see the changes.");
-      getLogger().severe("https://www.spigotmc.org/resources/rankup.17933/updates");
+      getLogger().severe("https://www.spigotmc.org/resources/rankup.76964/updates");
     }
 
     helper = new RankupHelper(this);
