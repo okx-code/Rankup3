@@ -59,7 +59,7 @@ public class RankupExpansion extends PlaceholderExpansion {
     switch (params) {
       case "current_prestige":
         requirePrestiging(prestiges, params);
-        if (prestiges.isLast(plugin.getPermissions(), player)) {
+        if (prestiges.isLast(player)) {
           return prestiges.getLast();
         } else if (prestige == null || prestige.getRank() == null) {
           return getPlaceholder("no-prestige");
@@ -68,7 +68,7 @@ public class RankupExpansion extends PlaceholderExpansion {
         }
       case "next_prestige":
         requirePrestiging(prestiges, params);
-        if (prestiges.isLast(plugin.getPermissions(), player)) {
+        if (prestiges.isLast(player)) {
           return getPlaceholder("highest-rank");
         }
         return orElse(prestige, Prestige::getNext, prestiges.getFirst().getNext());
@@ -79,7 +79,7 @@ public class RankupExpansion extends PlaceholderExpansion {
         requirePrestiging(prestiges, params);
         return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
       case "current_rank":
-        if (rankups.isLast(plugin.getPermissions(), player)) {
+        if (rankups.isLast(player)) {
           return rankups.getLast();
         } else if (rank == null) {
           return getPlaceholder("not-in-ladder");
@@ -87,7 +87,7 @@ public class RankupExpansion extends PlaceholderExpansion {
           return rank.getRank();
         }
       case "next_rank":
-        if (rankups.isLast(plugin.getPermissions(), player)) {
+        if (rankups.isLast(player)) {
           return getPlaceholder("highest-rank");
         }
         return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");

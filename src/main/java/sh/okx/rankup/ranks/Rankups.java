@@ -6,6 +6,6 @@ import sh.okx.rankup.RankupPlugin;
 
 public class Rankups extends RankList<Rank> {
   public Rankups(RankupPlugin plugin, FileConfiguration config) {
-    super(config, section -> Rankup.deserialize(plugin, section));
+    super(plugin, config, section -> Rankup.deserialize(plugin, section));
   }
 }

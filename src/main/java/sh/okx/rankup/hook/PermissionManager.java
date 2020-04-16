@@ -27,4 +27,8 @@ public class PermissionManager {
     }
     return new VaultPermissionProvider(provider);
   }
+
+  public PermissionProvider permissionOnlyProvider() {
+    return new PermissionPermissionProvider();
+  }
 }

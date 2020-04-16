@@ -1,5 +1,5 @@
 # this is used for letting you know that you need to update/change your config file
-version: 6
+version: 7
 
 # the locale to use for messages
 # all messages can be customised but this allows you to
@@ -33,6 +33,14 @@ prestige: false
 # if true, players with the permission rankup.notify will receive notifications when they join
 # to update if the server is on an older version of Rankup.
 notify-update: true
+
+# if rankups and prestiges should be by permissions
+#   if false, players will be checked for if they have a group of the same name as in rankups.yml,
+# and automatically added and taken away from those groups.
+#   if true, players will be checked for the permission rankup.rank.RANK, where RANK
+# is the rankup in rankups.yml. Nothing will automatically happen on rankup, so you must
+# use commands to change a player's group or permission.
+permission-rankup: false
 
 # how people should confirm ranking up
 # options are: gui, text or none
