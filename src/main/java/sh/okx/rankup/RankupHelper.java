@@ -133,9 +133,9 @@ public class RankupHelper {
   public boolean checkRankup(Player player, boolean message) {
     Rankups rankups = plugin.getRankups();
     Rank rank = rankups.getByPlayer(player);
-    if (rankups.isLast(permissions, player)) {
+    if (rankups.isLast(player)) {
       Prestiges prestiges = plugin.getPrestiges();
-      plugin.getMessage(prestiges == null || prestiges.isLast(permissions, player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+      plugin.getMessage(prestiges == null || prestiges.isLast(player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, rankups.getLast())
           .send(player);
@@ -186,8 +186,7 @@ public class RankupHelper {
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (prestiges
-        .isLast(plugin.getPermissions(), player)) { // check if they are at the highest rank
+    } else if (prestiges.isLast(player)) { // check if they are at the highest rank
       plugin.getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
           .replaceRanks(player, prestige.getRank())

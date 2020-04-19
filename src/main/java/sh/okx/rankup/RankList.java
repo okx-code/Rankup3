@@ -11,15 +11,16 @@ import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.hook.PermissionProvider;
 import sh.okx.rankup.ranks.Rank;
 
 public class RankList<T extends Rank> {
+  protected final RankupPlugin plugin;
   @Getter
   protected final FileConfiguration config;
   protected final Set<T> ranks = new HashSet<>();
 
-  public RankList(FileConfiguration config, Function<ConfigurationSection, T> deserializer) {
+  public RankList(RankupPlugin plugin, FileConfiguration config, Function<ConfigurationSection, T> deserializer) {
+    this.plugin = plugin;
     this.config = config;
     for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
       ConfigurationSection rankSection = (ConfigurationSection) entry.getValue();
@@ -112,9 +113,9 @@ public class RankList<T extends Rank> {
     return list.get(list.size() - 1).getNext();
   }
 
-  public boolean isLast(PermissionProvider perms, Player player) {
+  public boolean isLast(Player player) {
     String last = getLast();
-    return perms.inGroup(player.getUniqueId(), last);
+    return plugin.getPermissions().inGroup(player.getUniqueId(), last);
   }
 
   public T next(T rank) {

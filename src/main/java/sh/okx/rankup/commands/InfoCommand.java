@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import sh.okx.rankup.RankupPlugin;
-
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
@@ -47,7 +46,7 @@ public class InfoCommand implements CommandExecutor {
         }
 
         Rankups rankups = plugin.getRankups();
-        if (rankups.isLast(plugin.getPermissions(), player)) {
+        if (rankups.isLast(player)) {
           sender.sendMessage(ChatColor.YELLOW + "That player is at the last rank.");
           return true;
         }
@@ -83,7 +82,7 @@ public class InfoCommand implements CommandExecutor {
         }
 
         Prestiges prestiges = plugin.getPrestiges();
-        if (prestiges.isLast(plugin.getPermissions(), player)) {
+        if (prestiges.isLast(player)) {
           sender.sendMessage(ChatColor.YELLOW + "That player is at the last prestige.");
           return true;
         }
@@ -113,6 +112,8 @@ public class InfoCommand implements CommandExecutor {
             ChatColor.YELLOW + " by " + ChatColor.BLUE + ChatColor.BOLD + String.join(", ", description.getAuthors()));
     if (sender.hasPermission("rankup.reload")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " reload " + ChatColor.YELLOW + "Reloads configuration files.");
+    }
+    if (sender.hasPermission("rankup.force")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " forcerankup <player> " + ChatColor.YELLOW + "Force a player to rankup, bypassing requirements.");
       if (plugin.getPrestiges() != null) {
         sender.sendMessage(

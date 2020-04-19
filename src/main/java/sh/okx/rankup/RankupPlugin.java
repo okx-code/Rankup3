@@ -156,12 +156,19 @@ public class RankupPlugin extends JavaPlugin {
   public void reload(boolean init) {
     errorMessage = null;
 
+    config = loadConfig("config.yml");
+
     PermissionManager permissionManager = new PermissionManager(this);
 
-    permissions = permissionManager.findPermissionProvider();
-    if (permissions == null) {
-      errorMessage = "No permission plugin found";
+    if (config.getBoolean("permission-rankup")) {
+      permissions = permissionManager.permissionOnlyProvider();
+    } else {
+      permissions = permissionManager.findPermissionProvider();
+      if (permissions == null) {
+        errorMessage = "No permission plugin found";
+      }
     }
+
     setupEconomy();
 
     closeInventories();
@@ -176,7 +183,7 @@ public class RankupPlugin extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
-    if (config.getInt("version") < 6) {
+    if (config.getInt("version") < 7) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");
@@ -243,7 +250,6 @@ public class RankupPlugin extends JavaPlugin {
   private void loadConfigs(boolean init) {
     saveLocales();
 
-    config = loadConfig("config.yml");
     String locale = config.getString("locale", "en");
     File localeFile = new File(new File(getDataFolder(), "locale"), locale + ".yml");
     messages = YamlConfiguration.loadConfiguration(localeFile);
