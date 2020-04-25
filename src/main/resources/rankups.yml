@@ -14,7 +14,7 @@ Aexample:
   next: 'B'
   # List of requirements to go to the next rank
   # This example will charge 1000 money to rankup from A to B.
-  # https://github.com/okx-code/Rankup3/wiki/Requirements
+  # https://github.com/okx-code/Rankup3/wiki/List-of-Requirements
   # custom requirements can also be added by other plugins.
   requirements:
     - 'money 1000'

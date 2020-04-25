@@ -4,19 +4,16 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.8'
+version '3.8.1'
 
 repositories {
     mavenCentral()
     mavenLocal()
     maven {
-        url 'http://nexus.hc.to/content/repositories/pub_releases'
-    }
-    maven {
         url 'https://hub.spigotmc.org/nexus/content/groups/public/'
     }
     maven {
-        url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
+        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
     maven {
         url 'https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/'
@@ -35,7 +32,7 @@ dependencies {
         transitive = false
     }
 
-    implementation('net.milkbowl.vault:VaultAPI:1.7') {
+    implementation('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
     implementation 'me.clip:placeholderapi:2.9.2'
@@ -43,7 +40,7 @@ dependencies {
     implementation('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
-    implementation 'com.github.Ben12345rocks:VotingPlugin:5.18.2'
+    implementation 'com.github.Ben12345rocks:VotingPlugin:5.21.1'
     implementation 'com.github.LlmDl:Towny:25fc18a'
 }
 

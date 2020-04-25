@@ -70,6 +70,8 @@ import sh.okx.rankup.requirements.requirement.towny.TownyKingRequirement;
 import sh.okx.rankup.requirements.requirement.towny.TownyMayorNumberResidentsRequirement;
 import sh.okx.rankup.requirements.requirement.towny.TownyMayorRequirement;
 import sh.okx.rankup.requirements.requirement.towny.TownyResidentRequirement;
+import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
@@ -349,7 +351,9 @@ public class RankupPlugin extends JavaPlugin {
     }
     if (pluginManager.isPluginEnabled("VotingPlugin")) {
       requirements.addRequirements(
-          new VotingPluginVotesRequirement(this));
+          new VotingPluginVotesRequirement(this),
+          new VotingPluginPointsRequirement(this, "votingplugin-pointsh"),
+          new VotingPluginPointsDeductibleRequirement(this, "votingplugin-points"));
     }
     if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
       requirements.addRequirements(
