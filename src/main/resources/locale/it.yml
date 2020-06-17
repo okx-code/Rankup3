@@ -1,48 +1,48 @@
-# the messages in this section can be customised for each rankup in rankups.yml.
+#traduzione italiana del locale per rankup
 rankup:
-  requirements-not-met: "&cYou need {MONEY} money to rankup."
-  no-rankup: "&eYou are at the highest rank."
-  # set to an empty string, ie: success-public: ""
-  # to hide that message.
-  success-public: "&a{PLAYER} &ehas ranked up to: &d{RANK}"
-  success-private: "&aYou have ranked up to: &d{RANK}"
-  # used for the text confirmation
+  requirements-not-met: "&cHai bisogno di {MONEY} soldi per avanzare di rank."
+  no-rankup: "&eSei al rank più alto."
+  # imposta stringa vuota per nascondere il messaggio
+  success-public: "&a{PLAYER} &e\u00E8 avanzato di rank a: &d{RANK}"
+  success-private: "&aHai avanzato di rank a: &d{RANK}"
+  # conferma testuale
   confirmation: |-
-    &eAre you sure you want to rankup to &a{RANK}&e?
-    &eType &c/rankup &eagain to confirm.
-  # used for the GUI confirmation
-  title: "Rankup to {RANK}"
+    &eSei sicuro di voler avanzare di rank a &a{RANK}&e?
+    &eScrivi &c/rankup &edi nuovo per confermare.
+  # conferma gui
+  title: "Avanzamento di rank a {RANK}"
 
-  must-prestige: "&cYou must prestige to /rankup further!"
+  must-prestige: "&cDevi effettuare un prestige prima di avanzare di rank!"
 
   gui:
-    title: "Rankup to {RANK}"
+    title: "Avanzamento di rank a {RANK}"
     rankup:
       material: EMERALD_BLOCK
-      # index can be separated by spaces to show in multiple groups
-      # for example: 0-3 9-12 18-21
-      # you can also just use a single number instead of a range.
+      # l'indice può essere separato da spazi per mostrarlo in più gruppi
+      # per esempio: 0-3 9-12 18-21
+      # puoi anche inserire numeri al posto di range
       index: 0-3
-      name: '&a&lConfirm'
-      # lore is optional
-      lore: '&6Rankup to &b{RANK}'
+      name: '&a&lConferma'
+      # lore opzionale
+      lore: '&6Avanzamento a &b{RANK}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
-      name: '&c&lCancel'
+      name: '&c&lAnnulla'
     fill:
       name: ' '
-      # if you are using a 1.8-1.12 and you want to change this
-      # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
-      # this works for both the rankup and cancel blocks as well
+      # se stai usando la 1.8 fino alla 1.12.2 per cambiarlo puoi usare
+      # MATERIAL:data, per esempio STAINED_GLASS_PANE:8
+      # funziona per i bloccchi rankup e cancel
       material: BLACK_STAINED_GLASS_PANE
 
-  # you can (and probably should) you override these in rankups.yml
-  # to show the specific requirements for each rank.
-  # however if you are just using money or don't need to change the message per rank, you can use any combination of:
+  # potresti e dovresti configurare questi in rankup.yml
+  # per visualizzare i requisiti di ogni rank
+  # ma se stai usando solo i soldi e non ti serve modificare il mesaggio puoi usapre questi
   # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
-  # {MONEY} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
-  # here is an example of showing the requirements for just money:
+  # {MONEY} e {MONEY_NEEDED} sono diversi da {AMOUNT money} e {AMOUNT_NEEDED money}, usano un formato diverso
+  # ESEMPIO:
+  
   #list:
   #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
   #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE money}%"
@@ -51,40 +51,38 @@ rankup:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
     current: "&c{OLD_RANK} &e\xbb &c{RANK}"
     incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
-    # an empty string disables the header/footer
+    # stringa vuota per disattivare
     header: ""
     footer: ""
-  # sent when a player tries to rankup when they are on cooldown
+  # messaggi cooldown
   cooldown:
-    singular: "&cYou must wait {SECONDS_LEFT} more second to rankup again."
-    plural: "&cYou must wait {SECONDS_LEFT} more seconds to rankup again."
-# prestige messages can also be customised
+    singular: "&cDevi aspettare ancora {SECONDS_LEFT} secondo per avanzare di rank."
+    plural: "&cDevi aspettare ancora {SECONDS_LEFT} secondi per avanzare di rank."
+# messaggi prestige
 prestige:
-  requirements-not-met: "&cYou need {MONEY} money to prestige."
-  no-prestige: "&eYou are at the highest prestige."
+  requirements-not-met: "&cHai bisogno di {MONEY} soldi per effettuare un prestige."
+  no-prestige: "&eSei al prestige più alto."
 
-  success-public: "&a{PLAYER} &ehas prestiged to: &d{RANK}"
-  success-private: "&aYou have prestiged to: &d{RANK}"
+  success-public: "&a{PLAYER} &eha effettuato un prestige a: &d{RANK}"
+  success-private: "&aHai effettuato un prestige a: &d{RANK}"
 
   confirmation: |-
-    &eAre you sure you want to prestige to &a{RANK}&e?
-    &eType &c/prestige &eagain to confirm.
+    &eSei sicuro di voler effettuare un prestige a &a{RANK}&e?
+    &eScrivi &c/prestige &edi nuovo per confermare.
   gui:
-    title: "Prestige to {RANK}"
+    title: "Prestige a {RANK}"
     rankup:
       material: GOLD_BLOCK
       index: 0-3
-      name: '&a&lConfirm'
-      lore: '&6Prestige to &b{RANK}'
+      name: '&a&lConferma'
+      lore: '&6Prestige a &b{RANK}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
-      name: '&c&lCancel'
+      name: '&c&lAnnulla'
     fill:
       name: ' '
-      # if you are using a 1.8-1.12 and you want to change this
-      # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
-      # this works for both the rankup and cancel blocks as well
+      # riferirsi a commento riga 34
       material: BLACK_STAINED_GLASS_PANE
 
   list:
@@ -94,9 +92,9 @@ prestige:
     header: ""
     footer: ""
   cooldown:
-    singular: "&cYou must wait {SECONDS_LEFT} second to prestige again."
-    plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
+    singular: "&cDevi aspettare {SECONDS_LEFT} secondo per effettuare un altro prestige."
+    plural: "&cDevi aspettare {SECONDS_LEFT} secondi per effettuare un altro prestige."
 
-not-high-enough: "&cYou cannot prestige at your rank!"
-not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in. Use /ranks to list the rankups."
-invalid-rankup: "&cInvalid rankup defined in config, please check console."
+not-high-enough: "&cNon puoi effettuare un prestige al tuo rank!"
+not-in-ladder: "&cNon riusciamo a trovare nessun avanzamento di rank per il tuo gruppo. Scrivi /ranks per ottenere una lista degli avanzamenti disponibili."
+invalid-rankup: "&cRankup invalido definito nel file di configurazione, controlla la console."
