@@ -16,6 +16,7 @@ rankup:
   must-prestige: "&cYou must prestige to /rankup further!"
 
   gui:
+    rows: 1
     title: "Rankup to {RANK}"
     rankup:
       material: EMERALD_BLOCK

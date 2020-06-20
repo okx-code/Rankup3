@@ -23,6 +23,11 @@ public class WorldRequirement extends Requirement {
   }
 
   @Override
+  public double getTotal(Player player) {
+    return 1;
+  }
+
+  @Override
   public Requirement clone() {
     return new WorldRequirement(this);
   }

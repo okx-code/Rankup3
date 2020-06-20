@@ -1,10 +1,10 @@
 plugins {
     id 'java'
-    id "io.freefair.lombok" version "4.1.6"
+    id "io.freefair.lombok" version "5.0.1"
 }
 
 group 'sh.okx'
-version '3.8.1'
+version '3.8.2'
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ repositories {
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.jetbrains:annotations:16.0.2'
-    implementation 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
+    implementation 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
     implementation('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }

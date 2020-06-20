@@ -54,6 +54,12 @@ public class RankupExpansion extends PlaceholderExpansion {
         amount = amount - plugin.getEconomy().getBalance(player);
       }
       return plugin.formatMoney(Math.max(0, amount));
+    } else if (params.startsWith("status_")) {
+      if (rankups.isLast(player) || rank.isIn(player)) {
+        return getPlaceholder("status-complete");
+      } else {
+        return getPlaceholder("status-incomplete");
+      }
     }
 
     switch (params) {

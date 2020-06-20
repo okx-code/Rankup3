@@ -29,7 +29,7 @@ import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
 import sh.okx.rankup.hook.PermissionManager;
-import sh.okx.rankup.hook.PermissionProvider;
+import sh.okx.rankup.hook.GroupProvider;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.NullMessageBuilder;
@@ -79,7 +79,7 @@ import sh.okx.rankup.util.VersionChecker;
 public class RankupPlugin extends JavaPlugin {
 
   @Getter
-  private PermissionProvider permissions;
+  private GroupProvider permissions;
   @Getter
   private Economy economy;
   /**
@@ -179,7 +179,7 @@ public class RankupPlugin extends JavaPlugin {
     if (autoRankup != null) {
       autoRankup.cancel();
     }
-    long time = config.getInt("autorankup-interval") * 60 * 20;
+    long time = (long) (config.getDouble("autorankup-interval") * 60 * 20);
     if (time > 0) {
       autoRankup = new AutoRankup(this);
       autoRankup.runTaskTimer(this, time, time);
@@ -469,19 +469,15 @@ public class RankupPlugin extends JavaPlugin {
     return builder;
   }
 
-  private void replaceRequirements(MessageBuilder builder, Variable variable,
-      Requirement requirement, Supplier<Object> value) {
-    Object get;
+  private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
     try {
-      get = value.get();
       builder.replace(variable + " " + requirement.getFullName(), value.get());
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank,
-      String rankName) {
+  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, String rankName) {
     String oldRankName;
     if (oldRank instanceof Prestige && oldRank.getRank() == null) {
       oldRankName = ((Prestige) oldRank).getFrom();

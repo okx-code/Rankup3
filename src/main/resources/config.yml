@@ -84,6 +84,9 @@ placeholders:
   no-prestige: "None"
   # used in the next_rank and next_prestige placeholders when a player is at the highest rank or prestige
   highest-rank: "None"
+  # used in the %rankup_status_[rank]% placeholders
+  status-complete: "Complete"
+  status-incomplete: "Incomplete"
 
 # what to shorten money by.
 # ie 1000 -> 1k

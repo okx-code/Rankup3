@@ -11,11 +11,11 @@ public class PermissionManager {
     this.plugin = plugin;
   }
 
-  public PermissionProvider findPermissionProvider() {
+  public GroupProvider findPermissionProvider() {
     return getVaultPermissionProvider();
   }
 
-  private PermissionProvider getVaultPermissionProvider() {
+  private GroupProvider getVaultPermissionProvider() {
     RegisteredServiceProvider<Permission> rsp = plugin.getServer().getServicesManager()
         .getRegistration(Permission.class);
     if (rsp == null) {
@@ -25,10 +25,10 @@ public class PermissionManager {
     if (!provider.hasGroupSupport()) {
       return null;
     }
-    return new VaultPermissionProvider(provider);
+    return new VaultGroupProvider(provider);
   }
 
-  public PermissionProvider permissionOnlyProvider() {
-    return new PermissionPermissionProvider();
+  public GroupProvider permissionOnlyProvider() {
+    return new PermissionGroupProvider();
   }
 }

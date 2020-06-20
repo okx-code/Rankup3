@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import sh.okx.rankup.hook.PermissionProvider;
+import sh.okx.rankup.hook.GroupProvider;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.prestige.Prestige;
@@ -20,7 +20,7 @@ public class RankupHelper {
 
   private final RankupPlugin plugin;
   private final ConfigurationSection config;
-  private final PermissionProvider permissions;
+  private final GroupProvider permissions;
   /**
    * Players who cannot rankup/prestige for a certain amount of time.
    */

@@ -1,6 +1,7 @@
 package sh.okx.rankup;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,7 @@ public class RankList<T extends Rank> {
   protected final RankupPlugin plugin;
   @Getter
   protected final FileConfiguration config;
-  protected final Set<T> ranks = new HashSet<>();
+  protected final Collection<T> ranks = new ArrayList<>();
 
   public RankList(RankupPlugin plugin, FileConfiguration config, Function<ConfigurationSection, T> deserializer) {
     this.plugin = plugin;
@@ -59,7 +60,7 @@ public class RankList<T extends Rank> {
     for (T rank : ranks) {
       // see if anything ranks up to this
       for (T rank0 : ranks) {
-        if (rank0.getNext().equals(rank.getRank())) {
+        if (rank0.getNext().equalsIgnoreCase(rank.getRank())) {
           continue OUTER;
         }
       }

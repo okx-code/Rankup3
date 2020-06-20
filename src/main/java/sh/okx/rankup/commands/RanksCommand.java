@@ -34,10 +34,10 @@ public class RanksCommand implements CommandExecutor {
     while (rank != null) {
       String name = rank.getNext();
       if (rank.equals(playerRank)) {
-        plugin.getMessage(sender, Message.RANKS_CURRENT, rank, name).send(sender);
+        plugin.getMessage(sender, Message.RANKS_CURRENT, rank, name).failIfEmpty().send(sender);
         message = Message.RANKS_INCOMPLETE;
       } else {
-        plugin.getMessage(sender, message, rank, name).send(sender);
+        plugin.getMessage(sender, message, rank, name).failIfEmpty().send(sender);
       }
       rank = rankups.getByName(name);
     }

@@ -102,6 +102,8 @@ public class InfoCommand implements CommandExecutor {
             + ChatColor.GREEN + " from " + ChatColor.GOLD + prestige.getFrom()
             + ChatColor.GREEN + " to " + ChatColor.GOLD + prestige.getTo());
         return true;
+      } else if(args[0].equalsIgnoreCase("rankdown") && sender.hasPermission("rankup.force")) {
+
       }
     }
     

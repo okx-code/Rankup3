@@ -4,7 +4,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PermissionPermissionProvider implements PermissionProvider {
+public class PermissionGroupProvider implements GroupProvider {
 
   @Override
   public boolean inGroup(UUID uuid, String group) {
