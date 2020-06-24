@@ -9,6 +9,7 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
+import sh.okx.rankup.ranks.RankElement;
 
 @RequiredArgsConstructor
 public class PrestigesCommand implements CommandExecutor {
@@ -23,26 +24,26 @@ public class PrestigesCommand implements CommandExecutor {
     Prestiges prestiges = plugin.getPrestiges();
     Prestige playerRank = null;
     if (sender instanceof Player) {
-      playerRank = prestiges.getByPlayer((Player) sender);
+      playerRank = prestiges.getRankByPlayer((Player) sender);
     }
 
     plugin.sendHeaderFooter(sender, playerRank, Message.PRESTIGES_HEADER);
 
     Message message = playerRank == null ? Message.PRESTIGES_INCOMPLETE : Message.PRESTIGES_COMPLETE;
-    Prestige prestige = prestiges.getFirst();
-    String nextRank;
-    do {
-      nextRank = prestige.getNext();
-      if (prestige.equals(playerRank)) {
-        plugin.getMessage(sender, Message.PRESTIGES_CURRENT, prestige, nextRank)
+    RankElement<Prestige> prestige = prestiges.getTree().getFirst();
+    while (prestige.hasNext()) {
+      RankElement<Prestige> next = prestige.getNext();
+      if (prestige.getRank().equals(playerRank)) {
+        plugin.getMessage(sender, Message.PRESTIGES_CURRENT, prestige.getRank(), next.getRank())
             .send(sender);
         message = Message.PRESTIGES_INCOMPLETE;
       } else {
-        plugin.getMessage(sender, message, prestige, nextRank)
-            .replaceFirstPrestige(prestige, prestiges, prestige.getFrom())
+        plugin.getMessage(sender, message, prestige.getRank(), next.getRank())
+            .replaceFirstPrestige(prestige.getRank(), prestiges, prestige.getRank().getFrom())
             .send(sender);
       }
-    } while((prestige = prestiges.getByName(nextRank)) != null);
+      prestige = next;
+    }
 
     plugin.sendHeaderFooter(sender, playerRank, Message.PRESTIGES_FOOTER);
     return true;

@@ -10,6 +10,7 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 
 import java.util.Map;
@@ -35,10 +36,10 @@ public class RankupCommand implements CommandExecutor {
     Player player = (Player) sender;
 
     Rankups rankups = plugin.getRankups();
-    Rank rank = rankups.getByPlayer(player);
     if (!plugin.getHelper().checkRankup(player)) {
       return true;
     }
+    RankElement<Rank> rankElement = rankups.getByPlayer(player);
     /*Rank next = rankups.next(rank);
     if (next == null) {
       plugin.getLogger().severe("Rankup from " + rank.getRank() + " to " + rank.getNext() +
@@ -46,7 +47,6 @@ public class RankupCommand implements CommandExecutor {
       plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(player);
       return true;
     }*/
-    String next = rank.getNext();
 
     FileConfiguration config = plugin.getConfig();
     String confirmationType = config.getString("confirmation-type").toLowerCase();
@@ -63,12 +63,12 @@ public class RankupCommand implements CommandExecutor {
     switch (confirmationType) {
       case "text":
         confirming.put(player, System.currentTimeMillis());
-        plugin.replaceMoneyRequirements(plugin.getMessage(rank, Message.CONFIRMATION)
-            .replaceRanks(player, rank, next), player, rank)
+        plugin.replaceMoneyRequirements(plugin.getMessage(rankElement.getRank(), Message.CONFIRMATION)
+            .replaceRanks(player, rankElement.getRank(), rankElement.getNext().getRank()), player, rankElement.getRank())
             .send(player);
         break;
       case "gui":
-        Gui.of(player, rank, next, plugin).open(player);
+        Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin).open(player);
         break;
       case "none":
         plugin.getHelper().rankup(player);

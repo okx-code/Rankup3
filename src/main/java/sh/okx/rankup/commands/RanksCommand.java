@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 
 @RequiredArgsConstructor
@@ -21,27 +22,29 @@ public class RanksCommand implements CommandExecutor {
     }
 
     Rankups rankups = plugin.getRankups();
-    Rank playerRank = null;
+    RankElement<Rank> playerRank = null;
+    Rank pRank = null;
     if (sender instanceof Player) {
       playerRank = rankups.getByPlayer((Player) sender);
+      pRank = playerRank == null ? null : playerRank.getRank();
     }
 
-    plugin.sendHeaderFooter(sender, playerRank, Message.RANKS_HEADER);
+    plugin.sendHeaderFooter(sender, pRank, Message.RANKS_HEADER);
 
-    Message message = !(sender instanceof Player && rankups.isLast((Player) sender))
+    Message message = !(sender instanceof Player && !(playerRank != null && playerRank.hasNext()))
         && playerRank == null ? Message.RANKS_INCOMPLETE : Message.RANKS_COMPLETE;
-    Rank rank = rankups.getFirst();
-    while (rank != null) {
-      String name = rank.getNext();
-      if (rank.equals(playerRank)) {
-        plugin.getMessage(sender, Message.RANKS_CURRENT, rank, name).failIfEmpty().send(sender);
+    RankElement<Rank> rank = rankups.getTree().getFirst();
+    while (rank.hasNext()) {
+      RankElement<Rank> next = rank.getNext();
+      if (rank.getRank().equals(pRank)) {
+        plugin.getMessage(sender, Message.RANKS_CURRENT, rank.getRank(), next.getRank()).failIfEmpty().send(sender);
         message = Message.RANKS_INCOMPLETE;
       } else {
-        plugin.getMessage(sender, message, rank, name).failIfEmpty().send(sender);
+        plugin.getMessage(sender, message, rank.getRank(), next.getRank()).failIfEmpty().send(sender);
       }
-      rank = rankups.getByName(name);
+      rank = next;
     }
-    plugin.sendHeaderFooter(sender, playerRank, Message.RANKS_FOOTER);
+    plugin.sendHeaderFooter(sender, pRank, Message.RANKS_FOOTER);
     return true;
   }
 }

@@ -1,7 +1,8 @@
 package sh.okx.rankup.prestige;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import sh.okx.rankup.RankList;
+import sh.okx.rankup.ranks.RankElement;
+import sh.okx.rankup.ranks.RankList;
 import sh.okx.rankup.RankupPlugin;
 
 public class Prestiges extends RankList<Prestige> {
@@ -10,13 +11,9 @@ public class Prestiges extends RankList<Prestige> {
   }
 
   @Override
-  public Prestige getFirst() {
-    for (Prestige prestige : ranks) {
-      if (prestige.getRank() == null) {
-        return prestige;
-      }
-    }
-    throw new IllegalStateException("No prestige found for first prestige (first prestige is counted as a prestige without a rank set). " +
-        "Disable prestiges in config.yml if you don't want any.");
+  public void addLastRank(RankupPlugin plugin) {
+    RankElement<Prestige> last = getTree().last();
+    last.setNext(new RankElement<>(new LastPrestige(plugin, last.getRank().getNext()), null));
   }
+
 }

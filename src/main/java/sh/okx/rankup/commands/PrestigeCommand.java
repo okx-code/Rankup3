@@ -11,6 +11,7 @@ import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
+import sh.okx.rankup.ranks.RankElement;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -33,10 +34,11 @@ public class PrestigeCommand implements CommandExecutor {
     Player player = (Player) sender;
 
     Prestiges prestiges = plugin.getPrestiges();
-    Prestige prestige = prestiges.getByPlayer(player);
     if (!plugin.getHelper().checkPrestige(player)) {
       return true;
     }
+    RankElement<Prestige> rankElement = prestiges.getByPlayer(player);
+    Prestige prestige = rankElement.getRank();
 
     FileConfiguration config = plugin.getConfig();
     String confirmationType = config.getString("confirmation-type").toLowerCase();
@@ -51,8 +53,8 @@ public class PrestigeCommand implements CommandExecutor {
     switch (confirmationType) {
       case "text":
         confirming.put(player, System.currentTimeMillis());
-        Prestige next = prestiges.next(prestige);
-        String nextRank = next == null ? prestiges.getLast() : next.getRank();
+        Prestige next = rankElement.getNext().getRank();
+        String nextRank = next == null ? prestiges.getTree().last().getRank().getRank() : next.getRank();
 
         plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.PRESTIGE_CONFIRMATION)
             .replaceRanks(player, prestige, nextRank), player, prestige)
@@ -60,7 +62,7 @@ public class PrestigeCommand implements CommandExecutor {
             .send(player);
         break;
       case "gui":
-        Gui.of(player, prestige, prestige.getNext(), plugin).open(player);
+        Gui.of(player, prestige, rankElement.getNext().getRank(), plugin).open(player);
         break;
       case "none":
         plugin.getHelper().prestige(player);

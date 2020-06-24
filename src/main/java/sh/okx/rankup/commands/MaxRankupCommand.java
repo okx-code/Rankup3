@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.RankupHelper;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 
 @RequiredArgsConstructor
 public class MaxRankupCommand implements CommandExecutor {
@@ -27,8 +28,8 @@ public class MaxRankupCommand implements CommandExecutor {
     }
 
     do {
-      Rank rank = plugin.getRankups().getByPlayer(player);
-      rank.applyRequirements(player);
+      RankElement<Rank> rank = plugin.getRankups().getByPlayer(player);
+      rank.getRank().applyRequirements(player);
 
       helper.doRankup(player, rank);
 

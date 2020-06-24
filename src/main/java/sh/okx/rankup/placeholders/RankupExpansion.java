@@ -7,6 +7,7 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.Requirement;
 
@@ -30,12 +31,15 @@ public class RankupExpansion extends PlaceholderExpansion {
     params = params.toLowerCase();
 
     Rankups rankups = plugin.getRankups();
-    Rank rank = rankups.getByPlayer(player);
+    RankElement<Rank> rankElement = rankups.getByPlayer(player);
+    Rank rank = rankElement == null ? null : rankElement.getRank();
 
     Prestiges prestiges = plugin.getPrestiges();
+    RankElement<Prestige> prestigeElement = null;
     Prestige prestige = null;
     if (prestiges != null) {
-      prestige = prestiges.getByPlayer(player);
+      prestigeElement = prestiges.getByPlayer(player);
+      prestige = prestigeElement == null ? null : prestigeElement.getRank();
     }
 
     if (params.startsWith("requirement_")) {
@@ -55,7 +59,7 @@ public class RankupExpansion extends PlaceholderExpansion {
       }
       return plugin.formatMoney(Math.max(0, amount));
     } else if (params.startsWith("status_")) {
-      if (rankups.isLast(player) || rank.isIn(player)) {
+      if (rankElement != null && (!rankElement.hasNext() || rank.isIn(player))) {
         return getPlaceholder("status-complete");
       } else {
         return getPlaceholder("status-incomplete");
@@ -65,16 +69,14 @@ public class RankupExpansion extends PlaceholderExpansion {
     switch (params) {
       case "current_prestige":
         requirePrestiging(prestiges, params);
-        if (prestiges.isLast(player)) {
-          return prestiges.getLast();
-        } else if (prestige == null || prestige.getRank() == null) {
+        if (prestige == null || prestige.getRank() == null) {
           return getPlaceholder("no-prestige");
         } else {
           return prestige.getRank();
         }
       case "next_prestige":
         requirePrestiging(prestiges, params);
-        if (prestiges.isLast(player)) {
+        if (prestigeElement != null && !prestigeElement.hasNext()) {
           return getPlaceholder("highest-rank");
         }
         return orElse(prestige, Prestige::getNext, prestiges.getFirst().getNext());
@@ -85,15 +87,13 @@ public class RankupExpansion extends PlaceholderExpansion {
         requirePrestiging(prestiges, params);
         return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
       case "current_rank":
-        if (rankups.isLast(player)) {
-          return rankups.getLast();
-        } else if (rank == null) {
+        if (rank == null) {
           return getPlaceholder("not-in-ladder");
         } else {
           return rank.getRank();
         }
       case "next_rank":
-        if (rankups.isLast(player)) {
+        if (rankElement != null && !rankElement.hasNext()) {
           return getPlaceholder("highest-rank");
         }
         return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");

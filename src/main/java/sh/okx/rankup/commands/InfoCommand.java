@@ -11,6 +11,7 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.util.UpdateNotifier;
 
@@ -46,19 +47,19 @@ public class InfoCommand implements CommandExecutor {
         }
 
         Rankups rankups = plugin.getRankups();
-        if (rankups.isLast(player)) {
+        RankElement<Rank> rankElement = rankups.getByPlayer(player);
+        if (rankElement == null) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is not in any rankup groups.");
+          return true;
+        } else if (!rankElement.hasNext()) {
           sender.sendMessage(ChatColor.YELLOW + "That player is at the last rank.");
           return true;
         }
 
-        Rank rank = rankups.getByPlayer(player);
-        if (rank == null) {
-          sender.sendMessage(ChatColor.YELLOW + "That player is not in any rankup groups.");
-          return true;
-        }
+        Rank rank = rankElement.getRank();
 
-        plugin.getHelper().doRankup(player, rank);
-        plugin.getHelper().sendRankupMessages(player, rank);
+        plugin.getHelper().doRankup(player, rankElement);
+        plugin.getHelper().sendRankupMessages(player, rankElement);
         sender.sendMessage(ChatColor.GREEN + "Successfully forced "
             + ChatColor.GOLD + player.getName()
             + ChatColor.GREEN + " to rankup from " + ChatColor.GOLD + rank.getRank()
@@ -82,19 +83,20 @@ public class InfoCommand implements CommandExecutor {
         }
 
         Prestiges prestiges = plugin.getPrestiges();
-        if (prestiges.isLast(player)) {
+        RankElement<Prestige> rankElement = prestiges.getByPlayer(player);
+        if (!rankElement.hasNext()) {
           sender.sendMessage(ChatColor.YELLOW + "That player is at the last prestige.");
           return true;
         }
 
-        Prestige prestige = prestiges.getByPlayer(player);
+        Prestige prestige = rankElement.getRank();
         if (prestige == null) {
           sender.sendMessage(ChatColor.YELLOW + "That player is not in any prestige groups.");
           return true;
         }
 
         plugin.getHelper().doPrestige(player, prestige);
-        plugin.getHelper().sendPrestigeMessages(player, prestige);
+        plugin.getHelper().sendPrestigeMessages(player, rankElement);
         sender.sendMessage(ChatColor.GREEN + "Successfully forced "
             + ChatColor.GOLD + player.getName()
             + ChatColor.GREEN + " to prestige "

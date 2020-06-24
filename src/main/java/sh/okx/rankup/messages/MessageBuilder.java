@@ -61,13 +61,30 @@ public class MessageBuilder {
     return this;
   }
 
+  public MessageBuilder replaceRanks(CommandSender player, Rank oldRank, Rank rank) {
+    replace(Variable.PLAYER, player.getName());
+    replaceRanks(oldRank, rank);
+    return this;
+  }
+
   public MessageBuilder replaceRanks(String rankName) {
     replace(Variable.RANK, rankName);
     return this;
   }
 
+  public MessageBuilder replaceRanks(Rank rank) {
+    replace(Variable.RANK, rank.getRank());
+    return this;
+  }
+
   public MessageBuilder replaceRanks(Rank oldRank, String rankName) {
     replaceRanks(rankName);
+    replace(Variable.OLD_RANK, oldRank.getRank());
+    return this;
+  }
+
+  public MessageBuilder replaceRanks(Rank oldRank, Rank rank) {
+    replaceRanks(rank);
     replace(Variable.OLD_RANK, oldRank.getRank());
     return this;
   }

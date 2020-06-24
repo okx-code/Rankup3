@@ -1,9 +1,8 @@
-package sh.okx.rankup.requirements.requirement;
+package sh.okx.rankup.requirements.requirement.tokenmanager;
 
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.DeductibleRequirement;
-import sh.okx.rankup.requirements.requirement.tokenmanager.TokensRequirement;
 
 public class TokensDeductibleRequirement extends TokensRequirement implements DeductibleRequirement {
   public TokensDeductibleRequirement(RankupPlugin plugin, String name) {

@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id "io.freefair.lombok" version "5.0.1"
+    id "io.freefair.lombok" version "5.1.0"
 }
 
 group 'sh.okx'

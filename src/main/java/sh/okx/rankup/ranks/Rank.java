@@ -1,11 +1,9 @@
 package sh.okx.rankup.ranks;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,8 +13,9 @@ import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
 
+import java.util.List;
+
 @EqualsAndHashCode
-@ToString
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rank {
   @Getter
@@ -32,10 +31,6 @@ public class Rank {
 
   public boolean isIn(Player player) {
     return plugin.getPermissions().inGroup(player.getUniqueId(), rank);
-  }
-
-  public boolean isLast() {
-    return plugin.getRankups().getByName(next) == null;
   }
 
   public boolean hasRequirements(Player player) {
@@ -59,5 +54,14 @@ public class Rank {
       }
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
     }
+  }
+
+  @Override
+  public String toString() {
+    return "Rank{" +
+        "next='" + next + '\'' +
+        ", rank='" + rank + '\'' +
+        ", commands=" + commands +
+        '}';
   }
 }

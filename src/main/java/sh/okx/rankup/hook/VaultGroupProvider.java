@@ -1,9 +1,10 @@
 package sh.okx.rankup.hook;
 
-import java.util.Objects;
-import java.util.UUID;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+
+import java.util.Objects;
+import java.util.UUID;
 
 public class VaultGroupProvider implements GroupProvider {
   private final Permission permission;

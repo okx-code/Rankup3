@@ -17,11 +17,11 @@ import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.util.ItemUtil;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import sh.okx.rankup.util.ItemUtil;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Gui implements InventoryHolder {
@@ -34,7 +34,7 @@ public class Gui implements InventoryHolder {
   @Getter
   private boolean prestige;
 
-  public static Gui of(Player player, Rank oldRank, String rank, RankupPlugin plugin) {
+  public static Gui of(Player player, Rank oldRank, Rank rank, RankupPlugin plugin) {
     Gui gui = new Gui();
     gui.prestige = oldRank instanceof Prestige;
 
@@ -65,7 +65,7 @@ public class Gui implements InventoryHolder {
   }
 
   @SuppressWarnings("deprecation")
-  private static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, Rank oldRank, String rank) {
+  private static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
     String materialName = section.getString("material").toUpperCase();
 
     ItemStack item;
@@ -73,7 +73,7 @@ public class Gui implements InventoryHolder {
       Material material = Material.valueOf(materialName);
       item = new ItemStack(material);
     } else {
-      // handle default material correctly on older vesions
+      // handle default material correctly on older versions
       if (materialName.equals("BLACK_STAINED_GLASS_PANE")) {
         materialName = "STAINED_GLASS_PANE:15";
       }
@@ -103,7 +103,7 @@ public class Gui implements InventoryHolder {
     return item;
   }
 
-  private static String format(RankupPlugin plugin, String message, Player player, Rank oldRank, String rank) {
+  private static String format(RankupPlugin plugin, String message, Player player, Rank oldRank, Rank rank) {
     return plugin.replaceMoneyRequirements(new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
         .replaceRanks(player, oldRank, rank), player, oldRank)
         .toString();

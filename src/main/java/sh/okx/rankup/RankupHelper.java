@@ -1,7 +1,5 @@
 package sh.okx.rankup;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.hook.GroupProvider;
@@ -10,7 +8,12 @@ import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Actually performs the ranking up and prestiging for the plugin and also manages the cooldowns
@@ -32,23 +35,23 @@ public class RankupHelper {
     this.permissions = plugin.getPermissions();
   }
 
-  public void doRankup(Player player, Rank rank) {
-    rank.runCommands(player);
+  public void doRankup(Player player, RankElement<Rank> rank) {
+    rank.getRank().runCommands(player);
 
     if (rank.getRank() != null) {
-      permissions.removeGroup(player.getUniqueId(), rank.getRank());
+      permissions.removeGroup(player.getUniqueId(), rank.getRank().getRank());
     }
-    permissions.addGroup(player.getUniqueId(), rank.getNext());
+    permissions.addGroup(player.getUniqueId(), rank.getNext().getRank().getRank());
   }
 
-  public void sendRankupMessages(Player player, Rank rank) {
-    plugin.getMessage(rank, Message.SUCCESS_PUBLIC)
+  public void sendRankupMessages(Player player, RankElement<Rank> rank) {
+    plugin.getMessage(rank.getRank(), Message.SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, rank, rank.getNext())
+        .replaceRanks(player, rank.getRank(), rank.getNext().getRank())
         .broadcast();
-    plugin.getMessage(rank, Message.SUCCESS_PRIVATE)
+    plugin.getMessage(rank.getRank(), Message.SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, rank, rank.getNext())
+        .replaceRanks(player, rank.getRank(), rank.getNext().getRank())
         .send(player);
   }
 
@@ -64,16 +67,19 @@ public class RankupHelper {
     permissions.addGroup(player.getUniqueId(), prestige.getNext());
   }
 
-  public void sendPrestigeMessages(Player player, Prestige prestige) {
-    plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PUBLIC)
+  public void sendPrestigeMessages(Player player, RankElement<Prestige> prestige) {
+    Objects.requireNonNull(prestige);
+    Objects.requireNonNull(prestige.getNext());
+
+    plugin.getMessage(prestige.getRank(), Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, prestige, prestige.getNext())
-        .replaceFromTo(prestige)
+        .replaceRanks(player, prestige.getRank(), prestige.getNext().getRank())
+        .replaceFromTo(prestige.getRank())
         .broadcast();
-    plugin.getMessage(prestige, Message.PRESTIGE_SUCCESS_PRIVATE)
+    plugin.getMessage(prestige.getRank(), Message.PRESTIGE_SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, prestige, prestige.getNext())
-        .replaceFromTo(prestige)
+        .replaceRanks(player, prestige.getRank(), prestige.getNext().getRank())
+        .replaceFromTo(prestige.getRank())
         .send(player);
   }
 
@@ -112,12 +118,13 @@ public class RankupHelper {
       return;
     }
 
-    Rank rank = plugin.getRankups().getByPlayer(player);
+    RankElement<Rank> rankElement = plugin.getRankups().getByPlayer(player);
+    Rank rank = rankElement.getRank();
     rank.applyRequirements(player);
     applyCooldown(player);
 
-    doRankup(player, rank);
-    sendRankupMessages(player, rank);
+    doRankup(player, rankElement);
+    sendRankupMessages(player, rankElement);
   }
 
   public boolean checkRankup(Player player) {
@@ -132,24 +139,26 @@ public class RankupHelper {
    */
   public boolean checkRankup(Player player, boolean message) {
     Rankups rankups = plugin.getRankups();
-    Rank rank = rankups.getByPlayer(player);
-    if (rankups.isLast(player)) {
-      Prestiges prestiges = plugin.getPrestiges();
-      plugin.getMessage(prestiges == null || prestiges.isLast(player) ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
-          .failIf(!message)
-          .replaceRanks(player, rankups.getLast())
-          .send(player);
-      return false;
-    } else if (rank == null) { // check if in ladder
+    RankElement<Rank> rankElement = rankups.getByPlayer(player);
+    if (rankElement == null) { // check if in ladder
       plugin.getMessage(Message.NOT_IN_LADDER)
           .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
+    }
+    Rank rank = rankElement.getRank();
+    if (!rankElement.hasNext()) {
+      Prestiges prestiges = plugin.getPrestiges();
+      plugin.getMessage(prestiges == null || !prestiges.getByPlayer(player).hasNext() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+          .failIf(!message)
+          .replaceRanks(player, rankups.getTree().last().getRank().getRank())
+          .send(player);
+      return false;
     } else if (!rank.hasRequirements(player)) { // check if they can afford it
       if (message) {
         plugin.replaceMoneyRequirements(plugin.getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-            .replaceRanks(player, rank, rank.getNext()), player, rank)
+            .replaceRanks(player, rank, rankElement.getNext().getRank()), player, rank)
             .send(player);
       }
       return false;
@@ -165,12 +174,13 @@ public class RankupHelper {
       return;
     }
 
-    Prestige prestige = plugin.getPrestiges().getByPlayer(player);
+    RankElement<Prestige> rankElement = plugin.getPrestiges().getByPlayer(player);
+    Prestige prestige = rankElement.getRank();
     prestige.applyRequirements(player);
 
     applyCooldown(player);
     doPrestige(player, prestige);
-    sendPrestigeMessages(player, prestige);
+    sendPrestigeMessages(player, rankElement);
   }
 
   public boolean checkPrestige(Player player) {
@@ -179,29 +189,29 @@ public class RankupHelper {
 
   public boolean checkPrestige(Player player, boolean message) {
     Prestiges prestiges = plugin.getPrestiges();
-    Prestige prestige = prestiges.getByPlayer(player);
-    if (prestige == null || !prestige.isEligable(player)) { // check if in ladder
+    RankElement<Prestige> prestigeElement = prestiges.getByPlayer(player);
+    if (prestigeElement == null || !prestigeElement.getRank().isEligible(player)) { // check if in ladder
       plugin.getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
           .replace(Variable.PLAYER, player.getName())
           .send(player);
       return false;
-    } else if (prestiges.isLast(player)) { // check if they are at the highest rank
-      plugin.getMessage(prestige, Message.PRESTIGE_NO_PRESTIGE)
+    } else if (!prestigeElement.hasNext()) { // check if they are at the highest rank
+      plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
-          .replaceRanks(player, prestige.getRank())
-          .replaceFromTo(prestige)
+          .replaceRanks(player, prestigeElement.getRank().getRank())
+          .replaceFromTo(prestigeElement.getRank())
           .send(player);
       return false;
-    } else if (!prestige.hasRequirements(player)) { // check if they can afford it
+    } else if (!prestigeElement.getRank().hasRequirements(player)) { // check if they can afford it
       plugin.replaceMoneyRequirements(
-          plugin.getMessage(prestige, Message.PRESTIGE_REQUIREMENTS_NOT_MET)
+          plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_REQUIREMENTS_NOT_MET)
               .failIf(!message)
-              .replaceRanks(player, prestige, prestiges.next(prestige).getRank()), player, prestige)
-          .replaceFromTo(prestige)
+              .replaceRanks(player, prestigeElement.getRank(), prestigeElement.getNext().getRank().getRank()), player, prestigeElement.getRank())
+          .replaceFromTo(prestigeElement.getRank())
           .send(player);
       return false;
-    } else if (checkCooldown(player, prestige)) {
+    } else if (checkCooldown(player, prestigeElement.getRank())) {
       return false;
     }
 

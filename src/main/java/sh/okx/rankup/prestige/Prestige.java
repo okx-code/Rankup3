@@ -22,7 +22,7 @@ public class Prestige extends Rank {
   @Getter
   private final String to;
 
-  private Prestige(ConfigurationSection section, RankupPlugin plugin, String next, String rank, RankRequirements requirements, List<String> commands, String from, String to) {
+  protected Prestige(ConfigurationSection section, RankupPlugin plugin, String next, String rank, RankRequirements requirements, List<String> commands, String from, String to) {
     super(section, plugin, next, rank, requirements, commands);
     this.from = from;
     this.to = to;
@@ -47,7 +47,7 @@ public class Prestige extends Rank {
     boolean inFrom = plugin.getPermissions().inGroup(player.getUniqueId(), from);
     if (rank == null && inFrom) {
       // not in any other prestiges
-      for (Prestige prestige : plugin.getPrestiges().getOrderedList()) {
+      for (Prestige prestige : plugin.getPrestiges().getTree()) {
         if (prestige != this && prestige.isIn(player)) {
           return false;
         }
@@ -68,12 +68,7 @@ public class Prestige extends Rank {
     return false;
   }
 
-  public boolean isEligable(Player player) {
+  public boolean isEligible(Player player) {
     return plugin.getPermissions().inGroup(player.getUniqueId(), from);
-  }
-
-  @Override
-  public boolean isLast() {
-    return plugin.getPrestiges().getByName(next) == null;
   }
 }
