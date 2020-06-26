@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.8.2'
+version '3.9-beta.1'
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ repositories {
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.jetbrains:annotations:16.0.2'
-    implementation 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+    implementation 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
     implementation('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }
@@ -35,7 +35,7 @@ dependencies {
     implementation('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    implementation 'me.clip:placeholderapi:2.9.2'
+    implementation 'me.clip:placeholderapi:2.10.6'
     implementation 'com.hm.achievement:advanced-achievements-api:1.1.0'
     implementation('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'

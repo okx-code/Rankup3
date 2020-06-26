@@ -55,16 +55,17 @@ public class RankupHelper {
         .send(player);
   }
 
-  public void doPrestige(Player player, Prestige prestige) {
-    prestige.runCommands(player);
+  public void doPrestige(Player player, RankElement<Prestige> prestige) {
+    Prestige rank = prestige.getRank();
+    rank.runCommands(player);
 
-    permissions.removeGroup(player.getUniqueId(), prestige.getFrom());
-    permissions.addGroup(player.getUniqueId(), prestige.getTo());
+    permissions.removeGroup(player.getUniqueId(), rank.getFrom());
+    permissions.addGroup(player.getUniqueId(), rank.getTo());
 
-    if (prestige.getRank() != null) {
-      permissions.removeGroup(player.getUniqueId(), prestige.getRank());
+    if (rank.getRank() != null) {
+      permissions.removeGroup(player.getUniqueId(), rank.getRank());
     }
-    permissions.addGroup(player.getUniqueId(), prestige.getNext());
+    permissions.addGroup(player.getUniqueId(), prestige.getNext().getRank().getRank());
   }
 
   public void sendPrestigeMessages(Player player, RankElement<Prestige> prestige) {
@@ -179,7 +180,7 @@ public class RankupHelper {
     prestige.applyRequirements(player);
 
     applyCooldown(player);
-    doPrestige(player, prestige);
+    doPrestige(player, rankElement);
     sendPrestigeMessages(player, rankElement);
   }
 

@@ -3,10 +3,13 @@ package sh.okx.rankup.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
@@ -15,7 +18,9 @@ import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.util.UpdateNotifier;
 
-public class InfoCommand implements CommandExecutor {
+import java.util.*;
+
+public class InfoCommand implements TabExecutor {
   private final RankupPlugin plugin;
 
   private final UpdateNotifier notifier;
@@ -95,7 +100,7 @@ public class InfoCommand implements CommandExecutor {
           return true;
         }
 
-        plugin.getHelper().doPrestige(player, prestige);
+        plugin.getHelper().doPrestige(player, rankElement);
         plugin.getHelper().sendPrestigeMessages(player, rankElement);
         sender.sendMessage(ChatColor.GREEN + "Successfully forced "
             + ChatColor.GOLD + player.getName()
@@ -105,7 +110,87 @@ public class InfoCommand implements CommandExecutor {
             + ChatColor.GREEN + " to " + ChatColor.GOLD + prestige.getTo());
         return true;
       } else if(args[0].equalsIgnoreCase("rankdown") && sender.hasPermission("rankup.force")) {
+        if (args.length < 2) {
+          sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " rankdown <player>");
+          return true;
+        }
 
+        Player player = Bukkit.getPlayer(args[1]);
+        if (player == null) {
+          sender.sendMessage(ChatColor.YELLOW + "Player not found.");
+          return true;
+        }
+
+        RankElement<Rank> currentRankElement = plugin.getRankups().getByPlayer(player);
+        if (currentRankElement == null) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is not in any rankup groups.");
+          return true;
+        }
+        Rank currentRank = currentRankElement.getRank();
+
+        if (plugin.getRankups().getFirst().equals(currentRank)) {
+          sender.sendMessage(ChatColor.YELLOW + "That player is in the first rank and cannot be ranked down.");
+
+        }
+
+        RankElement<Rank> prevRankElement = plugin.getRankups().getTree().getFirst();
+        while(prevRankElement.hasNext() && !prevRankElement.getNext().getRank().equals(currentRank)) {
+          prevRankElement = prevRankElement.getNext();
+        }
+
+        if (!prevRankElement.hasNext()) {
+          sender.sendMessage(ChatColor.YELLOW + "Could not match previous rank.");
+        }
+        Rank prevRank = prevRankElement.getRank();
+
+        if (prevRankElement.getRank() != null) {
+          plugin.getPermissions().removeGroup(player.getUniqueId(), currentRank.getRank());
+        }
+        plugin.getPermissions().addGroup(player.getUniqueId(), prevRank.getRank());
+
+        sender.sendMessage(ChatColor.GREEN + "Successfully forced "
+                + ChatColor.GOLD + player.getName()
+                + ChatColor.GREEN + " to rank down from " + ChatColor.GOLD + currentRank.getRank()
+                + ChatColor.GREEN + " to " + ChatColor.GOLD + prevRank.getRank());
+        return true;
+      } else if (args[0].equalsIgnoreCase("placeholders") && sender.hasPermission("rankup.admin")) {
+        sender.sendMessage("--- Rankup placeholders ---");
+        if (args.length > 1 && args[1].equalsIgnoreCase("status")) {
+          for (Rank rank : plugin.getRankups().getTree()) {
+            String placeholder = "status_" + rank.getRank();
+            sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().onPlaceholderRequest(sender instanceof Player ? (Player) sender : null, placeholder));
+          }
+          return true;
+        }
+
+        String[] placeholders = new String[] {
+                "prestige_money",
+                "prestige_money_formatted",
+                "prestige_percent_left_formatted",
+                "prestige_percent_done_formatted",
+                "money_formatted",
+                "money_left_formatted",
+                "percent_left_formatted",
+                "percent_done_formatted",
+                "current_prestige",
+                "next_prestige",
+                "current_rank",
+                "next_rank",
+        };
+        for (String placeholder : placeholders) {
+          sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().onPlaceholderRequest(sender instanceof Player ? (Player) sender : null, placeholder));
+        }
+        return true;
+      } else if (args[0].equalsIgnoreCase("tree") && sender.hasPermission("rankup.admin")) {
+        RankElement<Rank> element = plugin.getRankups().getTree().getFirst();
+        while (element.hasNext()) {
+          Rank rank = element.getRank();
+          RankElement<Rank> next = element.getNext();
+          Rank nextRank = next.getRank();
+          sender.sendMessage(rank.getRank() + " (" + rank.getNext() + ") -> " + nextRank.getRank() + " (" + nextRank.getNext() + ")");
+          element = next;
+        }
+        return true;
       }
     }
     
@@ -131,5 +216,38 @@ public class InfoCommand implements CommandExecutor {
     }
 
     return true;
+  }
+
+  @Override
+  public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    if (args.length == 1) {
+      List<String> list = new ArrayList<>();
+      if (sender.hasPermission("rankup.reload")) {
+        list.add("reload");
+      }
+      if (sender.hasPermission("rankup.force")) {
+        list.add("forcerankup");
+        list.add("forceprestige");
+        list.add("rankdown");
+      }
+      return StringUtil.copyPartialMatches(args[0], list, new ArrayList<>());
+    } else if (args.length == 2) {
+      if (args[0].equalsIgnoreCase("forcerankup") && sender.hasPermission("rankup.force")) {
+        return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
+      } else if (args[0].equalsIgnoreCase("forceprestige") && sender.hasPermission("rankup.force")) {
+        return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
+      } else if (args[0].equalsIgnoreCase("rankdown") && sender.hasPermission("rankup.force")) {
+        return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  private Iterable<String> players() {
+    Set<String> players = new HashSet<>();
+    for (Player player : Bukkit.getOnlinePlayers()) {
+      players.add(player.getName());
+    }
+    return players;
   }
 }

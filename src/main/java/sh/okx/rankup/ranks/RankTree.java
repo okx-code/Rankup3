@@ -34,13 +34,14 @@ public class RankTree<T extends Rank> implements Iterable<T> {
       private RankElement<T> element = first;
       @Override
       public boolean hasNext() {
-        return element.hasNext();
+        return element != null;
       }
 
       @Override
       public T next() {
+        T rank = element.getRank();
         element = element.getNext();
-        return element.getRank();
+        return rank;
       }
     };
   }

@@ -59,11 +59,30 @@ public class RankupExpansion extends PlaceholderExpansion {
       }
       return plugin.formatMoney(Math.max(0, amount));
     } else if (params.startsWith("status_")) {
-      if (rankElement != null && (!rankElement.hasNext() || rank.isIn(player))) {
-        return getPlaceholder("status-complete");
-      } else {
-        return getPlaceholder("status-incomplete");
+      String[] parts = params.split("_",  2);
+      Rank statusRank = rankups.getByName(parts[1]);
+
+      if (statusRank == null) {
+        return null;
       }
+      if (rank == null) {
+        return getPlaceholder("status.incomplete");
+      }
+      if (statusRank.equals(rank)) {
+        return getPlaceholder("status.current");
+      }
+
+      // is playerRank before or after statusRank?
+      for (RankElement<Rank> element : rankups.getTree().asList()) {
+        if (element.getRank().equals(statusRank)) {
+          return getPlaceholder("status.complete");
+        } else if (element.getRank().equals(rank)) {
+          return getPlaceholder("status.incomplete");
+        }
+      }
+
+      // this should not happen
+      return null;
     }
 
     switch (params) {

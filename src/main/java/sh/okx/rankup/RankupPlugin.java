@@ -55,6 +55,8 @@ import java.util.function.Supplier;
 
 public class RankupPlugin extends JavaPlugin {
 
+  public static final int CONFIG_VERSION = 8;
+
   @Getter
   private GroupProvider permissions;
   @Getter
@@ -78,11 +80,10 @@ public class RankupPlugin extends JavaPlugin {
   private RankupHelper helper;
   private AutoRankup autoRankup;
   private String errorMessage;
-  private UpdateNotifier notifier;
 
   @Override
   public void onEnable() {
-    notifier = new UpdateNotifier(new VersionChecker(this));
+    UpdateNotifier notifier = new UpdateNotifier(new VersionChecker(this));
 
     reload(true);
 
@@ -99,6 +100,10 @@ public class RankupPlugin extends JavaPlugin {
     }));
     metrics.addCustomChart(new Metrics.SimplePie("prestige",
         () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
+    metrics.addCustomChart(new Metrics.SimplePie("permission-rankup",
+            () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
+    metrics.addCustomChart(new Metrics.SimplePie("notify-update",
+            () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
 
     if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RanksCommand(this));
@@ -162,7 +167,7 @@ public class RankupPlugin extends JavaPlugin {
       autoRankup.runTaskTimer(this, time, time);
     }
 
-    if (config.getInt("version") < 7) {
+    if (config.getInt("version") < CONFIG_VERSION) {
       getLogger().severe("You are using an outdated config!");
       getLogger().severe("This means that some things might not work!");
       getLogger().severe("To update, please rename ALL your config files (or the folder they are in),");

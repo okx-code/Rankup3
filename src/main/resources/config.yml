@@ -1,5 +1,5 @@
 # this is used for letting you know that you need to update/change your config file
-version: 7
+version: 8
 
 # the locale to use for messages
 # all messages can be customised but this allows you to
@@ -52,7 +52,7 @@ cooldown: 1
 
 # if enabled, players can run /maxrankup to rankup as many times as possible,
 # before they fail the requirements for the next rank.
-# the permission rankup.maxrankup is used for this command, but it is usually given by default.
+# the permission rankup.maxrankup is used for this command, but it is given by default.
 # note that /maxrankup, if enabled, has no confirmation.
 max-rankup:
   # You must restart your server if you enable or disable /maxrankup!
@@ -85,8 +85,10 @@ placeholders:
   # used in the next_rank and next_prestige placeholders when a player is at the highest rank or prestige
   highest-rank: "None"
   # used in the %rankup_status_[rank]% placeholders
-  status-complete: "Complete"
-  status-incomplete: "Incomplete"
+  status:
+    complete: "Complete"
+    current: "Current"
+    incomplete: "Incomplete"
 
 # what to shorten money by.
 # ie 1000 -> 1k
@@ -94,7 +96,7 @@ placeholders:
 # for each entry here, it counts as increasing by a factor of 1,000
 # the first represents thousands (1,000) then millions (1,000,000) then billions (1,000,000,000) etc.
 shorten:
-- 'k'
+- 'K'
 - 'M'
 - 'B'
 - 'T'

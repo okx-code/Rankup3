@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class RequirementRegistry {
-  private Set<Requirement> requirements = new HashSet<>();
+  private final Set<Requirement> requirements = new HashSet<>();
 
   public void addRequirement(Requirement requirement) {
     requirements.add(requirement);

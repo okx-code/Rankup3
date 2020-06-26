@@ -11,7 +11,6 @@ commands:
     permission: rankup.rankup
     description: Rankup.
   rankup3:
-    permission: rankup3.info
     description: View Rankup version and perform some administrative commands.
     # support the old command
     aliases: [pru]
@@ -30,7 +29,6 @@ commands:
 permissions:
   rankup.*:
     children:
-      rankup.info: true
       rankup.rankup: true
       rankup.admin: true
       rankup.ranks: true
@@ -49,8 +47,6 @@ permissions:
       # if a player receives notifications to update rankup when they log in.
       rankup.notify: true
     default: op
-  rankup.info:
-    default: true
   rankup.rankup:
     default: true
   rankup.ranks:

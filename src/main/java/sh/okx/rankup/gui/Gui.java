@@ -99,7 +99,6 @@ public class Gui implements InventoryHolder {
       meta.setDisplayName(ChatColor.RESET + format(plugin, section.getString("name"), player, oldRank, rank));
     }
     item.setItemMeta(meta);
-
     return item;
   }
 
