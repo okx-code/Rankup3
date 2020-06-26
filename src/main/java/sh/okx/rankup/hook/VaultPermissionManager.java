@@ -4,13 +4,14 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import sh.okx.rankup.RankupPlugin;
 
-public class PermissionManager {
+public class VaultPermissionManager implements PermissionManager {
   private final RankupPlugin plugin;
 
-  public PermissionManager(RankupPlugin plugin) {
+  public VaultPermissionManager(RankupPlugin plugin) {
     this.plugin = plugin;
   }
 
+  @Override
   public GroupProvider findPermissionProvider() {
     return getVaultPermissionProvider();
   }
@@ -28,6 +29,7 @@ public class PermissionManager {
     return new VaultGroupProvider(provider);
   }
 
+  @Override
   public GroupProvider permissionOnlyProvider() {
     return new PermissionGroupProvider();
   }

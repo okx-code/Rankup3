@@ -27,7 +27,7 @@ public class RankupHelper {
   /**
    * Players who cannot rankup/prestige for a certain amount of time.
    */
-  private Map<Player, Long> cooldowns = new HashMap<>();
+  private final Map<Player, Long> cooldowns = new HashMap<>();
 
   public RankupHelper(RankupPlugin plugin) {
     this.plugin = plugin;

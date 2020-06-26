@@ -27,9 +27,10 @@ public class Placeholders {
   }
 
   public void register() {
+    expansion = new RankupExpansion(plugin, this);
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      expansion = new RankupExpansion(plugin, this);
-      expansion.register();
+      RankupPlaceholderExpansion placeholderExpansion = new RankupPlaceholderExpansion(plugin, expansion);
+      placeholderExpansion.register();
       registered = true;
     } else {
       registered = false;

@@ -1,6 +1,7 @@
 package sh.okx.rankup.commands;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,13 +41,6 @@ public class RankupCommand implements CommandExecutor {
       return true;
     }
     RankElement<Rank> rankElement = rankups.getByPlayer(player);
-    /*Rank next = rankups.next(rank);
-    if (next == null) {
-      plugin.getLogger().severe("Rankup from " + rank.getRank() + " to " + rank.getNext() +
-          " is defined but " + rank.getNext() + " does not exist.");
-      plugin.getMessage(Message.INVALID_RANKUP).failIfEmpty().send(player);
-      return true;
-    }*/
 
     FileConfiguration config = plugin.getConfig();
     String confirmationType = config.getString("confirmation-type").toLowerCase();
@@ -68,7 +62,12 @@ public class RankupCommand implements CommandExecutor {
             .send(player);
         break;
       case "gui":
-        Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin).open(player);
+        Gui gui = Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin);
+        if (gui == null) {
+          player.sendMessage(ChatColor.RED + "GUI is not available. Check console for more informatiopn.");
+          return true;
+        }
+        gui.open(player);
         break;
       case "none":
         plugin.getHelper().rankup(player);

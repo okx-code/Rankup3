@@ -1,6 +1,7 @@
 package sh.okx.rankup.hook;
 
-public interface PermisionManager {
+public interface PermissionManager {
+
     GroupProvider findPermissionProvider();
 
     GroupProvider permissionOnlyProvider();

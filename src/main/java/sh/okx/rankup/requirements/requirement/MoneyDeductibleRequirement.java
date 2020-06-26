@@ -1,8 +1,8 @@
 package sh.okx.rankup.requirements.requirement;
 
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
+import sh.okx.rankup.economy.Economy;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 

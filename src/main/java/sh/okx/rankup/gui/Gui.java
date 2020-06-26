@@ -41,6 +41,11 @@ public class Gui implements InventoryHolder {
     String type = gui.prestige ? "prestige" : "rankup";
     String basePath = type + ".gui";
     ConfigurationSection config = plugin.getSection(oldRank, basePath);
+    if (config == null) {
+      plugin.getLogger().severe("You must update your config.yml and locale/en.yml to be able to use the GUI! Your configuration files are outdated.");
+      return null;
+    }
+
     ItemStack[] items = new ItemStack[config.getInt("rows", 1) * 9];
 
     ItemStack fill = getItem(plugin, plugin.getSection(oldRank, basePath + ".fill"), player, oldRank, rank);

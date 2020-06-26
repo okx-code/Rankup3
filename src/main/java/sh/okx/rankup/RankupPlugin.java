@@ -1,7 +1,6 @@
 package sh.okx.rankup;
 
 import lombok.Getter;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -11,14 +10,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import sh.okx.rankup.commands.*;
+import sh.okx.rankup.economy.Economy;
+import sh.okx.rankup.economy.EconomyProvider;
+import sh.okx.rankup.economy.VaultEconomyProvider;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
 import sh.okx.rankup.hook.GroupProvider;
 import sh.okx.rankup.hook.PermissionManager;
+import sh.okx.rankup.hook.VaultPermissionManager;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.NullMessageBuilder;
@@ -31,7 +35,7 @@ import sh.okx.rankup.ranks.RankList;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
-import sh.okx.rankup.requirements.XpLevelDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.XpLevelDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.*;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
@@ -78,8 +82,20 @@ public class RankupPlugin extends JavaPlugin {
   private Placeholders placeholders;
   @Getter
   private RankupHelper helper;
-  private AutoRankup autoRankup;
+  protected AutoRankup autoRankup = new AutoRankup(this);
   private String errorMessage;
+  private PermissionManager permissionManager = new VaultPermissionManager(this);
+  private EconomyProvider economyProvider = new VaultEconomyProvider();
+
+  public RankupPlugin() {
+    super();
+  }
+
+  protected RankupPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file, PermissionManager permissionManager, EconomyProvider economyProvider) {
+    super(loader, description, dataFolder, file);
+    this.permissionManager = permissionManager;
+    this.economyProvider = economyProvider;
+  }
 
   @Override
   public void onEnable() {
@@ -87,23 +103,25 @@ public class RankupPlugin extends JavaPlugin {
 
     reload(true);
 
-    Metrics metrics = new Metrics(this);
-    metrics.addCustomChart(new Metrics.SimplePie("confirmation",
-        () -> config.getString("confirmation-type", "unknown")));
-    metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
-      Map<String, Integer> map = new HashMap<>();
-      addAll(map, rankups);
-      if (prestiges != null) {
-        addAll(map, prestiges);
-      }
-      return map;
-    }));
-    metrics.addCustomChart(new Metrics.SimplePie("prestige",
-        () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
-    metrics.addCustomChart(new Metrics.SimplePie("permission-rankup",
-            () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
-    metrics.addCustomChart(new Metrics.SimplePie("notify-update",
-            () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
+    if (System.getProperty("TEST") == null) {
+      Metrics metrics = new Metrics(this);
+      metrics.addCustomChart(new Metrics.SimplePie("confirmation",
+              () -> config.getString("confirmation-type", "unknown")));
+      metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
+        Map<String, Integer> map = new HashMap<>();
+        addAll(map, rankups);
+        if (prestiges != null) {
+          addAll(map, prestiges);
+        }
+        return map;
+      }));
+      metrics.addCustomChart(new Metrics.SimplePie("prestige",
+              () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
+      metrics.addCustomChart(new Metrics.SimplePie("permission-rankup",
+              () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
+      metrics.addCustomChart(new Metrics.SimplePie("notify-update",
+              () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
+    }
 
     if (config.getBoolean("ranks")) {
       getCommand("ranks").setExecutor(new RanksCommand(this));
@@ -142,8 +160,6 @@ public class RankupPlugin extends JavaPlugin {
 
     config = loadConfig("config.yml");
 
-    PermissionManager permissionManager = new PermissionManager(this);
-
     if (config.getBoolean("permission-rankup")) {
       permissions = permissionManager.permissionOnlyProvider();
     } else {
@@ -158,12 +174,11 @@ public class RankupPlugin extends JavaPlugin {
     closeInventories();
     loadConfigs(init);
 
-    if (autoRankup != null) {
-      autoRankup.cancel();
-    }
     long time = (long) (config.getDouble("autorankup-interval") * 60 * 20);
     if (time > 0) {
-      autoRankup = new AutoRankup(this);
+      if (!autoRankup.isCancelled()) {
+        autoRankup.cancel();
+      }
       autoRankup.runTaskTimer(this, time, time);
     }
 
@@ -239,7 +254,7 @@ public class RankupPlugin extends JavaPlugin {
     messages = YamlConfiguration.loadConfiguration(localeFile);
 
     if (init) {
-      Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+      Bukkit.getScheduler().runTask(this, () -> {
         refreshRanks();
         error();
       });
@@ -302,6 +317,7 @@ public class RankupPlugin extends JavaPlugin {
         new XpLevelRequirement(this, "xp-levelh"),
         new XpLevelDeductibleRequirement(this, "xp-level"),
         new PlaytimeMinutesRequirement(this),
+        new AdvancementRequirement(this),
         new GroupRequirement(this),
         new PermissionRequirement(this),
         new PlaceholderRequirement(this),
@@ -353,13 +369,7 @@ public class RankupPlugin extends JavaPlugin {
     }
   }
   private void setupEconomy() {
-    RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager()
-        .getRegistration(Economy.class);
-    if (rsp != null) {
-      economy = rsp.getProvider();
-    } else {
-      getLogger().warning("No economy found. The 'money' requirement will be disabled.");
-    }
+    economy = economyProvider.getEconomy();
   }
 
   public String formatMoney(double money) {

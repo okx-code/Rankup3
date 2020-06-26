@@ -158,7 +158,7 @@ public class InfoCommand implements TabExecutor {
         if (args.length > 1 && args[1].equalsIgnoreCase("status")) {
           for (Rank rank : plugin.getRankups().getTree()) {
             String placeholder = "status_" + rank.getRank();
-            sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().onPlaceholderRequest(sender instanceof Player ? (Player) sender : null, placeholder));
+            sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().placeholder(sender instanceof Player ? (Player) sender : null, placeholder));
           }
           return true;
         }
@@ -178,7 +178,7 @@ public class InfoCommand implements TabExecutor {
                 "next_rank",
         };
         for (String placeholder : placeholders) {
-          sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().onPlaceholderRequest(sender instanceof Player ? (Player) sender : null, placeholder));
+          sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().placeholder(sender instanceof Player ? (Player) sender : null, placeholder));
         }
         return true;
       } else if (args[0].equalsIgnoreCase("tree") && sender.hasPermission("rankup.admin")) {
