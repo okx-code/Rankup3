@@ -182,6 +182,7 @@ public class RankupPlugin extends JavaPlugin {
         }
       } catch (IllegalStateException ignored) {
       }
+      autoRankup = new AutoRankup(this);
       autoRankup.runTaskTimer(this, time, time);
     }
 
