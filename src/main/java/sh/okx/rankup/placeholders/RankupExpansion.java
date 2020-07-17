@@ -120,9 +120,9 @@ public class RankupExpansion implements Expansion {
             case "money_formatted":
                 return plugin.formatMoney(getMoney(player, rank).doubleValue());
             case "money_left":
-                return String.valueOf(Math.max(0, orElse(rank, r -> simplify(plugin.getEconomy().getBalance(player) - r.getRequirement(player, "money").getValueDouble()), 0).doubleValue()));
+                return String.valueOf(Math.max(0, orElse(rank, r -> simplify(r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player)), 0).doubleValue()));
             case "money_left_formatted":
-                return plugin.formatMoney(Math.max(0D, orElse(rank, r -> plugin.getEconomy().getBalance(player) - r.getRequirement(player, "money").getValueDouble(), 0D)));
+                return plugin.formatMoney(Math.max(0D, orElse(rank, r -> r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player), 0D)));
             case "percent_left":
                 return String.valueOf(Math.max(0D, orElse(rank, r -> (1 - (plugin.getEconomy().getBalance(player) / r.getRequirement(player, "money").getValueDouble())) * 100, 0).doubleValue()));
             case "percent_left_formatted":

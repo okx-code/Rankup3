@@ -176,8 +176,11 @@ public class RankupPlugin extends JavaPlugin {
 
     long time = (long) (config.getDouble("autorankup-interval") * 60 * 20);
     if (time > 0) {
-      if (!autoRankup.isCancelled()) {
-        autoRankup.cancel();
+      try {
+        if (!autoRankup.isCancelled()) {
+          autoRankup.cancel();
+        }
+      } catch (IllegalStateException ignored) {
       }
       autoRankup.runTaskTimer(this, time, time);
     }

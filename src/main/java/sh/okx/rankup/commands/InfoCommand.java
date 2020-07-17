@@ -178,7 +178,13 @@ public class InfoCommand implements TabExecutor {
                 "next_rank",
         };
         for (String placeholder : placeholders) {
-          sender.sendMessage(placeholder + ": " + plugin.getPlaceholders().getExpansion().placeholder(sender instanceof Player ? (Player) sender : null, placeholder));
+          String result;
+          try {
+            result = plugin.getPlaceholders().getExpansion().placeholder(sender instanceof Player ? (Player) sender : null, placeholder);
+          } catch (Exception e) {
+            result = e.getClass().getSimpleName() + ", " + e.getMessage();
+          }
+          sender.sendMessage(placeholder + ": " + result);
         }
         return true;
       } else if (args[0].equalsIgnoreCase("tree") && sender.hasPermission("rankup.admin")) {

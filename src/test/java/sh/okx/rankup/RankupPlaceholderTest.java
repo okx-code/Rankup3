@@ -1,10 +1,10 @@
 package sh.okx.rankup;
 
+import static org.junit.Assert.assertEquals;
+
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import org.junit.Test;
 import sh.okx.rankup.placeholders.RankupExpansion;
-
-import static org.junit.Assert.assertEquals;
 
 public class RankupPlaceholderTest extends RankupTest {
     @Test
@@ -51,5 +51,25 @@ public class RankupPlaceholderTest extends RankupTest {
 
         RankupExpansion expansion = plugin.getPlaceholders().getExpansion();
         assertEquals("Incomplete", expansion.placeholder(player, "status_b"));
+    }
+
+    @Test
+    public void testMoneyLeft() {
+        PlayerMock player = server.addPlayer();
+        groupProvider.addGroup(player.getUniqueId(), "A");
+        plugin.getEconomy().setPlayer(player, 900);
+
+        RankupExpansion expansion = plugin.getPlaceholders().getExpansion();
+        assertEquals("100.0", expansion.placeholder(player, "money_left"));
+    }
+
+    @Test
+    public void testMoney() {
+        PlayerMock player = server.addPlayer();
+        groupProvider.addGroup(player.getUniqueId(), "A");
+        plugin.getEconomy().setPlayer(player, 900);
+
+        RankupExpansion expansion = plugin.getPlaceholders().getExpansion();
+        assertEquals("1000", expansion.placeholder(player, "money"));
     }
 }
