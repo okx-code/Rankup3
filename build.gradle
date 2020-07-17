@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'com.github.seeseemelk:MockBukkit-v1.15:0.3.0-SNAPSHOT'
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.15:0.3.0'
 
     compileOnly 'org.jetbrains:annotations:16.0.2'
     implementation 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
