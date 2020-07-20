@@ -31,15 +31,16 @@ public class AdvancementRequirement extends Requirement {
         Advancement adv = advancementIterator.next();
         String key = adv.getKey().getKey();
         Pattern pattern = Pattern.compile(string.replace("*", ".*").replace("-", ""));
-        boolean positive = false;
         if (pattern.matcher(key).find()) {
-          positive = !string.startsWith("-");
+          boolean positive = !string.startsWith("-");
+
+          AdvancementProgress progress = player.getAdvancementProgress(adv);
+          if (progress.isDone() == positive) {
+            return true;
+          }
         }
 
-        AdvancementProgress progress = player.getAdvancementProgress(adv);
-        if (progress.isDone() == positive) {
-          return true;
-        }
+
       }
     }
     return false;
