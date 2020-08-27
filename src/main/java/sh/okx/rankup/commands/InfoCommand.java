@@ -164,7 +164,6 @@ public class InfoCommand implements TabExecutor {
         }
 
         String[] placeholders = new String[] {
-                "prestige_money",
                 "prestige_money_formatted",
                 "prestige_percent_left_formatted",
                 "prestige_percent_done_formatted",

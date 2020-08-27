@@ -33,6 +33,7 @@ import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankList;
 import sh.okx.rankup.ranks.Rankups;
+import sh.okx.rankup.ranksgui.RanksGuiManager;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
 import sh.okx.rankup.requirements.requirement.XpLevelDeductibleRequirement;
@@ -86,6 +87,8 @@ public class RankupPlugin extends JavaPlugin {
   private String errorMessage;
   private PermissionManager permissionManager = new VaultPermissionManager(this);
   private EconomyProvider economyProvider = new VaultEconomyProvider();
+
+  private RanksGuiManager ranksGuiManager = new RanksGuiManager(this);
 
   public RankupPlugin() {
     super();
