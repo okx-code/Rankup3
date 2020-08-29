@@ -38,8 +38,12 @@ public class RankupHelper {
   public void doRankup(Player player, RankElement<Rank> rank) {
     rank.getRank().runCommands(player);
 
-    if (rank.getRank() != null) {
-      permissions.removeGroup(player.getUniqueId(), rank.getRank().getRank());
+    boolean removePrev = config.getBoolean("remove-previous");
+    
+    if(removePrev) {
+    	if (rank.getRank() != null) {
+    		permissions.removeGroup(player.getUniqueId(), rank.getRank().getRank());
+    	}	
     }
     permissions.addGroup(player.getUniqueId(), rank.getNext().getRank().getRank());
   }

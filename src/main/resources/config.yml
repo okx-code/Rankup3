@@ -90,6 +90,10 @@ placeholders:
     current: "Current"
     incomplete: "Incomplete"
 
+# If you want to "add" group only, instead of remove previous
+# set this to false
+remove-previous: true
+
 # what to shorten money by.
 # ie 1000 -> 1k
 # set to an empty list to disable
