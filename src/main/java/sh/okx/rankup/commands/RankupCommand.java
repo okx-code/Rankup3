@@ -62,7 +62,7 @@ public class RankupCommand implements CommandExecutor {
             .send(player);
         break;
       case "gui":
-        Gui gui = Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin);
+        Gui gui = Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin, args.length > 0 && args[0].equalsIgnoreCase("gui"));
         if (gui == null) {
           player.sendMessage(ChatColor.RED + "GUI is not available. Check console for more informatiopn.");
           return true;

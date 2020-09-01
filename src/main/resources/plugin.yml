@@ -26,6 +26,8 @@ commands:
   maxrankup:
     permission: rankup.maxrankup
     description: Rankup as much as possible.
+  ranksgui:
+    description: Show the ranks GUI
 permissions:
   rankup.*:
     children:

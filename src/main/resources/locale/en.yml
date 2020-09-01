@@ -38,6 +38,26 @@ rankup:
       # this works for both the rankup and cancel blocks as well
       material: BLACK_STAINED_GLASS_PANE
 
+  ranksgui:
+    title: "Ranks"
+    rows: 3
+    offset: 10
+    width: 7
+    rankup:
+      complete:
+        material: GREEN_STAINED_GLASS_PANE
+        name: "&aRank &7{RANK} &a(completed)"
+      current:
+        material: ORANGE_STAINED_GLASS_PANE
+        name: "&dRankup to &7{RANK}"
+      incomplete:
+        material: RED_STAINED_GLASS_PANE
+        name: "&cRank &7{RANK} &c(requires rankup)"
+    fill:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+
+
   # you can (and probably should) you override these in rankups.yml
   # to show the specific requirements for each rank.
   # however if you are just using money or don't need to change the message per rank, you can use any combination of:
