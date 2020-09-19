@@ -35,8 +35,8 @@ public class RanksGuiListener implements Listener {
     Player player = (Player) event.getWhoClicked();
     RanksGui ranksGui = guiMap.get(player);
     if (ranksGui != null && event.getInventory() == ranksGui.getInventory()) {
-      ranksGui.click(event);
       event.setCancelled(true);
+      ranksGui.click(event);
     }
   }
 
