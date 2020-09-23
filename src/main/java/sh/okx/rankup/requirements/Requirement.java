@@ -99,6 +99,6 @@ public abstract class Requirement implements Cloneable {
   public abstract Requirement clone();
 
   public double getTotal(Player player) {
-    return getValueDouble();
+    return 1;
   }
 }

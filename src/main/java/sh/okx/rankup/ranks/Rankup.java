@@ -12,7 +12,9 @@ public class Rankup extends Rank {
     String next = section.getString("next");
     String rank = section.getString("rank");
 
-    if (next != null && next.isEmpty()) {
+    if (next == null || next.isEmpty()) {
+      plugin.getLogger().warning("Having a final rank (for example: \"Z: rank: 'Z'\") from 3.4.2 or earlier should no longer be used.\n"
+          + "It is safe to just delete the final rank " + section.getName() + "");
       plugin.getLogger().warning("Rankup section '" + section.getName() + "' has a blank 'next' field, will be ignored.");
       return null;
     }

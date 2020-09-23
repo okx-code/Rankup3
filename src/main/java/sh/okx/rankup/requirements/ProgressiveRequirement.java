@@ -30,5 +30,10 @@ public abstract class ProgressiveRequirement extends Requirement {
     return Math.max(0, (multiplier * getTotal(player)) - getProgress(player));
   }
 
+  @Override
+  public double getTotal(Player player) {
+    return getValueDouble();
+  }
+
   public abstract double getProgress(Player player);
 }
