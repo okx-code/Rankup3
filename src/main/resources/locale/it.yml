@@ -1,0 +1,100 @@
+#traduzione italiana del locale per rankup
+rankup:
+  requirements-not-met: "&cHai bisogno di {MONEY} soldi per avanzare di rank."
+  no-rankup: "&eSei al rank più alto."
+  # imposta stringa vuota per nascondere il messaggio
+  success-public: "&a{PLAYER} &e\u00E8 avanzato di rank a: &d{RANK}"
+  success-private: "&aHai avanzato di rank a: &d{RANK}"
+  # conferma testuale
+  confirmation: |-
+    &eSei sicuro di voler avanzare di rank a &a{RANK}&e?
+    &eScrivi &c/rankup &edi nuovo per confermare.
+  # conferma gui
+  title: "Avanzamento di rank a {RANK}"
+
+  must-prestige: "&cDevi effettuare un prestige prima di avanzare di rank!"
+
+  gui:
+    title: "Avanzamento di rank a {RANK}"
+    rankup:
+      material: EMERALD_BLOCK
+      # l'indice può essere separato da spazi per mostrarlo in più gruppi
+      # per esempio: 0-3 9-12 18-21
+      # puoi anche inserire numeri al posto di range
+      index: 0-3
+      name: '&a&lConferma'
+      # lore opzionale
+      lore: '&6Avanzamento a &b{RANK}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lAnnulla'
+    fill:
+      name: ' '
+      # se stai usando la 1.8 fino alla 1.12.2 per cambiarlo puoi usare
+      # MATERIAL:data, per esempio STAINED_GLASS_PANE:8
+      # funziona per i bloccchi rankup e cancel
+      material: BLACK_STAINED_GLASS_PANE
+
+  # potresti e dovresti configurare questi in rankup.yml
+  # per visualizzare i requisiti di ogni rank
+  # ma se stai usando solo i soldi e non ti serve modificare il mesaggio puoi usapre questi
+  # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {MONEY} e {MONEY_NEEDED} sono diversi da {AMOUNT money} e {AMOUNT_NEEDED money}, usano un formato diverso
+  # ESEMPIO:
+  
+  #list:
+  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
+  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
+  list:
+    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
+    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    # stringa vuota per disattivare
+    header: ""
+    footer: ""
+  # messaggi cooldown
+  cooldown:
+    singular: "&cDevi aspettare ancora {SECONDS_LEFT} secondo per avanzare di rank."
+    plural: "&cDevi aspettare ancora {SECONDS_LEFT} secondi per avanzare di rank."
+# messaggi prestige
+prestige:
+  requirements-not-met: "&cHai bisogno di {MONEY} soldi per effettuare un prestige."
+  no-prestige: "&eSei al prestige più alto."
+
+  success-public: "&a{PLAYER} &eha effettuato un prestige a: &d{RANK}"
+  success-private: "&aHai effettuato un prestige a: &d{RANK}"
+
+  confirmation: |-
+    &eSei sicuro di voler effettuare un prestige a &a{RANK}&e?
+    &eScrivi &c/prestige &edi nuovo per confermare.
+  gui:
+    title: "Prestige a {RANK}"
+    rankup:
+      material: GOLD_BLOCK
+      index: 0-3
+      name: '&a&lConferma'
+      lore: '&6Prestige a &b{RANK}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lAnnulla'
+    fill:
+      name: ' '
+      # riferirsi a commento riga 34
+      material: BLACK_STAINED_GLASS_PANE
+
+  list:
+    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
+    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
+    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    header: ""
+    footer: ""
+  cooldown:
+    singular: "&cDevi aspettare {SECONDS_LEFT} secondo per effettuare un altro prestige."
+    plural: "&cDevi aspettare {SECONDS_LEFT} secondi per effettuare un altro prestige."
+
+not-high-enough: "&cNon puoi effettuare un prestige al tuo rank!"
+not-in-ladder: "&cNon riusciamo a trovare nessun avanzamento di rank per il tuo gruppo. Scrivi /ranks per ottenere una lista degli avanzamenti disponibili."
+invalid-rankup: "&cRankup invalido definito nel file di configurazione, controlla la console."
