@@ -9,9 +9,9 @@ Rankup can be compiled with the `gradlew build` command. The compiled plugin jar
 If you would like to contribute to translating the plugin, you can fork it.
 Locale names are in ISO-639-1 and are in the folder [`src/main/resources/locale`](https://github.com/okx-code/Rankup3/tree/master/src/main/resources/locale)
 
-When a locale is added, it should be saved [here](https://github.com/okx-code/Rankup3/blob/master/src/main/java/sh/okx/rankup/Rankup.java#L242), ie through adding a line such as `saveLocale("es");`. However, I can do it if you forget.
+When a locale is added, it should be saved [here](https://github.com/okx-code/Rankup3/blob/master/src/main/java/sh/okx/rankup/RankupPlugin.java#L294), ie through adding a line such as `saveLocale("es");`. However, I can do it if you forget.
 
-You can use the [English](https://github.com/okx-code/Rankup3/blob/locale/src/main/resources/locale/en.yml) locale to help translate.
+You can use the [English](https://github.com/okx-code/Rankup3/blob/master/src/main/resources/locale/en.yml) locale to help translate.
 
 Locales should be added or modified with a pull request, but if you wish to contribute often I can give you push access to this branch.
 
