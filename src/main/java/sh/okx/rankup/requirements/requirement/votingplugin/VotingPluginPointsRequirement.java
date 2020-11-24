@@ -1,6 +1,6 @@
 package sh.okx.rankup.requirements.requirement.votingplugin;
 
-import com.Ben12345rocks.VotingPlugin.UserManager.UserManager;
+import com.bencodez.votingplugin.user.UserManager;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;

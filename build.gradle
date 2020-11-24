@@ -41,7 +41,7 @@ dependencies {
     implementation('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
-    implementation 'com.github.Ben12345rocks:VotingPlugin:5.21.1'
+    implementation 'com.github.BenCodez:VotingPlugin:6.0'
     implementation 'com.github.LlmDl:Towny:25fc18a'
 }
 

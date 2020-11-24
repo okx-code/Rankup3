@@ -1,11 +1,11 @@
 package sh.okx.rankup.requirements.requirement.votingplugin;
 
-import com.Ben12345rocks.VotingPlugin.TopVoter.TopVoter;
-import com.Ben12345rocks.VotingPlugin.UserManager.UserManager;
+import com.bencodez.votingplugin.topvoter.TopVoter;
+import com.bencodez.votingplugin.user.UserManager;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
-import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
+import sh.okx.rankup.requirements.Requirement;
 
 public class VotingPluginVotesRequirement extends ProgressiveRequirement {
   public VotingPluginVotesRequirement(RankupPlugin plugin) {
