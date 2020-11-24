@@ -1,8 +1,11 @@
 package sh.okx.rankup.gui;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,14 +20,13 @@ import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
+import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.util.ItemUtil;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Gui implements InventoryHolder {
+  @Getter
+  private final boolean returnToRanksGui;
   @Getter
   private Inventory inventory;
   @Getter
@@ -34,8 +36,8 @@ public class Gui implements InventoryHolder {
   @Getter
   private boolean prestige;
 
-  public static Gui of(Player player, Rank oldRank, Rank rank, RankupPlugin plugin) {
-    Gui gui = new Gui();
+  public static Gui of(Player player, Rank oldRank, Rank rank, RankupPlugin plugin, boolean returnToRanksGui) {
+    Gui gui = new Gui(returnToRanksGui);
     gui.prestige = oldRank instanceof Prestige;
 
     String type = gui.prestige ? "prestige" : "rankup";
@@ -60,17 +62,28 @@ public class Gui implements InventoryHolder {
     gui.cancel = cancel;
 
     Inventory inventory = Bukkit.createInventory(gui, items.length,
-        plugin.replaceMoneyRequirements(
+        ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', plugin.replaceMoneyRequirements(
             plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
                 .replaceRanks(player, oldRank, rank)
-                .replaceFromTo(oldRank), player, oldRank).toString());
+                .replaceFromTo(oldRank), player, oldRank).toString())));
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;
   }
 
+  public static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, RankElement<Rank> element) {
+    if (element == null) {
+      return getItem(plugin, section, player, null, null);
+    } else {
+      return getItem(plugin, section, player, element.getRank(), element.getNext().getRank());
+    }
+  }
+
   @SuppressWarnings("deprecation")
-  private static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
+  public static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
+    if (section == null) {
+      return null;
+    }
     String materialName = section.getString("material").toUpperCase();
 
     ItemStack item;
@@ -108,9 +121,11 @@ public class Gui implements InventoryHolder {
   }
 
   private static String format(RankupPlugin plugin, String message, Player player, Rank oldRank, Rank rank) {
-    return plugin.replaceMoneyRequirements(new MessageBuilder(ChatColor.translateAlternateColorCodes('&', message))
-        .replaceRanks(player, oldRank, rank), player, oldRank)
-        .toString();
+    MessageBuilder builder = new MessageBuilder(message);
+    if (oldRank != null && rank != null) {
+      builder = builder.replaceRanks(player, oldRank, rank);
+    }
+    return ChatColor.translateAlternateColorCodes('&', plugin.replaceMoneyRequirements(builder, player, oldRank).toString());
   }
 
   private static void addItem(ItemStack[] items, ConfigurationSection section, ItemStack item) {

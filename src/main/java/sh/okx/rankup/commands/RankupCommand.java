@@ -46,7 +46,8 @@ public class RankupCommand implements CommandExecutor {
     String confirmationType = config.getString("confirmation-type").toLowerCase();
 
     // if they are on text confirming, rank them up
-    if (confirmationType.equals("text") && confirming.containsKey(player)) {
+    // clicking on the gui cannot confirm a rankup
+    if (confirmationType.equals("text") && confirming.containsKey(player) && !(args.length > 0 && args[0].equalsIgnoreCase("gui"))) {
       long time = System.currentTimeMillis() - confirming.remove(player);
       if (time < config.getInt("text.timeout") * 1000) {
         plugin.getHelper().rankup(player);
@@ -62,9 +63,9 @@ public class RankupCommand implements CommandExecutor {
             .send(player);
         break;
       case "gui":
-        Gui gui = Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin);
+        Gui gui = Gui.of(player, rankElement.getRank(), rankElement.getNext().getRank(), plugin, args.length > 0 && args[0].equalsIgnoreCase("gui"));
         if (gui == null) {
-          player.sendMessage(ChatColor.RED + "GUI is not available. Check console for more informatiopn.");
+          player.sendMessage(ChatColor.RED + "GUI is not available. Check console for more information.");
           return true;
         }
         gui.open(player);

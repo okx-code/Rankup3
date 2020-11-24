@@ -1,5 +1,11 @@
 package sh.okx.rankup;
 
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,7 +20,12 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
-import sh.okx.rankup.commands.*;
+import sh.okx.rankup.commands.InfoCommand;
+import sh.okx.rankup.commands.MaxRankupCommand;
+import sh.okx.rankup.commands.PrestigeCommand;
+import sh.okx.rankup.commands.PrestigesCommand;
+import sh.okx.rankup.commands.RanksCommand;
+import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.economy.Economy;
 import sh.okx.rankup.economy.EconomyProvider;
 import sh.okx.rankup.economy.VaultEconomyProvider;
@@ -33,29 +44,45 @@ import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankList;
 import sh.okx.rankup.ranks.Rankups;
+import sh.okx.rankup.ranksgui.RanksGuiCommand;
+import sh.okx.rankup.ranksgui.RanksGuiListener;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
+import sh.okx.rankup.requirements.requirement.AdvancementRequirement;
+import sh.okx.rankup.requirements.requirement.BlockBreakRequirement;
+import sh.okx.rankup.requirements.requirement.CraftItemRequirement;
+import sh.okx.rankup.requirements.requirement.GroupRequirement;
+import sh.okx.rankup.requirements.requirement.ItemDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.ItemRequirement;
+import sh.okx.rankup.requirements.requirement.MobKillsRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyRequirement;
+import sh.okx.rankup.requirements.requirement.PermissionRequirement;
+import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
+import sh.okx.rankup.requirements.requirement.PlayerKillsRequirement;
+import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
+import sh.okx.rankup.requirements.requirement.TotalMobKillsRequirement;
+import sh.okx.rankup.requirements.requirement.UseItemRequirement;
+import sh.okx.rankup.requirements.requirement.WorldRequirement;
 import sh.okx.rankup.requirements.requirement.XpLevelDeductibleRequirement;
-import sh.okx.rankup.requirements.requirement.*;
+import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensRequirement;
-import sh.okx.rankup.requirements.requirement.towny.*;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberResidentsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberTownsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyMayorNumberResidentsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyMayorRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyResidentRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
-
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class RankupPlugin extends JavaPlugin {
 
@@ -124,7 +151,13 @@ public class RankupPlugin extends JavaPlugin {
     }
 
     if (config.getBoolean("ranks")) {
-      getCommand("ranks").setExecutor(new RanksCommand(this));
+      if (config.getBoolean("ranks-gui")) {
+        RanksGuiListener listener = new RanksGuiListener();
+        getCommand("ranks").setExecutor(new RanksGuiCommand(this, listener));
+        getServer().getPluginManager().registerEvents(listener, this);
+      } else {
+        getCommand("ranks").setExecutor(new RanksCommand(this));
+      }
     }
     if (config.getBoolean("prestige")) {
       getCommand("prestige").setExecutor(new PrestigeCommand(this));
@@ -414,23 +447,27 @@ public class RankupPlugin extends JavaPlugin {
 
   public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender,
       Rank rank) {
-    if (builder instanceof NullMessageBuilder) {
+    if (builder instanceof NullMessageBuilder || rank == null) {
       return builder;
     }
 
     Requirement money = rank.getRequirement(sender instanceof Player ? (Player) sender : null, "money");
     if (money != null) {
       Double amount = null;
+      Double total = null;
       if (sender instanceof Player && rank.isIn((Player) sender)) {
         if (economy != null) {
           amount = money.getRemaining((Player) sender);
+          total = money.getTotal((Player) sender);
         }
       } else {
         amount = money.getValueDouble();
+        total = 0D;
       }
       if (amount != null && economy != null) {
         builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
         builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
+        builder.replace(Variable.MONEY_DONE, formatMoney(total));
       }
     }
     if (sender instanceof Player) {

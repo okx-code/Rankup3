@@ -8,6 +8,7 @@ public enum Variable {
   TO,
   MONEY,
   MONEY_NEEDED,
+  MONEY_DONE,
   AMOUNT,
   AMOUNT_NEEDED,
   AMOUNT_DONE,

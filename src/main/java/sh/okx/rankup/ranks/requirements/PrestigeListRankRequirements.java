@@ -52,7 +52,7 @@ public class PrestigeListRankRequirements implements RankRequirements {
 
     for (Prestige prestige : prestiges.getTree()) {
       String next = prestige.getNext();
-      if(plugin.getPermissions().inGroup(player.getUniqueId(), next)) {
+      if(next != null && plugin.getPermissions().inGroup(player.getUniqueId(), next)) {
         RankRequirements rankRequirements = this.requirements.get(next.toLowerCase());
         if (rankRequirements != null) {
           return rankRequirements;

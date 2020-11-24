@@ -34,7 +34,12 @@ public class GuiListener implements Listener {
         plugin.getHelper().rankup(player);
       }
     } else if (gui.getCancel().isSimilar(e.getCurrentItem())) {
-      Bukkit.getScheduler().runTask(plugin, player::closeInventory);
+      Bukkit.getScheduler().runTask(plugin, () -> {
+        player.closeInventory();
+        if (gui.isReturnToRanksGui()) {
+          Bukkit.dispatchCommand(player, "ranksgui");
+        }
+      });
     }
   }
 }
