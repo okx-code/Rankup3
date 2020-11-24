@@ -151,7 +151,13 @@ public class RankupPlugin extends JavaPlugin {
     }
 
     if (config.getBoolean("ranks")) {
-      getCommand("ranks").setExecutor(new RanksCommand(this));
+      if (config.getBoolean("ranks-gui")) {
+        RanksGuiListener listener = new RanksGuiListener();
+        getCommand("ranks").setExecutor(new RanksGuiCommand(this, listener));
+        getServer().getPluginManager().registerEvents(listener, this);
+      } else {
+        getCommand("ranks").setExecutor(new RanksCommand(this));
+      }
     }
     if (config.getBoolean("prestige")) {
       getCommand("prestige").setExecutor(new PrestigeCommand(this));
@@ -163,11 +169,8 @@ public class RankupPlugin extends JavaPlugin {
       getCommand("maxrankup").setExecutor(new MaxRankupCommand(this));
     }
 
-    RanksGuiListener listener = new RanksGuiListener();
-    getCommand("ranksgui").setExecutor(new RanksGuiCommand(this, listener));
     getCommand("rankup").setExecutor(new RankupCommand(this));
     getCommand("rankup3").setExecutor(new InfoCommand(this, notifier));
-    getServer().getPluginManager().registerEvents(listener, this);
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
     getServer().getPluginManager().registerEvents(
         new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update"), "rankup.notify"), this);
@@ -451,16 +454,20 @@ public class RankupPlugin extends JavaPlugin {
     Requirement money = rank.getRequirement(sender instanceof Player ? (Player) sender : null, "money");
     if (money != null) {
       Double amount = null;
+      Double total = null;
       if (sender instanceof Player && rank.isIn((Player) sender)) {
         if (economy != null) {
           amount = money.getRemaining((Player) sender);
+          total = money.getTotal((Player) sender);
         }
       } else {
         amount = money.getValueDouble();
+        total = 0D;
       }
       if (amount != null && economy != null) {
         builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
         builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
+        builder.replace(Variable.MONEY_DONE, formatMoney(total));
       }
     }
     if (sender instanceof Player) {
