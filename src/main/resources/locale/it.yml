@@ -36,6 +36,24 @@ rankup:
       # funziona per i bloccchi rankup e cancel
       material: BLACK_STAINED_GLASS_PANE
 
+  ranksgui:
+    title: "Ranks"
+    rows: 3
+    offset: 10
+    width: 7
+    complete:
+      material: GREEN_STAINED_GLASS_PANE
+      name: "&aRank &7{RANK} &a(completed)"
+    current:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: "&dRankup to &7{RANK}"
+    incomplete:
+      material: RED_STAINED_GLASS_PANE
+      name: "&cRank &7{RANK} &c(requires rankup)"
+    fill:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+
   # potresti e dovresti configurare questi in rankup.yml
   # per visualizzare i requisiti di ogni rank
   # ma se stai usando solo i soldi e non ti serve modificare il mesaggio puoi usapre questi
