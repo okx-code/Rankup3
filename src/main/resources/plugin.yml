@@ -1,5 +1,5 @@
 name: Rankup
-version: ${version}
+version: "${version}"
 main: sh.okx.rankup.RankupPlugin
 author: Okx
 depend: [Vault]
