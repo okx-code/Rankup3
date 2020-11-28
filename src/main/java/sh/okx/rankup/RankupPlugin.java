@@ -469,7 +469,7 @@ public class RankupPlugin extends JavaPlugin {
       if (amount != null && economy != null) {
         builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
         builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
-        builder.replace(Variable.MONEY_DONE, formatMoney(total));
+        builder.replace(Variable.MONEY_DONE, formatMoney(total - amount));
       }
     }
     if (sender instanceof Player) {
