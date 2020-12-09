@@ -120,4 +120,4 @@ prestige:
 
 not-high-enough: "&c您无法在您当前等级上进行声望晋升!"
 not-in-ladder: "&c抱歉，我们找不到您所在小组的任何段位等级。使用 /ranks 列出所有段位等级。"
-invalid-rankup: "&配置中定义了无效的 段位晋升，请检查控制台获取更多信息。"
+invalid-rankup: "&c配置中定义了无效的 段位晋升，请检查控制台获取更多信息。"
