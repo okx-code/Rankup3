@@ -1,53 +1,112 @@
-# the messages in this section can be customised for each rankup in rankups.yml.
+# 这部分的信息能在 rankups.yml 对不同的段位进行自定义。
 rankup:
-  requirements-not-met: "&c 你还需要 {MONEY} 才能够升级。"
-  no-rankup: "&e你已经处在最高的等级了。"
-  # set to an empty string, ie: success-public: ""
-  # to hide that message.
-  success-public: "&a玩家 {PLAYER} &e升级到: &d{RANK}"
-  success-private: "&a你已经升级到: &d{RANK}"
-  # used for the text confirmation
+  requirements-not-met: "&c您需要 {MONEY} 游戏币才能晋级。"
+  no-rankup: "&e您目前已处于段位的顶端。"
+  # 想设置字符串为空？ 
+  # 一个例子: success-public: ""
+  # 这将隐藏那条信息。
+  success-public: "&a{PLAYER} &e已经晋升至新的段位: &d{RANK}"
+  success-private: "&a您成功晋升到新的段位: &d{RANK}"
+  # 用于二次确认的文本信息
   confirmation: |-
-    &e你确定要升级到 &a{RANK}&e？
-    &e再次输入 &c/rankup &e来确定。
-  # used for the GUI confirmation
-  title: "升级到 {RANK}"
+    &e您确定您要晋级至 &a{RANK}&e?
+    &e再次输入 &c/rankup &e以确认操作。
+  # 用于二次确认的 GUI 信息
+  title: "晋级至 {RANK}"
 
-  must-prestige: "&cYou must prestige to /rankup further!"
+  must-prestige: "&c您必须再次输入 /rankup !"
 
-  # you can (and probably should) you override these in rankups.yml
-  # to show the specific requirements for each rank.
-  # however if you are just using money or don't need to change the message per rank, you can use any combination of:
+  gui:
+    rows: 1
+    title: "晋级至 {RANK}"
+    rankup:
+      material: EMERALD_BLOCK
+      # 可以用空格分隔序号以显示在多个槽位组中
+      # 示例: 0-3 9-12 18-21
+      # 您也可以指定页码而不使用范围。
+      index: 0-3
+      name: '&a&l确认'
+      # lore 可有可无
+      lore: '&6晋级至 &b{RANK}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&l取消'
+    fill:
+      name: ' '
+      # 如果您使用的是 1.8-1.12，并且您想更改此设置
+      # 您可以使用 MATERIAL:data, 示例 STAINED_GLASS_PANE:8
+      # 这对rankup和cancel块都有效
+      material: BLACK_STAINED_GLASS_PANE
+
+  ranksgui:
+    title: "段位等级"
+    rows: 3
+    offset: 10
+    width: 7
+    complete:
+      material: GREEN_STAINED_GLASS_PANE
+      name: "&a段位等级 &7{RANK} &a(已达成)"
+    current:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: "&d晋升段位等级至 &7{RANK}"
+    incomplete:
+      material: RED_STAINED_GLASS_PANE
+      name: "&c段位等级 &7{RANK} &c(需要晋升)"
+    fill:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+
+
+  # 您可以（也可能应该）在 rankups.yml
+  # 显示每个等级的具体要求。
+  # 但是，如果您只想使用游戏币作为晋升需求或不需要更改每个级别的消息，则可以使用以下任意组合：
   # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
-  # {MONEY} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
-  # here is an example of showing the requirements for just money:
+  # {MONEY} 和 {MONEY_NEEDED} 相较于 {AMOUNT money} 和 {AMOUNT_NEEDED money} 在使用的格式上不尽相同。
+  # 这里有一个只使用游戏币作为晋升条件的示例:
   #list:
-  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
-  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE money}%"
-  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
+  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e花费 &7${MONEY}"
+  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &e花费 &a${MONEY} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e花费 &a${MONEY}"
   list:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
     current: "&c{OLD_RANK} &e\xbb &c{RANK}"
     incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
-    # an empty string disables the header/footer
+    # 一个空字符串可以关闭 header(页眉)/footer(页脚)
     header: ""
     footer: ""
-  # sent when a player tries to rankup when they are on cooldown
+  # 这些信息将在玩家处于晋升冷却期间尝试升级后发送
   cooldown:
-    singular: "&c你必须等候 {SECONDS_LEFT} 才能够再次升级！"
-    plural: "&c你必须等候 {SECONDS_LEFT} 才能够再次升级！"
-# prestige messages can also be customised
+    singular: "&c您必须等待 {SECONDS_LEFT} 秒才能进行晋升段位等级操作。"
+    plural: "&c您必须等待 {SECONDS_LEFT} 秒才能进行晋升段位等级操作。"
+# 声望信息也可以定制
 prestige:
-  requirements-not-met: "&cYou need {MONEY} money to prestige."
-  no-prestige: "&eYou are at the highest prestige."
+  requirements-not-met: "&c您需要 {MONEY} 游戏币才能进行声望等级升级。"
+  no-prestige: "&e您目前已经处在最高的声望等级了。"
 
-  success-public: "&a{PLAYER} &ehas prestiged to: &d{RANK}"
-  success-private: "&aYou have prestiged to: &d{RANK}"
+  success-public: "&a{PLAYER} &e已经晋升至: &d{RANK}"
+  success-private: "&a您成功晋升声望至: &d{RANK}"
 
   confirmation: |-
-    &eAre you sure you want to prestige to &a{RANK}&e?
-    &eType &c/prestige &eagain to confirm.
-  title: "Prestige to {RANK}"
+    &e您确定要晋升声望至 &a{RANK}&e?
+    &e再次输入 &c/prestige &e确认操作。
+  gui:
+    title: "声望晋升至 {RANK}"
+    rankup:
+      material: GOLD_BLOCK
+      index: 0-3
+      name: '&a&l确认'
+      lore: '&6声望晋升至 &b{RANK}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&l取消'
+    fill:
+      name: ' '
+      # 如果您使用的是 1.8-1.12，并且您想更改此设置
+      # 您可以使用 MATERIAL:data, 示例 STAINED_GLASS_PANE:8
+      # 这对rankup和cancel块都有效。
+      material: BLACK_STAINED_GLASS_PANE
 
   list:
     complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
@@ -56,9 +115,9 @@ prestige:
     header: ""
     footer: ""
   cooldown:
-    singular: "&cYou must wait {SECONDS_LEFT} second to prestige again."
-    plural: "&cYou must wait {SECONDS_LEFT} more seconds to prestige again."
+    singular: "&c您必须等待 {SECONDS_LEFT} 秒才能再次晋升声望等级。"
+    plural: "&c您必须等待 {SECONDS_LEFT} 秒才能再次晋升声望等级。"
 
-not-high-enough: "&cYou cannot prestige at your rank!"
-not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in. 使用 /ranks 指令去查看所有等级的列表。"
-invalid-rankup: "&c配置中定义的等级无效，请联系管理员检查后台。"
+not-high-enough: "&c您无法在您当前等级上进行声望晋升!"
+not-in-ladder: "&c抱歉，我们找不到您所在小组的任何段位等级。使用 /ranks 列出所有段位等级。"
+invalid-rankup: "&配置中定义了无效的 段位晋升，请检查控制台获取更多信息。"
