@@ -1,19 +1,19 @@
 ﻿# the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
   requirements-not-met: "&cNo satisfaces los requisitos para seguir al siguiente rango."
-  no-rankup: "&eEstas en el último rango."
+  no-rankup: "&eEstás en el último rango."
   # set to an empty string, ie: success-public: ""
   # to hide that message.
   success-public: "&a{PLAYER} &eha subido de rango a: &d{RANK}"
   success-private: ""
   # used for the text confirmation
   confirmation: |-
-    &eEstas seguro de que quires subir de rango a &a{RANK}&e?
+    &e¿Estás seguro de que quires subir de rango a &a{RANK}&e?
     &eEscribe /rankup para confirmar.
   # used for the GUI confirmation
   title: "Subir de rango a {RANK}"
 
-  must-prestige: "&cTienes que prestigiar para seguir subiendo de rango!"
+  must-prestige: "&c¡Tienes que prestigiar para seguir subiendo de rango!"
 
   gui:
     rows: 1
@@ -39,19 +39,19 @@ rankup:
       material: BLACK_STAINED_GLASS_PANE
 
   ranksgui:
-    title: "Ranks"
+    title: "Rangos"
     rows: 3
     offset: 10
     width: 7
     complete:
       material: GREEN_STAINED_GLASS_PANE
-      name: "&aRank &7{RANK} &a(completed)"
+      name: "&aRango &7{RANK} &a(completado)"
     current:
       material: ORANGE_STAINED_GLASS_PANE
-      name: "&dRankup to &7{RANK}"
+      name: "&dSubir a &7{RANK}"
     incomplete:
       material: RED_STAINED_GLASS_PANE
-      name: "&cRank &7{RANK} &c(requires rankup)"
+      name: "&cRango &7{RANK} &c(requiere ascenso)"
     fill:
       material: BLACK_STAINED_GLASS_PANE
       name: ' '
@@ -78,7 +78,7 @@ rankup:
     plural: "&cTienes que esperar {SECONDS_LEFT} segundos más para subir de rango otra vez."
 # prestige messages can also be customised
 prestige:
-  requirements-not-met: "&cNecesitas {MONEY} más plata para prestigiar."
+  requirements-not-met: "&cNecesitas {MONEY} más dinero para prestigiar."
   no-prestige: "&eYa estás en el prestigio más alto."
 
   success-public: "&a{PLAYER} &eha prestigiado a: &d{RANK}"
@@ -116,6 +116,6 @@ prestige:
     singular: "&cTienes que esperar {SECONDS_LEFT} segundo más para prestigiar otra vez."
     plural: "&cTienes que esperar {SECONDS_LEFT} segundos más para prestigiar otra vez."
 
-not-high-enough: "&cNo puedes prestigiar a tu rango!"
+not-high-enough: "&c¡No puedes prestigiar a tu rango!"
 not-in-ladder: "&cPerdón, pero no hemos podido encontrar rangos en los grupos que perteneces. Usa /ranks para ver los rangos."
-invalid-rankup: "&cInvalid rankup defined in config, please check console. &cRango invalido definido en la configuración, verifica que todo esta correcto y chequea la consola."
+invalid-rankup: "&cRango inválido definido en la configuración, verifica que todo esté correcto y revisa la consola."
