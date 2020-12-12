@@ -17,7 +17,6 @@ repositories {
     maven {
         url 'https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/'
     }
-    // for plugins without repos, namely mcmmo, votingplugin, and towny
     maven {
         url 'https://jitpack.io'
     }
@@ -37,7 +36,7 @@ dependencies {
         exclude group: 'org.bukkit'
     }
     implementation 'me.clip:placeholderapi:2.10.6'
-    implementation 'com.hm.achievement:advanced-achievements-api:1.1.0'
+    implementation 'com.github.pyvesb:advanced-achievements:6.7.2'
     implementation('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
