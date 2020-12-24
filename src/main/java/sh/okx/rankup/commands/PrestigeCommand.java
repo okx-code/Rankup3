@@ -12,6 +12,7 @@ import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
+import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 
 import java.util.Map;
@@ -55,7 +56,7 @@ public class PrestigeCommand implements CommandExecutor {
       case "text":
         confirming.put(player, System.currentTimeMillis());
         Prestige next = rankElement.getNext().getRank();
-        String nextRank = next == null ? prestiges.getTree().last().getRank().getRank() : next.getRank();
+        Rank nextRank = next == null ? prestiges.getTree().last().getRank() : next;
 
         plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.PRESTIGE_CONFIRMATION)
             .replaceRanks(player, prestige, nextRank), player, prestige)

@@ -37,7 +37,7 @@ public class GuiListener implements Listener {
       Bukkit.getScheduler().runTask(plugin, () -> {
         player.closeInventory();
         if (gui.isReturnToRanksGui()) {
-          Bukkit.dispatchCommand(player, "ranksgui");
+          Bukkit.dispatchCommand(player, "ranks");
         }
       });
     }

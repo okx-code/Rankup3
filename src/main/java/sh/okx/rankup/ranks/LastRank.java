@@ -1,16 +1,13 @@
 package sh.okx.rankup.ranks;
 
+import java.util.Collections;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.ranks.requirements.LastRankRequirements;
-import sh.okx.rankup.requirements.NullRequirement;
-import sh.okx.rankup.requirements.Requirement;
-
-import java.util.Collections;
 
 public class LastRank extends Rank {
-  public LastRank(RankupPlugin plugin, String name) {
-    super(null, plugin, null, name, new LastRankRequirements(), Collections.emptyList());
+  public LastRank(RankupPlugin plugin, String name, String displayName) {
+    super(null, plugin, null, name, displayName, new LastRankRequirements(), Collections.emptyList());
   }
 
   @Override
@@ -19,15 +16,10 @@ public class LastRank extends Rank {
   }
 
   @Override
-  public Requirement getRequirement(Player player, String name) {
-    return new NullRequirement();
-  }
-
-  @Override
   public void applyRequirements(Player player) {
   }
 
   @Override
-  public void runCommands(Player player) {
+  public void runCommands(Player player, Rank next) {
   }
 }

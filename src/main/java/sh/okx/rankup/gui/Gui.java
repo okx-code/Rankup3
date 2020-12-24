@@ -21,6 +21,7 @@ import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
+import sh.okx.rankup.util.Colour;
 import sh.okx.rankup.util.ItemUtil;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -62,10 +63,10 @@ public class Gui implements InventoryHolder {
     gui.cancel = cancel;
 
     Inventory inventory = Bukkit.createInventory(gui, items.length,
-        ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', plugin.replaceMoneyRequirements(
+        Colour.translate(plugin.replaceMoneyRequirements(
             plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
                 .replaceRanks(player, oldRank, rank)
-                .replaceFromTo(oldRank), player, oldRank).toString())));
+                .replaceFromTo(oldRank), player, oldRank).toString()));
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;
@@ -75,7 +76,8 @@ public class Gui implements InventoryHolder {
     if (element == null) {
       return getItem(plugin, section, player, null, null);
     } else {
-      return getItem(plugin, section, player, element.getRank(), element.getNext().getRank());
+      RankElement<Rank> next = element.getNext();
+      return getItem(plugin, section, player, element.getRank(), (next == null ? element : next).getRank());
     }
   }
 
@@ -125,7 +127,7 @@ public class Gui implements InventoryHolder {
     if (oldRank != null && rank != null) {
       builder = builder.replaceRanks(player, oldRank, rank);
     }
-    return ChatColor.translateAlternateColorCodes('&', plugin.replaceMoneyRequirements(builder, player, oldRank).toString());
+    return Colour.translate(plugin.replaceMoneyRequirements(builder, player, oldRank).toString());
   }
 
   private static void addItem(ItemStack[] items, ConfigurationSection section, ItemStack item) {

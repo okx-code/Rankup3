@@ -3,8 +3,11 @@ package sh.okx.rankup;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import sh.okx.rankup.events.PlayerPrestigeEvent;
+import sh.okx.rankup.events.PlayerRankupEvent;
 import sh.okx.rankup.hook.GroupProvider;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.Variable;
@@ -40,7 +43,9 @@ public class RankupHelper {
     }
     permissions.addGroup(player.getUniqueId(), rank.getNext().getRank().getRank());
 
-    rank.getRank().runCommands(player);
+    rank.getRank().runCommands(player, rank.getNext().getRank());
+
+    Bukkit.getPluginManager().callEvent(new PlayerRankupEvent(plugin, player, rank));
   }
 
   public void sendRankupMessages(Player player, RankElement<Rank> rank) {
@@ -65,7 +70,9 @@ public class RankupHelper {
     }
     permissions.addGroup(player.getUniqueId(), prestige.getNext().getRank().getRank());
 
-    rank.runCommands(player);
+    rank.runCommands(player, prestige.getNext().getRank());
+
+    Bukkit.getPluginManager().callEvent(new PlayerPrestigeEvent(plugin, player, prestige));
   }
 
   public void sendPrestigeMessages(Player player, RankElement<Prestige> prestige) {
@@ -95,7 +102,7 @@ public class RankupHelper {
         plugin
             .getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
             .failIfEmpty()
-            .replaceRanks(player, rank.getRank())
+            .replaceRanks(player, rank)
             .replaceFromTo(rank)
             .replace(Variable.SECONDS, cooldownSeconds)
             .replace(Variable.SECONDS_LEFT, secondsLeft)
@@ -153,7 +160,7 @@ public class RankupHelper {
       Prestiges prestiges = plugin.getPrestiges();
       plugin.getMessage(prestiges == null || !prestiges.getByPlayer(player).hasNext() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
           .failIf(!message)
-          .replaceRanks(player, rankups.getTree().last().getRank().getRank())
+          .replaceRanks(player, rankups.getTree().last().getRank())
           .send(player);
       return false;
     } else if (!rank.hasRequirements(player)) { // check if they can afford it
@@ -200,7 +207,7 @@ public class RankupHelper {
     } else if (!prestigeElement.hasNext()) { // check if they are at the highest rank
       plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
-          .replaceRanks(player, prestigeElement.getRank().getRank())
+          .replaceRanks(player, prestigeElement.getRank())
           .replaceFromTo(prestigeElement.getRank())
           .send(player);
       return false;
@@ -208,7 +215,7 @@ public class RankupHelper {
       plugin.replaceMoneyRequirements(
           plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_REQUIREMENTS_NOT_MET)
               .failIf(!message)
-              .replaceRanks(player, prestigeElement.getRank(), prestigeElement.getNext().getRank().getRank()), player, prestigeElement.getRank())
+              .replaceRanks(player, prestigeElement.getRank(), prestigeElement.getNext().getRank()), player, prestigeElement.getRank())
           .replaceFromTo(prestigeElement.getRank())
           .send(player);
       return false;

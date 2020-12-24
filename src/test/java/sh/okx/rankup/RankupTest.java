@@ -1,5 +1,8 @@
 package sh.okx.rankup;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
@@ -14,9 +17,6 @@ import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class RankupTest {
     protected GroupProvider groupProvider;
@@ -73,7 +73,7 @@ public class RankupTest {
 
         plugin.getHelper().rankup(player);
 
-        player.assertSaid(plugin.getMessage(Message.NO_RANKUP).replaceRanks(player, plugin.getRankups().getTree().last().getRank().getRank()).toString());
+        player.assertSaid(plugin.getMessage(Message.NO_RANKUP).replaceRanks(player, plugin.getRankups().getTree().last().getRank()).toString());
         player.assertNoMoreSaid();
     }
 

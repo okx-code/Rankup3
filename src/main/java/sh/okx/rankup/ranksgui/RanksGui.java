@@ -12,6 +12,7 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
+import sh.okx.rankup.util.Colour;
 
 public class RanksGui {
     private final RankupPlugin plugin;
@@ -38,7 +39,7 @@ public class RanksGui {
         int offset = get(ConfigurationSection::getInt, "offset", playerPath, basePath, 10);
         int width = get(ConfigurationSection::getInt, "width", playerPath, basePath, 7);
 
-        inventory = Bukkit.createInventory(null, rows * 9, title);
+        inventory = Bukkit.createInventory(null, rows * 9, Colour.translate(title));
 
         ItemStack fill = get((section, path) -> Gui.getItem(plugin, section.getConfigurationSection(path), player, playerRankElement), "fill", playerPath, basePath, null);
 

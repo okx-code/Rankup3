@@ -1,11 +1,9 @@
 package sh.okx.rankup.placeholders;
 
+import java.text.DecimalFormat;
 import lombok.Getter;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import sh.okx.rankup.RankupPlugin;
-
-import java.text.DecimalFormat;
 
 public class Placeholders {
   private final RankupPlugin plugin;
@@ -17,7 +15,8 @@ public class Placeholders {
   private final DecimalFormat simpleFormat;
   @Getter
   private RankupExpansion expansion;
-  private boolean registered;
+
+  private RankupPlaceholderExpansion papiExpansion;
 
   public Placeholders(RankupPlugin plugin) {
     this.plugin = plugin;
@@ -29,17 +28,14 @@ public class Placeholders {
   public void register() {
     expansion = new RankupExpansion(plugin, this);
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      RankupPlaceholderExpansion placeholderExpansion = new RankupPlaceholderExpansion(plugin, expansion);
-      placeholderExpansion.register();
-      registered = true;
-    } else {
-      registered = false;
+      papiExpansion = new RankupPlaceholderExpansion(plugin, expansion);
+      papiExpansion.register();
     }
   }
 
   public void unregister() {
-    if (registered) {
-      PlaceholderAPI.unregisterPlaceholderHook("rankup");
+    if (papiExpansion != null) {
+      papiExpansion.unregister();
     }
   }
 }

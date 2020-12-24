@@ -20,7 +20,7 @@ ranks: true
 # this will also make the command not autocomplete in 1.13
 prestiges: true
 
-# whether to enabable the /ranks GUI.
+# whether to enable the /ranks GUI.
 # will override the /ranks command
 ranks-gui: false
 
@@ -93,6 +93,7 @@ placeholders:
     complete: "Complete"
     current: "Current"
     incomplete: "Incomplete"
+  last-rank-display-name: "last rank"
 
 # what to shorten money by.
 # ie 1000 -> 1k

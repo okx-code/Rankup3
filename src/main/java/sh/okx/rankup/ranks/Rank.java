@@ -26,7 +26,10 @@ public class Rank {
   @Getter
   protected final String rank;
   @Getter
+  protected final String displayName;
+  @Getter
   protected final RankRequirements requirements;
+  @Getter
   protected final List<String> commands;
 
   public boolean isIn(Player player) {
@@ -45,8 +48,7 @@ public class Rank {
     requirements.applyRequirements(player);
   }
 
-
-  public void runCommands(Player player) {
+  public void runCommands(Player player, Rank next) {
     for (String command : commands) {
       String string = new MessageBuilder(command).replaceRanks(player, this, next).toString();
       if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

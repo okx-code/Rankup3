@@ -1,5 +1,10 @@
 package sh.okx.rankup.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,8 +22,6 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.util.UpdateNotifier;
-
-import java.util.*;
 
 public class InfoCommand implements TabExecutor {
   private final RankupPlugin plugin;
@@ -130,7 +133,7 @@ public class InfoCommand implements TabExecutor {
 
         if (plugin.getRankups().getFirst().equals(currentRank)) {
           sender.sendMessage(ChatColor.YELLOW + "That player is in the first rank and cannot be ranked down.");
-
+          return true;
         }
 
         RankElement<Rank> prevRankElement = plugin.getRankups().getTree().getFirst();
@@ -140,6 +143,7 @@ public class InfoCommand implements TabExecutor {
 
         if (!prevRankElement.hasNext()) {
           sender.sendMessage(ChatColor.YELLOW + "Could not match previous rank.");
+          return true;
         }
         Rank prevRank = prevRankElement.getRank();
 
@@ -214,6 +218,7 @@ public class InfoCommand implements TabExecutor {
             ChatColor.GREEN + "/" + label + " forceprestige <player> " + ChatColor.YELLOW
                 + "Force a player to prestige, bypassing requirements.");
       }
+      sender.sendMessage(ChatColor.GREEN + "/" + label + " rankdown <player> " + ChatColor.YELLOW + "Force a player to move down one rank.");
     }
 
     if (sender.hasPermission("rankup.checkversion")) {
@@ -239,7 +244,7 @@ public class InfoCommand implements TabExecutor {
     } else if (args.length == 2) {
       if (args[0].equalsIgnoreCase("forcerankup") && sender.hasPermission("rankup.force")) {
         return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
-      } else if (args[0].equalsIgnoreCase("forceprestige") && sender.hasPermission("rankup.force")) {
+      } else if (args[0].equalsIgnoreCase("forceprestige") && sender.hasPermission("rankup.force") && plugin.getPrestiges() != null) {
         return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
       } else if (args[0].equalsIgnoreCase("rankdown") && sender.hasPermission("rankup.force")) {
         return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());

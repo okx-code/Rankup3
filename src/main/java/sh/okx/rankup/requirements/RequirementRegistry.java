@@ -8,11 +8,13 @@ import java.util.Set;
 public class RequirementRegistry {
   private final Set<Requirement> requirements = new HashSet<>();
 
+  @Deprecated
   public void addRequirement(Requirement requirement) {
     requirements.add(requirement);
   }
 
-  public void addRequirements(Requirement... requirements) {
+  public void addRequirements(Requirement requirement, Requirement... requirements) {
+    this.requirements.add(requirement);
     Collections.addAll(this.requirements, requirements);
   }
 

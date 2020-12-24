@@ -23,7 +23,7 @@ public class Prestige extends Rank {
   private final String to;
 
   protected Prestige(ConfigurationSection section, RankupPlugin plugin, String next, String rank, RankRequirements requirements, List<String> commands, String from, String to) {
-    super(section, plugin, next, rank, requirements, commands);
+    super(section, plugin, next, rank, rank, requirements, commands);
     this.from = from;
     this.to = to;
   }

@@ -1,13 +1,17 @@
 package sh.okx.rankup.ranks;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
-
-import java.util.*;
-import java.util.function.Function;
 
 public abstract class RankList<T extends Rank> {
 
@@ -45,7 +49,7 @@ public abstract class RankList<T extends Rank> {
     }
   }
 
-  public abstract void addLastRank(RankupPlugin plugin);
+  protected abstract void addLastRank(RankupPlugin plugin);
 
   private RankElement<T> findNext(T rank, List<RankElement<T>> rankElements) {
     Objects.requireNonNull(rank);

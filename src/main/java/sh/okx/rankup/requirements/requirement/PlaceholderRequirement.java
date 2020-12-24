@@ -31,8 +31,8 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
     }
 
     // numeric operations
-    double p = Double.parseDouble(parsed);
-    double v = Double.parseDouble(value);
+    double p = Double.parseDouble(parsed.replace(",", ""));
+    double v = Double.parseDouble(value.replace(",", ""));
     switch (parts[1]) {
       case ">":
         return p > v ? v : 0;

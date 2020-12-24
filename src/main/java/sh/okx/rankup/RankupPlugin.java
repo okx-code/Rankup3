@@ -29,6 +29,7 @@ import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.economy.Economy;
 import sh.okx.rankup.economy.EconomyProvider;
 import sh.okx.rankup.economy.VaultEconomyProvider;
+import sh.okx.rankup.events.RankupRegisterEvent;
 import sh.okx.rankup.gui.Gui;
 import sh.okx.rankup.gui.GuiListener;
 import sh.okx.rankup.hook.GroupProvider;
@@ -70,6 +71,7 @@ import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchie
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
+import sh.okx.rankup.requirements.requirement.superbvote.SuperbVoteVotesRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensRequirement;
 import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberResidentsRequirement;
@@ -406,6 +408,9 @@ public class RankupPlugin extends JavaPlugin {
           new TokensRequirement(this, "tokenmanager-tokensh"),
           new TokensDeductibleRequirement(this, "tokenmanager-tokens"));
     }
+    if (Bukkit.getPluginManager().isPluginEnabled("SuperbVotes")) {
+      requirements.addRequirements(new SuperbVoteVotesRequirement(this));
+    }
   }
   private void setupEconomy() {
     economy = economyProvider.getEconomy();
@@ -521,7 +526,7 @@ public class RankupPlugin extends JavaPlugin {
     }
 
     return replaceMoneyRequirements(getMessage(oldRank, message)
-        .replaceRanks(player, rankName.getRank())
+        .replaceRanks(player, rankName)
         .replace(Variable.OLD_RANK, oldRankName), player, oldRank)
         .replaceFromTo(oldRank);
   }
@@ -535,7 +540,7 @@ public class RankupPlugin extends JavaPlugin {
     } else {
       builder = getMessage(rank, type)
           .failIfEmpty()
-          .replaceRanks(sender, rank.getRank())
+          .replaceRanks(sender, rank)
           .replaceFromTo(rank);
     }
     builder.send(sender);

@@ -35,8 +35,11 @@ dependencies {
     implementation('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    implementation 'me.clip:placeholderapi:2.10.6'
+    implementation ('me.clip:placeholderapi:2.10.9') {
+        exclude group: 'org.bstats'
+    }
     implementation 'com.github.pyvesb:advanced-achievements:6.7.2'
+    implementation 'com.github.astei:Superbvote:700fca43659b438cb9bb36c218a7646d2f2ef315'
     implementation('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }

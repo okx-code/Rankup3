@@ -1,12 +1,10 @@
 package sh.okx.rankup.prestige;
 
+import java.util.Collections;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
+import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.requirements.LastRankRequirements;
-import sh.okx.rankup.requirements.NullRequirement;
-import sh.okx.rankup.requirements.Requirement;
-
-import java.util.Collections;
 
 public class LastPrestige extends Prestige {
   public LastPrestige(RankupPlugin plugin, String name) {
@@ -24,16 +22,11 @@ public class LastPrestige extends Prestige {
   }
 
   @Override
-  public Requirement getRequirement(Player player, String name) {
-    return new NullRequirement();
-  }
-
-  @Override
   public void applyRequirements(Player player) {
   }
 
   @Override
-  public void runCommands(Player player) {
+  public void runCommands(Player player, Rank next) {
   }
 
   @Override

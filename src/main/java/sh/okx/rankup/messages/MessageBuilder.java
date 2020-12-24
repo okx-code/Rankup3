@@ -1,18 +1,17 @@
 package sh.okx.rankup.messages;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
-
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import sh.okx.rankup.util.Colour;
 
 public class MessageBuilder {
   private String message;
@@ -28,7 +27,7 @@ public class MessageBuilder {
   private static MessageBuilder of(ConfigurationSection config, String message) {
     String string = config.getString(message);
     Objects.requireNonNull(string, "Configuration message '" + message + "' not found!");
-    return new MessageBuilder(ChatColor.translateAlternateColorCodes('&', string));
+    return new MessageBuilder(Colour.translate(string));
   }
 
   public MessageBuilder replace(Variable variable, Object value) {
@@ -36,6 +35,9 @@ public class MessageBuilder {
   }
 
   public MessageBuilder replace(String name, Object value) {
+    if (value == null) {
+      return this;
+    }
     Pattern pattern = Pattern.compile("\\{" + name + "}", Pattern.CASE_INSENSITIVE);
     Matcher matcher = pattern.matcher(message);
     this.message = matcher.replaceAll(String.valueOf(value));
@@ -49,15 +51,23 @@ public class MessageBuilder {
     return this;
   }
 
+  @Deprecated
   public MessageBuilder replaceRanks(CommandSender player, String rankName) {
     replace(Variable.PLAYER, player.getName());
     replaceRanks(rankName);
     return this;
   }
 
+  @Deprecated
   public MessageBuilder replaceRanks(CommandSender player, Rank oldRank, String rankName) {
     replace(Variable.PLAYER, player.getName());
     replaceRanks(oldRank, rankName);
+    return this;
+  }
+
+  public MessageBuilder replaceRanks(CommandSender player, Rank rank) {
+    replace(Variable.PLAYER, player.getName());
+    replaceRanks(rank);
     return this;
   }
 
@@ -67,6 +77,7 @@ public class MessageBuilder {
     return this;
   }
 
+  @Deprecated
   public MessageBuilder replaceRanks(String rankName) {
     replace(Variable.RANK, rankName);
     return this;
@@ -74,18 +85,22 @@ public class MessageBuilder {
 
   public MessageBuilder replaceRanks(Rank rank) {
     replace(Variable.RANK, rank.getRank());
+    replace(Variable.RANK_NAME, rank.getDisplayName());
     return this;
   }
 
+  @Deprecated
   public MessageBuilder replaceRanks(Rank oldRank, String rankName) {
     replaceRanks(rankName);
     replace(Variable.OLD_RANK, oldRank.getRank());
+    replace(Variable.OLD_RANK_NAME, oldRank.getDisplayName());
     return this;
   }
 
   public MessageBuilder replaceRanks(Rank oldRank, Rank rank) {
     replaceRanks(rank);
     replace(Variable.OLD_RANK, oldRank.getRank());
+    replace(Variable.OLD_RANK_NAME, oldRank.getDisplayName());
     return this;
   }
 
