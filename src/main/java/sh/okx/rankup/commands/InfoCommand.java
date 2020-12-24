@@ -131,7 +131,7 @@ public class InfoCommand implements TabExecutor {
         }
         Rank currentRank = currentRankElement.getRank();
 
-        if (plugin.getRankups().getFirst().equals(currentRank)) {
+        if (currentRankElement.isRootNode()) {
           sender.sendMessage(ChatColor.YELLOW + "That player is in the first rank and cannot be ranked down.");
           return true;
         }

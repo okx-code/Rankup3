@@ -138,9 +138,9 @@ public class RankupPlugin extends JavaPlugin {
               () -> config.getString("confirmation-type", "unknown")));
       metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
         Map<String, Integer> map = new HashMap<>();
-        addAll(map, rankups);
+        addAllRequirements(map, rankups);
         if (prestiges != null) {
-          addAll(map, prestiges);
+          addAllRequirements(map, prestiges);
         }
         return map;
       }));
@@ -262,7 +262,7 @@ public class RankupPlugin extends JavaPlugin {
     return true;
   }
 
-  private void addAll(Map<String, Integer> map, RankList<? extends Rank> ranks) {
+  private void addAllRequirements(Map<String, Integer> map, RankList<? extends Rank> ranks) {
     for (Rank rank : ranks.getTree()) {
       for (Requirement requirement : rank.getRequirements().getRequirements(null)) {
         String name = requirement.getName();
