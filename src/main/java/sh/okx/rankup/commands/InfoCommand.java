@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -200,9 +201,79 @@ public class InfoCommand implements TabExecutor {
           element = next;
         }
         return true;
+      } else if (args[0].equalsIgnoreCase("playtime") && sender.hasPermission("rankup.playtime")) {
+        Statistic playOneTick;
+        try {
+          playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
+        } catch (IllegalArgumentException e) {
+          // statistic was changed in 1.13.
+          playOneTick = Statistic.valueOf("PLAY_ONE_TICK");
+        }
+
+        if (args.length > 1) {
+          if (args[1].equalsIgnoreCase("get")) {
+            Player player;
+            if (args.length > 2) {
+              // pru playtime get Okx
+              player = Bukkit.getPlayer(args[2]);
+              if (player == null) {
+                sender.sendMessage(ChatColor.GRAY + "Player not found");
+                return true;
+              }
+            } else {
+              if (sender instanceof Player) {
+                player = (Player) sender;
+              } else {
+                sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " get [player] " + ChatColor.YELLOW
+                    + " Get amount of minutes played");
+                return true;
+              }
+            }
+
+            int ticks = player.getStatistic(playOneTick);
+            long minutes = (long) (ticks / 20D / 60);
+
+            String who;
+            if (player == sender) {
+              who = "You have";
+            } else {
+              who = player.getName() + " has";
+            }
+            player.sendMessage(ChatColor.LIGHT_PURPLE + who + " played for " + minutes + " minutes.");
+            return true;
+          } else if (args[1].equalsIgnoreCase("set")) {
+            if (args.length < 4) {
+              sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>" + ChatColor.YELLOW + " Update the playtime statistic for a player");
+              return true;
+            }
+
+            Player player = Bukkit.getPlayer(args[2]);
+            if (player == null) {
+              sender.sendMessage(ChatColor.GRAY + "Player not found");
+              return true;
+            }
+
+            int minutes;
+            try {
+              minutes = Integer.parseInt(args[3]);
+            } catch (NumberFormatException e) {
+              sender.sendMessage(ChatColor.GRAY + "Invalid number: " + args[3]);
+              return true;
+            }
+
+            player.setStatistic(playOneTick, minutes * 20 * 60);
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "Updated playtime for " + player.getName() + " to " + minutes + " minutes");
+            return true;
+          }
+        }
+        sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " get [player] " + ChatColor.YELLOW + " Get amount of minutes played");
+        sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>" + ChatColor.YELLOW + " Update the playtime statistic for a player");
+        return true;
       }
     }
-    
+
+    // Set playtime & get playtime for other players?
+
     PluginDescriptionFile description = plugin.getDescription();
     String version = description.getVersion();
     sender.sendMessage(
@@ -219,6 +290,9 @@ public class InfoCommand implements TabExecutor {
                 + "Force a player to prestige, bypassing requirements.");
       }
       sender.sendMessage(ChatColor.GREEN + "/" + label + " rankdown <player> " + ChatColor.YELLOW + "Force a player to move down one rank.");
+    }
+    if (sender.hasPermission("rankup.playtime")) {
+      sender.sendMessage(ChatColor.GREEN + "/" + label + " playtime " + ChatColor.YELLOW + "View your playtime");
     }
 
     if (sender.hasPermission("rankup.checkversion")) {
@@ -239,6 +313,9 @@ public class InfoCommand implements TabExecutor {
         list.add("forcerankup");
         list.add("forceprestige");
         list.add("rankdown");
+      }
+      if (sender.hasPermission("rankup.playtime")) {
+        list.add("playtime");
       }
       return StringUtil.copyPartialMatches(args[0], list, new ArrayList<>());
     } else if (args.length == 2) {

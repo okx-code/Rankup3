@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.11-beta.1'
+version '3.11-beta.2'
 
 repositories {
     mavenCentral()
