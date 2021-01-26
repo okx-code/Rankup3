@@ -3,9 +3,12 @@ package sh.okx.rankup.prestige;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
+import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.requirements.ListRankRequirements;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
@@ -39,6 +42,20 @@ public class Prestige extends Rank {
         section.getStringList("commands"),
         section.getString("from"),
         section.getString("to"));
+  }
+
+  @Override
+  public void runCommands(Player player, Rank next) {
+    for (String command : commands) {
+      String string = new MessageBuilder(command)
+          .replaceRanks(player, this, next)
+          .replaceFromTo(this)
+          .toString();
+      if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        string = PlaceholderAPI.setPlaceholders(player, string);
+      }
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
+    }
   }
 
   @Override
