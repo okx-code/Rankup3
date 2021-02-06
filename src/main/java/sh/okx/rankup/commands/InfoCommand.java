@@ -201,7 +201,7 @@ public class InfoCommand implements TabExecutor {
           element = next;
         }
         return true;
-      } else if (args[0].equalsIgnoreCase("playtime") && sender.hasPermission("rankup.playtime")) {
+      } else if (args[0].equalsIgnoreCase("playtime") && (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime.set"))) {
         Statistic playOneTick;
         try {
           playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
@@ -211,7 +211,7 @@ public class InfoCommand implements TabExecutor {
         }
 
         if (args.length > 1) {
-          if (args[1].equalsIgnoreCase("get")) {
+          if (args[1].equalsIgnoreCase("get") && sender.hasPermission("rankup.playtime.get")) {
             Player player;
             if (args.length > 2) {
               // pru playtime get Okx
@@ -241,7 +241,7 @@ public class InfoCommand implements TabExecutor {
             }
             player.sendMessage(ChatColor.LIGHT_PURPLE + who + " played for " + minutes + " minutes.");
             return true;
-          } else if (args[1].equalsIgnoreCase("set")) {
+          } else if (args[1].equalsIgnoreCase("set") && sender.hasPermission("rankup.playtime.set")) {
             if (args.length < 4) {
               sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>" + ChatColor.YELLOW + " Update the playtime statistic for a player");
               return true;
@@ -266,8 +266,16 @@ public class InfoCommand implements TabExecutor {
             return true;
           }
         }
-        sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " get [player] " + ChatColor.YELLOW + " Get amount of minutes played");
-        sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>" + ChatColor.YELLOW + " Update the playtime statistic for a player");
+        if (sender.hasPermission("rankup.playtime.get")) {
+          sender.sendMessage(
+              ChatColor.GREEN + "/" + label + " " + args[0] + " get [player] " + ChatColor.YELLOW
+                  + " Get amount of minutes played");
+        }
+        if (sender.hasPermission("rankup.playtime.set")) {
+          sender.sendMessage(
+              ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>"
+                  + ChatColor.YELLOW + " Update the playtime statistic for a player");
+        }
         return true;
       }
     }

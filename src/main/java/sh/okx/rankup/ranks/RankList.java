@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,11 +27,14 @@ public abstract class RankList<T extends Rank> {
     List<RankElement<T>> rankElements = new ArrayList<>();
     for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
       ConfigurationSection rankSection = (ConfigurationSection) entry.getValue();
-      validateSection(rankSection);
-      T apply = deserializer.apply(rankSection);
-      if (apply != null) {
-        // find next
-        rankElements.add(findNext(apply, rankElements));
+      if (validateSection(rankSection)) {
+        T apply = deserializer.apply(rankSection);
+        if (apply != null) {
+          // find next
+          rankElements.add(findNext(apply, rankElements));
+        }
+      } else {
+        plugin.getLogger().warning("Ignoring rank: " + entry.getKey());
       }
     }
 
@@ -70,23 +72,19 @@ public abstract class RankList<T extends Rank> {
     return currentElement;
   }
 
-  protected void validateSection(ConfigurationSection section) {
+  protected boolean validateSection(ConfigurationSection section) {
     String name = "'" + section.getName() + "'";
-    /*if (section.getConfigurationSection("requirements") != null) {
-      throw new IllegalArgumentException(
-          "Rankup/prestige section " + name + " is using the old requirements system.\n" +
-              "Instead of a configuration section, it is now a list of strings.\n" +
-              "For example, instead of \"requirements: money: 1000\" you should use \"requirements: - 'money 1000'\".");
-    }*/
-    Set<String> keys = section.getKeys(false);
-    if (keys.size() == 1 && keys.iterator().next().equalsIgnoreCase("rank")) {
-      throw new IllegalArgumentException(
-          "Having a final rank (for example: \"Z: rank: 'Z'\") from 3.4.2 or earlier should no longer be used.\n"
-              +
-              "It is safe to just delete the final rank " + name + "");
+    String nextField = section.getString("next");
+    if (nextField == null || nextField.isEmpty()) {
+      plugin.getLogger().warning("Rankup section " + name + " does not have a 'next' field.");
+      plugin.getLogger().warning("Having a final rank (for example: \"Z: rank: 'Z'\") from 3.4.2 or earlier should no longer be used.");
+      plugin.getLogger().warning("If this is intended as a final rank, you should delete " + name);
+      return false;
     } else if (!section.contains("requirements")) {
-      throw new IllegalArgumentException("Rank " + name + " does not have any requirements.");
+      plugin.getLogger().warning("Rank " + name + " does not have any requirements.");
+      return false;
     }
+    return true;
   }
 
   public T getFirst() {

@@ -519,15 +519,19 @@ public class RankupPlugin extends JavaPlugin {
 
   public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, Rank rankName) {
     String oldRankName;
+    String oldRankDisplayName;
     if (oldRank instanceof Prestige && oldRank.getRank() == null) {
       oldRankName = ((Prestige) oldRank).getFrom();
+      oldRankDisplayName = rankups.getTree().last().getRank().getDisplayName();
     } else {
       oldRankName = oldRank.getRank();
+      oldRankDisplayName = oldRank.getDisplayName();
     }
 
     return replaceMoneyRequirements(getMessage(oldRank, message)
         .replaceRanks(player, rankName)
-        .replace(Variable.OLD_RANK, oldRankName), player, oldRank)
+        .replace(Variable.OLD_RANK, oldRankName)
+        .replace(Variable.OLD_RANK_NAME, oldRankDisplayName), player, oldRank)
         .replaceFromTo(oldRank);
   }
 

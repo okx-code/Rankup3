@@ -69,7 +69,7 @@ public class RanksGui {
                 rowIndex += 9;
                 index += 9 - width;
             }
-            if (index >= rows * 9) {
+            if (index > rows * 9) {
                 throw new IllegalArgumentException("Ranks GUI is too small for the number of ranks. Increase the number of rows on the ranks GUI.");
             }
             rankElement = rankElement.getNext();

@@ -46,6 +46,7 @@ permissions:
       rankup.force: true
       # if a player receives notifications to update rankup when they log in.
       rankup.notify: true
+      rankup.playtime: true
     default: op
   rankup.rankup:
     default: true
@@ -59,3 +60,8 @@ permissions:
     default: true
   rankup.maxrankup:
     default: true
+  rankup.playtime:
+    children:
+      rankup.playtime.get: true
+      rankup.playtime.set: true
+    default: op
