@@ -66,7 +66,7 @@ public class PrestigeCommand implements CommandExecutor {
       case "gui":
         Gui gui = Gui.of(player, prestige, rankElement.getNext().getRank(), plugin, false);
         if (gui == null) {
-          player.sendMessage(ChatColor.RED + "GUI is not available. Check console for more informatiopn.");
+          player.sendMessage(ChatColor.RED + "GUI is not available. Check console for more information.");
           return true;
         }
         gui.open(player);
