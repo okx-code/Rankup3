@@ -47,19 +47,19 @@ public class RankupExpansion implements Expansion {
                     replacePattern(parts[1]), parts.length > 2 ? parts[2] : "");
         } else if (params.startsWith("rank_requirement_")) {
             String[] parts = params.split("_", 5);
-            return getPlaceholderRequirement(player, rankups.getByName(parts[2]),
+            return getPlaceholderRequirement(player, rankups.getRankByName(parts[2]),
                     replacePattern(parts[3]), parts.length > 4 ? parts[4] : "");
 //      return placeholders.getSimpleFormat().format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
         } else if (params.startsWith("rank_money_")) {
             String[] parts = params.split("_", 4);
-            double amount = Objects.requireNonNull(rankups.getByName(parts[2]), "Rankup " + parts[2] + " does not exist").getRequirement(player, "money").getValueDouble();
+            double amount = Objects.requireNonNull(rankups.getRankByName(parts[2]), "Rankup " + parts[2] + " does not exist").getRequirement(player, "money").getValueDouble();
             if (parts.length > 3 && parts[3].equalsIgnoreCase("left")) {
                 amount = amount - plugin.getEconomy().getBalance(player);
             }
             return plugin.formatMoney(Math.max(0, amount));
         } else if (params.startsWith("status_")) {
             String[] parts = params.split("_",  2);
-            Rank statusRank = rankups.getByName(parts[1]);
+            Rank statusRank = rankups.getRankByName(parts[1]);
 
             if (statusRank == null) {
                 return null;

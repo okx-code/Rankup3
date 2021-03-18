@@ -2,10 +2,9 @@ package sh.okx.rankup.requirements.requirement.mcmmo;
 
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.util.player.UserManager;
-import org.bukkit.entity.Player;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.bukkit.entity.Player;
 
 /**
  * Because mcMMO like changing the name of their skill types.

@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
-import sh.okx.rankup.messages.MessageBuilder;
+import sh.okx.rankup.messages.pebble.PebbleMessageBuilder;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.requirements.ListRankRequirements;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
@@ -45,9 +45,10 @@ public class Prestige extends Rank {
   @Override
   public void runCommands(Player player, Rank next) {
     for (String command : commands) {
-      String string = new MessageBuilder(command)
-          .replaceRanks(player, this, next)
-          .replaceFromTo(this)
+      String string = new PebbleMessageBuilder(this.plugin, command)
+          .replacePlayer(player)
+          .replaceOldRank(this)
+          .replaceRank(next)
           .toString();
       if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
         string = PlaceholderAPI.setPlaceholders(player, string);

@@ -1,0 +1,10 @@
+A:
+  rank: 'A'
+  next: 'B'
+  display-name: 'A-display'
+  requirements:
+    - 'money 1000'
+    - 'xp-level 4'
+  rankup:
+    # Test legacy placeholders
+    requirements-not-met: '{PLAYER} {OLD_RANK} {RANK} {OLD_RANK_NAME} {RANK_NAME} {MONEY} {MONEY_NEEDED} {AMOUNT xp-level} {AMOUNT_DONE xp-level} {AMOUNT_NEEDED xp-level} {PERCENT_DONE xp-level} {PERCENT_LEFT xp-level}'

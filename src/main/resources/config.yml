@@ -1,5 +1,5 @@
 # this is used for letting you know that you need to update/change your config file
-version: 9
+version: 10
 
 # the locale to use for messages
 # all messages can be customised but this allows you to

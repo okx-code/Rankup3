@@ -8,6 +8,6 @@ import static org.junit.Assert.assertThat;
 public class MessageBuilderTest {
   @Test
   public void testFailIfEmpty() {
-    assertThat(new MessageBuilder("").failIfEmpty(), instanceOf(NullMessageBuilder.class));
+    assertThat(new StringMessageBuilder("").failIfEmpty(), instanceOf(NullMessageBuilder.class));
   }
 }

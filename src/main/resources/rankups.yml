@@ -22,7 +22,7 @@ Aexample:
   # nb: groups are automatically changed with vault
   #commands:
   # this will run when a player ranks up from A to B.
-  #- 'say {PLAYER} well done for ranking up from {OLD_RANK} to {RANK}!'
+  #- 'say {{player}} well done for ranking up from {{rank.rank}} to {{next.rank}}!'
 Bexample:
   rank: 'B'
   next: 'C'
@@ -39,6 +39,6 @@ Cexample:
   rankup:
     requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
     list:
-      complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e(5000 money, 2 XP levels)"
-      current: "&c{OLD_RANK} &e\xbb &c{RANK} &e(5000 money, 2 XP levels)"
-      incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e(5000 money, 2 XP levels)"
+      complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &e(5000 money, 2 XP levels)"
+      current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &e(5000 money, 2 XP levels)"
+      incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &e(5000 money, 2 XP levels)"

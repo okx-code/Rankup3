@@ -1,19 +1,16 @@
 package sh.okx.rankup.ranks;
 
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
-import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
-
-import java.util.List;
 
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,10 +47,7 @@ public class Rank {
 
   public void runCommands(Player player, Rank next) {
     for (String command : commands) {
-      String string = new MessageBuilder(command).replaceRanks(player, this, next).toString();
-      if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-        string = PlaceholderAPI.setPlaceholders(player, string);
-      }
+      String string = plugin.newMessageBuilder(command).replacePlayer(player).replaceOldRank(this).replaceRank(next).toString(player);
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
     }
   }

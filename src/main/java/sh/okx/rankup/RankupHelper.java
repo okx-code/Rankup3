@@ -51,11 +51,15 @@ public class RankupHelper {
   public void sendRankupMessages(Player player, RankElement<Rank> rank) {
     plugin.getMessage(rank.getRank(), Message.SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, rank.getRank(), rank.getNext().getRank())
+        .replacePlayer(player)
+        .replaceOldRank(rank.getRank())
+        .replaceRank(rank.getNext().getRank())
         .broadcast();
     plugin.getMessage(rank.getRank(), Message.SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, rank.getRank(), rank.getNext().getRank())
+        .replacePlayer(player)
+        .replaceOldRank(rank.getRank())
+        .replaceRank(rank.getNext().getRank())
         .send(player);
   }
 
@@ -81,13 +85,15 @@ public class RankupHelper {
 
     plugin.getMessage(prestige.getRank(), Message.PRESTIGE_SUCCESS_PUBLIC)
         .failIfEmpty()
-        .replaceRanks(player, prestige.getRank(), prestige.getNext().getRank())
-        .replaceFromTo(prestige.getRank())
+        .replacePlayer(player)
+        .replaceOldRank(prestige.getRank())
+        .replaceRank(prestige.getNext().getRank())
         .broadcast();
     plugin.getMessage(prestige.getRank(), Message.PRESTIGE_SUCCESS_PRIVATE)
         .failIfEmpty()
-        .replaceRanks(player, prestige.getRank(), prestige.getNext().getRank())
-        .replaceFromTo(prestige.getRank())
+        .replacePlayer(player)
+        .replaceOldRank(prestige.getRank())
+        .replaceRank(prestige.getNext().getRank())
         .send(player);
   }
 
@@ -102,10 +108,10 @@ public class RankupHelper {
         plugin
             .getMessage(rank, secondsLeft > 1 ? Message.COOLDOWN_PLURAL : Message.COOLDOWN_SINGULAR)
             .failIfEmpty()
-            .replaceRanks(player, rank)
-            .replaceFromTo(rank)
-            .replace(Variable.SECONDS, cooldownSeconds)
-            .replace(Variable.SECONDS_LEFT, secondsLeft)
+            .replacePlayer(player)
+            .replaceRank(rank)
+            .replaceKey(Variable.SECONDS.toString(), cooldownSeconds)
+            .replaceKey(Variable.SECONDS_LEFT.toString(), secondsLeft)
             .send(player);
         return true;
       }
@@ -151,22 +157,27 @@ public class RankupHelper {
     if (rankElement == null) { // check if in ladder
       plugin.getMessage(Message.NOT_IN_LADDER)
           .failIf(!message)
-          .replace(Variable.PLAYER, player.getName())
+          .replacePlayer(player)
           .send(player);
       return false;
     }
     Rank rank = rankElement.getRank();
     if (!rankElement.hasNext()) {
       Prestiges prestiges = plugin.getPrestiges();
-      plugin.getMessage(prestiges == null || !prestiges.getByPlayer(player).hasNext() ? Message.NO_RANKUP : Message.MUST_PRESTIGE)
+      plugin.getMessage(
+          prestiges == null || !prestiges.getByPlayer(player).hasNext() ? Message.NO_RANKUP
+              : Message.MUST_PRESTIGE)
           .failIf(!message)
-          .replaceRanks(player, rankups.getTree().last().getRank())
+          .replacePlayer(player)
+          .replaceRank(rankups.getTree().last().getRank())
           .send(player);
       return false;
     } else if (!rank.hasRequirements(player)) { // check if they can afford it
       if (message) {
-        plugin.replaceMoneyRequirements(plugin.getMessage(rank, Message.REQUIREMENTS_NOT_MET)
-            .replaceRanks(player, rank, rankElement.getNext().getRank()), player, rank)
+        plugin.getMessage(rank, Message.REQUIREMENTS_NOT_MET)
+            .replacePlayer(player)
+            .replaceOldRank(rank)
+            .replaceRank(rankElement.getNext().getRank())
             .send(player);
       }
       return false;
@@ -198,25 +209,26 @@ public class RankupHelper {
   public boolean checkPrestige(Player player, boolean message) {
     Prestiges prestiges = plugin.getPrestiges();
     RankElement<Prestige> prestigeElement = prestiges.getByPlayer(player);
-    if (prestigeElement == null || !prestigeElement.getRank().isEligible(player)) { // check if in ladder
+    if (prestigeElement == null || !prestigeElement.getRank()
+        .isEligible(player)) { // check if in ladder
       plugin.getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
-          .replace(Variable.PLAYER, player.getName())
+          .replacePlayer(player)
           .send(player);
       return false;
     } else if (!prestigeElement.hasNext()) { // check if they are at the highest rank
       plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_NO_PRESTIGE)
           .failIf(!message)
-          .replaceRanks(player, prestigeElement.getRank())
-          .replaceFromTo(prestigeElement.getRank())
+          .replacePlayer(player)
+          .replaceRank(prestigeElement.getRank())
           .send(player);
       return false;
     } else if (!prestigeElement.getRank().hasRequirements(player)) { // check if they can afford it
-      plugin.replaceMoneyRequirements(
-          plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_REQUIREMENTS_NOT_MET)
-              .failIf(!message)
-              .replaceRanks(player, prestigeElement.getRank(), prestigeElement.getNext().getRank()), player, prestigeElement.getRank())
-          .replaceFromTo(prestigeElement.getRank())
+      plugin.getMessage(prestigeElement.getRank(), Message.PRESTIGE_REQUIREMENTS_NOT_MET)
+          .failIf(!message)
+          .replacePlayer(player)
+          .replaceOldRank(prestigeElement.getRank())
+          .replaceRank(prestigeElement.getNext().getRank())
           .send(player);
       return false;
     } else if (checkCooldown(player, prestigeElement.getRank())) {

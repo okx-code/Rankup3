@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.Message;
+import sh.okx.rankup.messages.MessageBuilder;
+import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.RankElement;
@@ -38,9 +40,12 @@ public class PrestigesCommand implements CommandExecutor {
             .send(sender);
         message = Message.PRESTIGES_INCOMPLETE;
       } else {
-        plugin.getMessage(sender, message, prestige.getRank(), next.getRank())
-            .replaceFirstPrestige(prestige.getRank(), prestiges, prestige.getRank().getFrom())
-            .send(sender);
+        MessageBuilder builder = plugin
+            .getMessage(sender, message, prestige.getRank(), next.getRank());
+        if (prestiges.getFirst().equals(prestige.getRank())) {
+          builder.replaceKey(Variable.OLD_RANK.toString(), prestige.getRank().getFrom());
+        }
+        builder.send(sender);
       }
       prestige = next;
     }
