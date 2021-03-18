@@ -1,19 +1,19 @@
 package sh.okx.rankup.ranks.requirements;
 
-import java.util.Set;
+import java.util.List;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class ListRankRequirements implements RankRequirements {
-  private final Set<Requirement> requirements;
+  private final List<Requirement> requirements;
 
-  public ListRankRequirements(Set<Requirement> requirements) {
+  public ListRankRequirements(List<Requirement> requirements) {
     this.requirements = requirements;
   }
 
   @Override
-  public Set<Requirement> getRequirements(Player player) {
+  public Iterable<Requirement> getRequirements(Player player) {
     return requirements;
   }
 

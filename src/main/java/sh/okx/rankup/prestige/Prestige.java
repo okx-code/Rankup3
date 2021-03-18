@@ -1,5 +1,6 @@
 package sh.okx.rankup.prestige;
 
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,9 +14,6 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.requirements.ListRankRequirements;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
-
-import java.util.List;
-import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -33,7 +31,7 @@ public class Prestige extends Rank {
 
   public static Prestige deserialize(RankupPlugin plugin, ConfigurationSection section) {
     List<String> requirementsList = section.getStringList("requirements");
-    Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
+    List<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
 
     return new Prestige(section, plugin,
         section.getString("next"),

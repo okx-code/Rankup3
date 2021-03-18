@@ -92,12 +92,26 @@ public class RankupExpansion implements Expansion {
                 } else {
                     return prestige.getRank();
                 }
+            case "current_prestige_name":
+                requirePrestiging(prestiges, params);
+                if (prestige == null || prestige.getRank() == null) {
+                    return getPlaceholder("no-prestige");
+                } else {
+                    return prestige.getDisplayName();
+                }
             case "next_prestige":
                 requirePrestiging(prestiges, params);
                 if (prestigeElement != null && !prestigeElement.hasNext()) {
                     return getPlaceholder("highest-rank");
                 }
-                return orElse(prestige, Prestige::getNext, prestiges.getFirst().getNext());
+                return orElse(prestigeElement, e -> e.getNext().getRank().getRank(), prestiges.getTree().getFirst().getNext().getRank().getRank());
+            case "next_prestige_name":
+                requirePrestiging(prestiges, params);
+                if (prestigeElement != null && !prestigeElement.hasNext()) {
+                    return getPlaceholder("highest-rank");
+                } else {
+                    return orElse(prestigeElement, e -> e.getNext().getRank().getDisplayName(), prestiges.getTree().getFirst().getNext().getRank().getDisplayName());
+                }
             case "prestige_money":
                 requirePrestiging(prestiges, params);
                 return String.valueOf(simplify(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0)));
@@ -105,16 +119,21 @@ public class RankupExpansion implements Expansion {
                 requirePrestiging(prestiges, params);
                 return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
             case "current_rank":
-                if (rank == null) {
-                    return getPlaceholder("not-in-ladder");
-                } else {
-                    return rank.getRank();
-                }
+                return orElse(rank, Rank::getRank, getPlaceholder("not-in-ladder"));
+            case "current_rank_name":
+                return orElse(rank, Rank::getDisplayName, getPlaceholder("not-in-ladder"));
             case "next_rank":
                 if (rankElement != null && !rankElement.hasNext()) {
                     return getPlaceholder("highest-rank");
+                } else {
+                    return orElsePlaceholder(rankElement, e -> e.getNext().getRank().getRank(), "not-in-ladder");
                 }
-                return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");
+            case "next_rank_name":
+                if (rankElement != null && !rankElement.hasNext()) {
+                    return getPlaceholder("highest-rank");
+                } else {
+                    return orElsePlaceholder(rankElement, e -> e.getNext().getRank().getDisplayName(), "not-in-ladder");
+                }
             case "money":
                 return String.valueOf(getMoney(player, rank));
             case "money_formatted":
