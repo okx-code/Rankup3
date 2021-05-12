@@ -5,40 +5,50 @@
 # Join the discord server for live support: https://discord.gg/maB4382 (buyers only)
 #
 
-# this name doesn't matter
-Aexample:
-  # the name of the group
-  # players have to be in this rank to rankup
-  rank: 'A'
-  # the name of the rank a player can rankup to
-  next: 'B'
-  # List of requirements to go to the next rank
-  # This example will charge 1000 money to rankup from A to B.
-  # https://github.com/okx-code/Rankup3/wiki/List-of-Requirements
-  # custom requirements can also be added by other plugins.
-  requirements:
-    - 'money 1000'
-  # the console will run these commands when a player ranks up
-  # nb: groups are automatically changed with vault
-  #commands:
-  # this will run when a player ranks up from A to B.
-  #- 'say {PLAYER} well done for ranking up from {OLD_RANK} to {RANK}!'
-Bexample:
+ExampleA: # This name doesn't matter, it can be anything you want!
+  rank: 'A' # This is the rank where you start from. Use the displayname if you have it!
+  next: 'B' # This is the rank where you go next. Read it as "From A to B"
+  requirements:  # Here go your requirements. You can have as many as you want.
+# List of requirements: https://github.com/okx-code/Rankup3/wiki/List-of-Requirements
+    - 'money 5000'
+    - 'xp-level 5'
+
+ExampleB:
   rank: 'B'
   next: 'C'
   requirements:
-    - 'money 2500'
-Cexample:
+    - 'money 10000'
+    - 'xp-level 10'
+  rankup: # requirements-not-met is a custom message that gets displayed when you DON'T meet the requirements.
+    requirements-not-met: "&3You need &d&n$10K &3and &d&n10 XP levels&3!" # It supports (RGB if 1.16+) color codes.
+
+ExampleC:
   rank: 'C'
   next: 'D'
   requirements:
-    - 'money 5000'
-    - 'xp-level 2'
-  # you can have a custom messages for each rank
-  # the paths of these messages are the same as in the messages for your locale
+    - 'money 15000'
+    - 'xp-level 12'
+    - 'total-mob-kills 15'
+  rankup: # Introduction to placeholders and multi-line messages!
+    requirements-not-met: |- # These 2 characters indicate to Rankup that it's a multi-line message.
+# List of placeholders: https://github.com/okx-code/Rankup3/wiki/Config-Placeholders
+      &3You need:
+      &c- &d&n${AMOUNT money}
+      &c- &d&n{AMOUNT xp-level) &3XP levels
+      &c- &d&n{AMOUNT total-mob-kills} &3mob kills
+      &3 to reach &c&l{RANK}&3!
+
+ExampleD:
+  rank: 'D'
+  next: 'E'
+  requirements:
+    - 'moneyh 30000' # This requirement doesn't remove the money from the player's balance.
+    - 'mob-kills zombie 20' # This requirement has a sub-requirement.
+    - 'advancement story/iron_tools'
   rankup:
-    requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
-    list:
-      complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e(5000 money, 2 XP levels)"
-      current: "&c{OLD_RANK} &e\xbb &c{RANK} &e(5000 money, 2 XP levels)"
-      incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e(5000 money, 2 XP levels)"
+    requirements-not-met: |-
+      &3You need:
+      &c- &d&n${AMOUNT moneyh}
+      &c- &d&n{AMOUNT mob-kills#zombie} &3zombie kills
+      &c- &d&nThe "isn't it an iron pick" &3advancement.
+      &3 to reach &c&l{RANK}&3!
