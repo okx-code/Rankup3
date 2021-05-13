@@ -42,8 +42,9 @@ notify-update: true
 #   if false, players will be checked for if they have a group of the same name as in rankups.yml,
 # and automatically added and taken away from those groups.
 #   if true, players will be checked for the permission rankup.rank.RANK, where RANK
-# is the rankup in rankups.yml. Nothing will automatically happen on rankup, so you must
-# use commands to change a player's group or permission.
+# is the rankup in rankups.yml.
+# true also enables MANUAL MODE: Nothing will automatically change on rankup.
+# You must use 'commands:' to change a player's group or permission when true. https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#1-commands
 permission-rankup: false
 
 # how people should confirm ranking up
