@@ -33,8 +33,12 @@ public class RequirementContext {
     return requirement.getName();
   }
 
-  public double getPercent() {
+  public double getQuotient() {
     return getProgress() / getTotal();
+  }
+
+  public double getPercent() {
+    return getProgress() / getTotal() * 100;
   }
 
   public String toString() {

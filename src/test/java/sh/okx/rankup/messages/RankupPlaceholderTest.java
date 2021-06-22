@@ -1,12 +1,19 @@
 package sh.okx.rankup.messages;
 
+
+import static org.junit.Assert.assertNotNull;
+
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import org.junit.Test;
 import sh.okx.rankup.RankupTest;
 
 public class RankupPlaceholderTest extends RankupTest {
+  public RankupPlaceholderTest() {
+    super("placeholder");
+  }
+
   @Test
-  public void testSuccessPublicIsSame() {
+  public void testReceivesSuccessMessages() {
     PlayerMock player = server.addPlayer();
     PlayerMock receiver = server.addPlayer();
 
@@ -20,5 +27,21 @@ public class RankupPlaceholderTest extends RankupTest {
 
     // receiver does not receive success-private
     receiver.assertNoMoreSaid();
+
+    // player receives success-private and nothing else
+    assertNotNull(player.nextMessage());
+    player.assertNoMoreSaid();
+  }
+
+  @Test
+  public void testQuotientAndPercent() {
+    PlayerMock player = server.addPlayer();
+
+    plugin.getEconomy().setPlayer(player, 100);
+
+    groupProvider.addGroup(player.getUniqueId(), "A");
+    plugin.getHelper().rankup(player);
+
+    player.assertSaid("0.1 10");
   }
 }

@@ -335,6 +335,7 @@ public class RankupPlugin extends JavaPlugin {
     saveLocale("fr");
     saveLocale("it");
     saveLocale("es");
+    saveLocale("nl");
   }
 
   private void saveLocale(String locale) {

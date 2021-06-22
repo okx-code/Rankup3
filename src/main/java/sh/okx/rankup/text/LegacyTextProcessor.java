@@ -82,11 +82,11 @@ public class LegacyTextProcessor implements TextProcessor {
     } else if (p.toLowerCase().startsWith("percent_done ")) {
       String requirement = p.substring("percent_done ".length());
       return get("rank", p, o -> this.options.getPercentFormat()
-          .format(((RankContext) o).getReq(requirement).getPercent() * 100));
+          .format(((RankContext) o).getReq(requirement).getPercent()));
     } else if (p.toLowerCase().startsWith("percent_left ")) {
       String requirement = p.substring("percent_left ".length());
       return get("rank", p, o -> this.options.getPercentFormat()
-          .format(100 - ((RankContext) o).getReq(requirement).getPercent() * 100));
+          .format(100 - ((RankContext) o).getReq(requirement).getPercent()));
     }
 
     return get(p, "{" + p + "}");

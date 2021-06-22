@@ -20,5 +20,6 @@ public class LegacyPlaceholderTest extends RankupTest {
     plugin.getHelper().rankup(player);
 
     player.assertSaid("testPlayer A B A-display last rank 1,000 900 4 1 3 25 75");
+    player.assertNoMoreSaid();
   }
 }

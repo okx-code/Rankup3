@@ -1,0 +1,7 @@
+A:
+  rank: 'A'
+  next: 'B'
+  requirements:
+    - 'money 1000'
+  rankup:
+    requirements-not-met: '{{rank.requirement("money").quotient | simple}} {{rank.requirement("money").percent | simple}}'
