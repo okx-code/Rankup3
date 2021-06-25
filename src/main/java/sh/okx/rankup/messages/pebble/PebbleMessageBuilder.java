@@ -33,14 +33,13 @@ public class PebbleMessageBuilder implements MessageBuilder {
   }
 
   private void replaceInitial() {
-    Function<Player, Object> lastMinute = player -> {
+    lastMinuteContext.put("ranks", player -> {
       List<RankContext> ranks = new ArrayList<>();
       for (Rank rank : plugin.getRankups().getTree()) {
         ranks.add(new RankContext(plugin, player, rank));
       }
       return ranks;
-    };
-    lastMinuteContext.put("ranks", lastMinute);
+    });
     lastMinuteContext.put("player", HumanEntity::getName);
   }
 

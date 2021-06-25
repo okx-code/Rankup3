@@ -10,12 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import org.junit.After;
-import org.junit.Before;
-import sh.okx.rankup.economy.TestEconomyProvider;
+import org.junit.jupiter.api.BeforeEach;
+import sh.okx.rankup.providers.TestEconomyProvider;
 import sh.okx.rankup.hook.GroupProvider;
-import sh.okx.rankup.hook.TestGroupProvider;
-import sh.okx.rankup.hook.TestPermissionManager;
+import sh.okx.rankup.providers.TestGroupProvider;
+import sh.okx.rankup.providers.TestPermissionManager;
 
 public abstract class RankupTest {
     private final File testResourceFolder;
@@ -37,7 +36,7 @@ public abstract class RankupTest {
     protected ServerMock server;
     protected RankupPlugin plugin;
 
-    @Before
+    @BeforeEach
     public void setup() {
         System.setProperty("RANKUP_TEST", "true");
 
@@ -77,7 +76,7 @@ public abstract class RankupTest {
         }
     }
 
-    @After
+    @BeforeEach
     public void tearDown() {
         MockBukkit.unmock();
         System.clearProperty("RANKUP_TEST");

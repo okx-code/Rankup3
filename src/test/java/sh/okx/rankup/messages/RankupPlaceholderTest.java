@@ -1,10 +1,10 @@
 package sh.okx.rankup.messages;
 
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
 
 public class RankupPlaceholderTest extends RankupTest {

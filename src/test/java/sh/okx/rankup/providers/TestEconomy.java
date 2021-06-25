@@ -1,10 +1,11 @@
-package sh.okx.rankup.economy;
+package sh.okx.rankup.providers;
 
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import sh.okx.rankup.economy.Economy;
 
 public class TestEconomy implements Economy {
     private final Map<UUID, Double> balances = new HashMap<>();

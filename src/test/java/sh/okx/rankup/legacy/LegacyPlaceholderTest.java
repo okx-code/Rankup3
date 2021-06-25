@@ -2,7 +2,7 @@ package sh.okx.rankup.legacy;
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import java.text.DecimalFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
 
 public class LegacyPlaceholderTest extends RankupTest {

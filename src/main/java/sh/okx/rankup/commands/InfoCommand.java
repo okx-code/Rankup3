@@ -201,7 +201,7 @@ public class InfoCommand implements TabExecutor {
           element = next;
         }
         return true;
-      } else if (args[0].equalsIgnoreCase("playtime") && (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime.set"))) {
+      } else if (args[0].equalsIgnoreCase("playtime") && (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime"))) {
         Statistic playOneTick;
         try {
           playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
@@ -241,7 +241,7 @@ public class InfoCommand implements TabExecutor {
             }
             player.sendMessage(ChatColor.LIGHT_PURPLE + who + " played for " + minutes + " minutes.");
             return true;
-          } else if (args[1].equalsIgnoreCase("set") && sender.hasPermission("rankup.playtime.set")) {
+          } else if (args[1].equalsIgnoreCase("set") && sender.hasPermission("rankup.playtime")) {
             if (args.length < 4) {
               sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>" + ChatColor.YELLOW + " Update the playtime statistic for a player");
               return true;
@@ -264,7 +264,7 @@ public class InfoCommand implements TabExecutor {
             player.setStatistic(playOneTick, minutes * 20 * 60);
             player.sendMessage(ChatColor.LIGHT_PURPLE + "Updated playtime for " + player.getName() + " to " + minutes + " minutes");
             return true;
-          } else if (args[1].equalsIgnoreCase("add") && sender.hasPermission("rankup.playtime.set")) {
+          } else if (args[1].equalsIgnoreCase("add") && sender.hasPermission("rankup.playtime")) {
             if (args.length < 4) {
               sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " add <player> <minutes>" + ChatColor.YELLOW + " Increase the playtime statistic for a player");
               return true;
@@ -304,7 +304,7 @@ public class InfoCommand implements TabExecutor {
               ChatColor.GREEN + "/" + label + " " + args[0] + " get [player] " + ChatColor.YELLOW
                   + " Get amount of minutes played");
         }
-        if (sender.hasPermission("rankup.playtime.set")) {
+        if (sender.hasPermission("rankup.playtime")) {
           sender.sendMessage(
               ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>"
                   + ChatColor.YELLOW + " Update the playtime statistic for a player");
@@ -356,7 +356,7 @@ public class InfoCommand implements TabExecutor {
         list.add("forceprestige");
         list.add("rankdown");
       }
-      if (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime.set")) {
+      if (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime")) {
         list.add("playtime");
       }
       return StringUtil.copyPartialMatches(args[0], list, new ArrayList<>());
@@ -372,7 +372,7 @@ public class InfoCommand implements TabExecutor {
         if (sender.hasPermission("rankup.playtime.get")) {
           options.add("get");
         }
-        if (sender.hasPermission("rankup.playtime.set")) {
+        if (sender.hasPermission("rankup.playtime")) {
           options.add("set");
           options.add("add");
         }

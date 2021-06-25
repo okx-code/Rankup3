@@ -1,10 +1,11 @@
 package sh.okx.rankup;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
