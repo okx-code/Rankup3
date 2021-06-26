@@ -22,12 +22,8 @@ public abstract class ProgressiveRequirement extends Requirement {
   }
 
   @Override
-  public final double getRemaining(Player player) {
-    return getRemaining(player, 1);
-  }
-
-  public double getRemaining(Player player, double multiplier) {
-    return Math.max(0, (multiplier * getTotal(player)) - getProgress(player));
+  public double getRemaining(Player player) {
+    return Math.max(0, getTotal(player) - getProgress(player));
   }
 
   @Override

@@ -1,5 +1,7 @@
 package sh.okx.rankup.commands;
 
+import java.util.Map;
+import java.util.WeakHashMap;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,9 +15,6 @@ import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
-
-import java.util.Map;
-import java.util.WeakHashMap;
 
 @RequiredArgsConstructor
 public class RankupCommand implements CommandExecutor {
@@ -49,7 +48,7 @@ public class RankupCommand implements CommandExecutor {
     // clicking on the gui cannot confirm a rankup
     if (confirmationType.equals("text") && confirming.containsKey(player) && !(args.length > 0 && args[0].equalsIgnoreCase("gui"))) {
       long time = System.currentTimeMillis() - confirming.remove(player);
-      if (time < config.getInt("text.timeout") * 1000) {
+      if (time < config.getInt("text.timeout") * 1000L) {
         plugin.getHelper().rankup(player);
         return true;
       }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'sh.okx'
-version '3.12.1'
+version '3.12.2'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -32,8 +32,9 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher:1.7.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testImplementation 'com.github.MockBukkit:MockBukkit:04889261630cd6f5aaebd86a576bbcd12c442ea7'
-    testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
-    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+
+    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
     compileOnly 'org.jetbrains:annotations:16.0.2'
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
