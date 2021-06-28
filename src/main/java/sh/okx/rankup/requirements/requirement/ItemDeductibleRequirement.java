@@ -2,6 +2,7 @@ package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.DeductibleRequirement;
 import sh.okx.rankup.requirements.Requirement;
@@ -20,7 +21,13 @@ public class ItemDeductibleRequirement extends ItemRequirement implements Deduct
   public void apply(Player player, double multiplier) {
     int count = (int) (getTotal(player) * multiplier);
 
-    ItemStack[] contents = player.getInventory().getStorageContents();
+    PlayerInventory inventory = player.getInventory();
+    ItemStack[] contents;
+    if (ItemRequirement.USE_STORAGE_CONTENTS) {
+      contents = inventory.getStorageContents();
+    } else {
+      contents = inventory.getContents();
+    }
     for (int i = 0; i < contents.length && count > 0; i++) {
       ItemStack item = contents[i];
 
@@ -35,7 +42,11 @@ public class ItemDeductibleRequirement extends ItemRequirement implements Deduct
       }
     }
 
-    player.getInventory().setStorageContents(contents);
+    if (ItemRequirement.USE_STORAGE_CONTENTS) {
+      inventory.setStorageContents(contents);
+    } else {
+      inventory.setContents(contents);
+    }
 
     if (count > 0) {
       throw new IllegalStateException("REPORT THIS ERROR TO THE DEV - COULD NOT DEDUCT ALL ITEMS");
