@@ -112,6 +112,7 @@ public class RankupHelper {
             .replaceRank(rank)
             .replaceKey(Variable.SECONDS.toString(), cooldownSeconds)
             .replaceKey(Variable.SECONDS_LEFT.toString(), secondsLeft)
+            .replaceKey(Variable.SECONDS_LEFT.toString().toLowerCase(), secondsLeft)
             .send(player);
         return true;
       }
