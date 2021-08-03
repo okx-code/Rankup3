@@ -7,6 +7,8 @@ import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
 
+import java.text.DecimalFormat;
+
 public class RankupPlaceholderTest extends RankupTest {
   public RankupPlaceholderTest() {
     super("placeholder");
@@ -42,6 +44,7 @@ public class RankupPlaceholderTest extends RankupTest {
     groupProvider.addGroup(player.getUniqueId(), "A");
     plugin.getHelper().rankup(player);
 
-    player.assertSaid("0.1 10");
+    DecimalFormat decimal = new DecimalFormat("#.#");
+    player.assertSaid(decimal.format(0.1) + " 10");
   }
 }
