@@ -12,15 +12,17 @@ import sh.okx.rankup.requirements.Requirement;
 import java.util.Arrays;
 
 public class ItemRequirement extends ProgressiveRequirement {
-  public static boolean USE_STORAGE_CONTENTS;
+  public static final boolean USE_STORAGE_CONTENTS;
 
   static {
+    boolean getStorageContentsMethodExists;
     try {
       Inventory.class.getMethod("getStorageContents");
-      USE_STORAGE_CONTENTS = true;
+      getStorageContentsMethodExists = true;
     } catch (NoSuchMethodException e) {
-      USE_STORAGE_CONTENTS = false;
+      getStorageContentsMethodExists = false;
     }
+    USE_STORAGE_CONTENTS = getStorageContentsMethodExists;
   }
 
   public ItemRequirement(RankupPlugin plugin, String name) {
