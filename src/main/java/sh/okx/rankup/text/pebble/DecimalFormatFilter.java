@@ -28,7 +28,7 @@ public class DecimalFormatFilter implements Filter {
       return null;
     }
     if (!(input instanceof Number)) {
-      throw new PebbleException(null, "The input for the 'DecimalFormatFilter' filter has to be a number.",
+      throw new PebbleException(null, "The input for the 'DecimalFormatFilter' filter has to be a number: " + input,
           lineNumber, self.getName());
     }
 
