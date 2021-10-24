@@ -100,6 +100,7 @@ placeholders:
 # set to an empty list to disable
 # for each entry here, it counts as increasing by a factor of 1,000
 # the first represents thousands (1,000) then millions (1,000,000) then billions (1,000,000,000) etc.
+# this is used in the "| shortmoney" filter
 shorten:
 - 'K'
 - 'M'

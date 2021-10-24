@@ -55,7 +55,7 @@ public class RankupExpansion implements Expansion {
             if (parts.length > 3 && parts[3].equalsIgnoreCase("left")) {
                 amount = amount - plugin.getEconomy().getBalance(player);
             }
-            return plugin.formatMoney(Math.max(0, amount));
+            return plugin.getPlaceholders().formatMoney(Math.max(0, amount));
         } else if (params.startsWith("status_")) {
             String[] parts = params.split("_",  2);
             Rank statusRank = rankups.getRankByName(parts[1]);
@@ -116,7 +116,7 @@ public class RankupExpansion implements Expansion {
                 return String.valueOf(simplify(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0)));
             case "prestige_money_formatted":
                 requirePrestiging(prestiges, params);
-                return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
+                return plugin.getPlaceholders().formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
             case "current_rank":
                 return orElse(rank, Rank::getRank, getPlaceholder("not-in-ladder"));
             case "current_rank_name":
@@ -136,11 +136,11 @@ public class RankupExpansion implements Expansion {
             case "money":
                 return String.valueOf(getMoney(player, rank));
             case "money_formatted":
-                return plugin.formatMoney(getMoney(player, rank).doubleValue());
+                return placeholders.formatMoney(getMoney(player, rank).doubleValue());
             case "money_left":
                 return String.valueOf(Math.max(0, orElse(rank, r -> simplify(r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player)), 0).doubleValue()));
             case "money_left_formatted":
-                return plugin.formatMoney(Math.max(0D, orElse(rank, r -> r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player), 0D)));
+                return placeholders.formatMoney(Math.max(0D, orElse(rank, r -> r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player), 0D)));
             case "percent_left":
                 return String.valueOf(Math.max(0D, orElse(rank, r -> (1 - (plugin.getEconomy().getBalance(player) / r.getRequirement(player, "money").getValueDouble())) * 100, 0).doubleValue()));
             case "percent_left_formatted":

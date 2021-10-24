@@ -7,17 +7,14 @@ import java.util.Map;
 import java.util.function.Function;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.MessageBuilder;
 import sh.okx.rankup.messages.NullMessageBuilder;
-import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.text.TextProcessor;
 import sh.okx.rankup.text.TextProcessorBuilder;
-import sh.okx.rankup.text.pebble.PebbleOptions;
 
 public class PebbleMessageBuilder implements MessageBuilder {
 
@@ -40,7 +37,6 @@ public class PebbleMessageBuilder implements MessageBuilder {
       }
       return ranks;
     });
-    lastMinuteContext.put("player", HumanEntity::getName);
   }
 
   @Override
@@ -57,7 +53,9 @@ public class PebbleMessageBuilder implements MessageBuilder {
 
   @Override
   public PebbleMessageBuilder replaceRank(Rank rank) {
-    lastMinuteContext.put("next", player -> new RankContext(plugin, player, rank));
+    Function<Player, Object> fun = player -> new RankContext(plugin, player, rank);
+    context.put("next", fun.apply(null)); // for console
+    lastMinuteContext.put("next", fun);
     return this;
   }
 
@@ -69,7 +67,15 @@ public class PebbleMessageBuilder implements MessageBuilder {
     } else {
       object = player -> new RankContext(plugin, player, rank);
     }
+    context.put("rank", object.apply(null)); // for console
     lastMinuteContext.put("rank", object);
+    return this;
+  }
+
+  @Override
+  public MessageBuilder replaceSeconds(long seconds, long secondsLeft) {
+    context.put("seconds", seconds);
+    context.put("seconds_left", secondsLeft);
     return this;
   }
 
@@ -102,11 +108,10 @@ public class PebbleMessageBuilder implements MessageBuilder {
 
   private TextProcessor processor(Player player) {
     Map<String, Object> context = getContext(player);
-    PebbleOptions options = getOptions();
     return new TextProcessorBuilder()
-        .legacy(context, options)
+        .legacy(context, plugin.getPlaceholders())
         .papi(player)
-        .pebble(context, options)
+        .pebble(context, plugin.getPlaceholders())
         .papi(player)
         .colour()
         .create();
@@ -116,7 +121,10 @@ public class PebbleMessageBuilder implements MessageBuilder {
     Map<String, Object> context = new HashMap<>(this.context);
     if (player != null) {
       for (Map.Entry<String, Function<Player, Object>> lastMinute : lastMinuteContext.entrySet()) {
-        context.putIfAbsent(lastMinute.getKey(), lastMinute.getValue().apply(player));
+        context.put(lastMinute.getKey(), lastMinute.getValue().apply(player));
+      }
+      if (!context.containsKey("player")) {
+        context.put("player", player.getName());
       }
     }
     return context;
@@ -124,17 +132,11 @@ public class PebbleMessageBuilder implements MessageBuilder {
 
   @Override
   public MessageBuilder failIfEmpty() {
-    if (message.isEmpty()) {
-      return new NullMessageBuilder();
-    } else {
-      return this;
-    }
+    return failIf(message.isEmpty());
   }
 
-  private PebbleOptions getOptions() {
-    Placeholders placeholders = plugin.getPlaceholders();
-    return new PebbleOptions(placeholders.getMoneyFormat(),
-        placeholders.getPercentFormat(),
-        placeholders.getSimpleFormat());
+  @Override
+  public MessageBuilder failIf(boolean b) {
+    return b ? new NullMessageBuilder() : this;
   }
 }

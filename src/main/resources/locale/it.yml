@@ -113,4 +113,3 @@ prestige:
 
 not-high-enough: "&cNon puoi effettuare un prestige al tuo rank!"
 not-in-ladder: "&cNon riusciamo a trovare nessun avanzamento di rank per il tuo gruppo. Scrivi /ranks per ottenere una lista degli avanzamenti disponibili."
-invalid-rankup: "&cRankup invalido definito nel file di configurazione, controlla la console."

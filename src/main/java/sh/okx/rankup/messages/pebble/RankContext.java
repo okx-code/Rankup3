@@ -28,11 +28,15 @@ public class RankContext {
   }
 
   public RequirementContext getRequirement(String requirement) {
-    return new RequirementContext(player, rank.getRequirement(player, requirement));
+    Requirement context = rank.getRequirement(player, requirement);
+    if (context == null) {
+      throw new InvalidRequirementException(requirement, rank);
+    }
+    return new RequirementContext(player, context);
   }
 
   public RequirementContext getRequirement(String requirement, String sub) {
-    return new RequirementContext(player, rank.getRequirement(player, requirement + "#" + sub));
+    return getRequirement(requirement + "#" + sub);
   }
 
   public RequirementContext getReq(String requirement) {

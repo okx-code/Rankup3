@@ -1,6 +1,9 @@
 package sh.okx.rankup;
 
+import com.electronwill.nightconfig.toml.TomlFormat;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +83,9 @@ import sh.okx.rankup.requirements.requirement.towny.TownyResidentRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
+import sh.okx.rankup.serialization.RankSerialized;
+import sh.okx.rankup.serialization.ShadowDeserializer;
+import sh.okx.rankup.serialization.YamlDeserializer;
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
 
@@ -315,7 +321,7 @@ public class RankupPlugin extends JavaPlugin {
         prestiges = null;
       }
 
-      rankups = new Rankups(this, loadConfig("rankups.yml"));
+      rankups = new Rankups(this, loadRankupConfig("rankups"));
       // check rankups are not in an infinite loop
 //      rankups.getOrderedList();
 
@@ -344,6 +350,21 @@ public class RankupPlugin extends JavaPlugin {
     if (!file.exists()) {
       saveResource(name, false);
     }
+  }
+
+  private List<RankSerialized> loadRankupConfig(String name) {
+    File ymlFile = new File(getDataFolder(), name + ".yml");
+    File tomlFile = new File(getDataFolder(), name + ".toml");
+    if (tomlFile.exists()) {
+      try {
+        return ShadowDeserializer.deserialize(TomlFormat.instance().createParser().parse(new FileReader(tomlFile)));
+      } catch (FileNotFoundException ignored) {
+      }
+    }
+    if (!ymlFile.exists()) {
+      saveResource(ymlFile.getName(), false);
+    }
+    return YamlDeserializer.deserialize(YamlConfiguration.loadConfiguration(ymlFile));
   }
 
   private FileConfiguration loadConfig(String name) {
@@ -416,22 +437,6 @@ public class RankupPlugin extends JavaPlugin {
   }
   private void setupEconomy() {
     economy = economyProvider.getEconomy();
-  }
-
-  public String formatMoney(double money) {
-    List<String> shortened = config.getStringList("shorten");
-    String suffix = "";
-
-    for (int i = shortened.size(); i > 0; i--) {
-      double value = Math.pow(10, 3 * i);
-      if (money >= value) {
-        money /= value;
-        suffix = shortened.get(i - 1);
-        break;
-      }
-    }
-
-    return placeholders.getMoneyFormat().format(money) + suffix;
   }
 
   public ConfigurationSection getSection(Rank rank, String path) {

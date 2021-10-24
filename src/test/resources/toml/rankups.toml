@@ -1,0 +1,25 @@
+[A]
+rank = "A"
+next = "B"
+requirements = [
+    "money 1500"
+]
+[B]
+rank = "B"
+next = "C"
+requirements = [
+    "money 2500"
+]
+[C]
+rank = "C"
+next = "D"
+requirements = [
+    "money 6000",
+    "xp-level 2"
+]
+[C.rankup]
+    requirements-not-met = "toml"
+    [C.rankup.list]
+        complete = "&7{{rank.rank}} &8\u00bb &7{{next.rank}} t"
+        current = "&c{{rank.rank}} &e\u00bb &c{{next.rank}} o"
+        incomplete = "&r{{rank.rank}} &e\u00bb &r{{next.rank}} m"

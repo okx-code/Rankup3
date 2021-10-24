@@ -116,4 +116,3 @@ prestige:
 
 not-high-enough: "&cJe kan niet prestigen in jouw rang!"
 not-in-ladder: "&cSorry, maar we konden geen rangen vinden voor de group(en) waar jij in zit. Gebruik /ranks om de lijst van rangen te weergeven."
-invalid-rankup: "&cOngeldige rang gedefinieerd in de configuratie, check AUB het bedieningspaneel."

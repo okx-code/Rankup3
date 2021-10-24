@@ -93,6 +93,12 @@ public class StringMessageBuilder implements MessageBuilder {
         .replace(Variable.OLD_RANK_NAME, rank.getDisplayName());
   }
 
+  @Override
+  public MessageBuilder replaceSeconds(long seconds, long secondsLeft) {
+    return replace(Variable.SECONDS, seconds)
+        .replace(Variable.SECONDS_LEFT, secondsLeft);
+  }
+
   public void send(CommandSender sender) {
     String msg = message;
     if (sender instanceof Player && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

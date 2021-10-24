@@ -4,6 +4,7 @@ import lombok.Getter;
 
 public enum Message {
   NOT_IN_LADDER("not-in-ladder"),
+  NOT_HIGH_ENOUGH("not-high-enough"),
   REQUIREMENTS_NOT_MET("rankup.requirements-not-met"),
   NO_RANKUP("rankup.no-rankup"),
   SUCCESS_PUBLIC("rankup.success-public"),
@@ -26,11 +27,10 @@ public enum Message {
   COOLDOWN_SINGULAR("rankup.cooldown.singular"),
   COOLDOWN_PLURAL("rankup.cooldown.plural"),
   MUST_PRESTIGE("rankup.must-prestige"),
-  NOT_HIGH_ENOUGH("not-high-enough"),
   PRESTIGE_SUCCESS_PUBLIC("prestige.success-public"),
   PRESTIGE_SUCCESS_PRIVATE("prestige.success-private"),
   PRESTIGE_CONFIRMATION("prestige.confirmation"),
-  INVALID_RANKUP("invalid-rankup");
+  ;
 
   @Getter
   private final String name;

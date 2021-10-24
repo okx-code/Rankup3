@@ -1,4 +1,4 @@
-﻿# the messages in this section can be customised for each rankup in rankups.yml.
+﻿  money# the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
   requirements-not-met: "&cNo satisfaces los requisitos para seguir al siguiente rango."
   no-rankup: "&eEstás en el último rango."
@@ -116,4 +116,3 @@ prestige:
 
 not-high-enough: "&c¡No puedes prestigiar a tu rango!"
 not-in-ladder: "&cPerdón, pero no hemos podido encontrar rangos en los grupos que perteneces. Usa /ranks para ver los rangos."
-invalid-rankup: "&cRango inválido definido en la configuración, verifica que todo esté correcto y revisa la consola."

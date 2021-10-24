@@ -1,6 +1,6 @@
 # the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
-  requirements-not-met: "&cYou need {{rank.requirement('money').total | simple}} money to rankup."
+  requirements-not-met: "&cYou need {{rank.requirement('money').total | money}} money to rankup."
   no-rankup: "&eYou are at the highest rank."
   # set to an empty string, ie: success-public: ""
   # to hide that message.
@@ -77,7 +77,7 @@ rankup:
     plural: "&cYou must wait {{seconds_left}} more seconds to rankup again."
 # prestige messages can also be customised
 prestige:
-  requirements-not-met: "&cYou need {{rank.requirement('money').total | simple}} money to prestige."
+  requirements-not-met: "&cYou need {{rank.requirement('money').total | money}} money to prestige."
   no-prestige: "&eYou are at the highest prestige."
 
   success-public: "&a{{player}} &ehas prestiged to: &d{{next.rank}}"
@@ -117,4 +117,3 @@ prestige:
 
 not-high-enough: "&cYou cannot prestige at your rank!"
 not-in-ladder: "&cSorry, but we could not find any rankups for the group(s) you are in. Use /ranks to list the rankups."
-invalid-rankup: "&cInvalid rankup defined in config, please check console."

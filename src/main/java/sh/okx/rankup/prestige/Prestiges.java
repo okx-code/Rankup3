@@ -1,13 +1,26 @@
 package sh.okx.rankup.prestige;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.RankList;
-import sh.okx.rankup.RankupPlugin;
 
 public class Prestiges extends RankList<Prestige> {
   public Prestiges(RankupPlugin plugin, FileConfiguration config) {
-    super(plugin, config, section -> Prestige.deserialize(plugin, section));
+    super(plugin, convert(plugin, config));
+  }
+
+  private static List<Prestige> convert(RankupPlugin plugin, FileConfiguration config) {
+    Map<String, Object> values = config.getValues(false);
+    List<Prestige> prestiges = new ArrayList<>(values.size());
+    for (Map.Entry<String, Object> entry : values.entrySet()) {
+      prestiges.add(Prestige.deserialize(plugin, (ConfigurationSection) entry.getValue()));
+    }
+    return prestiges;
   }
 
   @Override

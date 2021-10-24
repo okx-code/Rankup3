@@ -3,14 +3,14 @@ package sh.okx.rankup.text;
 import java.util.Map;
 import java.util.function.Function;
 import sh.okx.rankup.messages.pebble.RankContext;
-import sh.okx.rankup.text.pebble.PebbleOptions;
+import sh.okx.rankup.placeholders.Placeholders;
 
 public class LegacyTextProcessor implements TextProcessor {
 
   private final Map<String, Object> pebbleContext;
-  private final PebbleOptions options;
+  private final Placeholders options;
 
-  public LegacyTextProcessor(Map<String, Object> pebbleContext, PebbleOptions options) {
+  public LegacyTextProcessor(Map<String, Object> pebbleContext, Placeholders options) {
     this.pebbleContext = pebbleContext;
     this.options = options;
   }

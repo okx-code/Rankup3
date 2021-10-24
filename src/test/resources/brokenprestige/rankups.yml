@@ -1,0 +1,10 @@
+Arank:
+  rank: 'A'
+  next: 'B'
+  requirements:
+    - 'money 1000'
+Brank:
+  rank: 'B'
+  next: 'C'
+  requirements:
+    - 'money 2500'

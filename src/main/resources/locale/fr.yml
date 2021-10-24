@@ -101,4 +101,3 @@ prestige:
 
 not-high-enough: "&cVous ne pouvez pas passer de prestige à votre rang !"
 not-in-ladder: "&cDésolé, mais nous n'avons pas trouvé de rang pour le(s) groupe(s) dans lequel(s) vous êtes. Tapez /ranks pour voir la liste des rangs."
-invalid-rankup: "La configuration de Rankup est invalide, veuillez vérifier la console."

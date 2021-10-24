@@ -1,7 +1,7 @@
 #
 # If you are adding your own ranks, make sure to delete the example ranks!
 # Need help setting the plugin up?
-# Read an example: https://github.com/okx-code/Rankup3/wiki/Configuration-Example
+# Read the wiki: https://okx.sh/rankup/Home.html
 # Join the discord server for live support: https://discord.gg/maB4382 (buyers only)
 #
 
@@ -14,7 +14,7 @@ Aexample:
   next: 'B'
   # List of requirements to go to the next rank
   # This example will charge 1000 money to rankup from A to B.
-  # https://github.com/okx-code/Rankup3/wiki/List-of-Requirements
+  # https://okx.sh/rankup/List-of-Requirements.html
   # custom requirements can also be added by other plugins.
   requirements:
     - 'money 1000'

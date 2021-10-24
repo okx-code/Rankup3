@@ -104,4 +104,3 @@ prestige:
 
 not-high-enough: "&cVocê não pode subir de prestígio nesse rank!"
 not-in-ladder: "&cDesculpa, não conseguimos achar nenhum rank para você subir."
-invalid-rankup: "Rankup inválido definido na config, por favor confira o console."

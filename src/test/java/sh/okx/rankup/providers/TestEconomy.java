@@ -12,7 +12,7 @@ public class TestEconomy implements Economy {
 
     @Override
     public double getBalance(Player player) {
-        return balances.get(player.getUniqueId());
+        return balances.getOrDefault(player.getUniqueId(), 0D);
     }
 
     @Override

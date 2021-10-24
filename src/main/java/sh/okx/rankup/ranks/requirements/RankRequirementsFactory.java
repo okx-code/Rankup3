@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
@@ -17,6 +18,22 @@ public class RankRequirementsFactory {
       return getPrestigeListRequirements(plugin, section.getConfigurationSection(REQUIREMENTS));
     } else {
       return getListRequirements(plugin, getRequirementStrings(section, REQUIREMENTS));
+    }
+  }
+
+  public static RankRequirements getRequirements(RankupPlugin plugin, List<String> requirements,
+      Map<String, List<String>> prestigeRequirements) {
+    if (prestigeRequirements != null) {
+      ConfigurationSection section = new MemoryConfiguration();
+      for (Map.Entry<String, List<String>> entry : prestigeRequirements.entrySet()) {
+        section.set(entry.getKey(), entry.getValue());
+      }
+      return getPrestigeListRequirements(plugin, section);
+    } else if (requirements != null) {
+      return getListRequirements(plugin, requirements);
+    } else {
+//      throw new IllegalArgumentException("No requirements set.");
+      return null;
     }
   }
 

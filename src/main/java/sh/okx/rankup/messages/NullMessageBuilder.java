@@ -29,6 +29,11 @@ public class NullMessageBuilder implements MessageBuilder {
   }
 
   @Override
+  public MessageBuilder replaceSeconds(long seconds, long secondsLeft) {
+    return null;
+  }
+
+  @Override
   public void send(CommandSender sender) {
 
   }
@@ -45,6 +50,11 @@ public class NullMessageBuilder implements MessageBuilder {
 
   @Override
   public MessageBuilder failIfEmpty() {
-    return null;
+    return this;
+  }
+
+  @Override
+  public MessageBuilder failIf(boolean b) {
+    return this;
   }
 }

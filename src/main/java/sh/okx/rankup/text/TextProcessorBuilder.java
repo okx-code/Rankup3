@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-import sh.okx.rankup.text.pebble.PebbleOptions;
+import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.text.pebble.PebbleTextProcessor;
 
 public class TextProcessorBuilder {
@@ -17,7 +17,7 @@ public class TextProcessorBuilder {
     return this;
   }
 
-  public TextProcessorBuilder pebble(Map<String, Object> context, PebbleOptions options) {
+  public TextProcessorBuilder pebble(Map<String, Object> context, Placeholders options) {
     processors.add(new PebbleTextProcessor(context, options));
     return this;
   }
@@ -27,7 +27,7 @@ public class TextProcessorBuilder {
     return this;
   }
 
-  public TextProcessorBuilder legacy(Map<String, Object> context, PebbleOptions options) {
+  public TextProcessorBuilder legacy(Map<String, Object> context, Placeholders options) {
     processors.add(new LegacyTextProcessor(context, options));
     return this;
   }

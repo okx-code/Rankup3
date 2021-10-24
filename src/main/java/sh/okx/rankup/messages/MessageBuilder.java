@@ -9,6 +9,7 @@ public interface MessageBuilder {
   MessageBuilder replacePlayer(CommandSender sender);
   MessageBuilder replaceRank(Rank rank);
   MessageBuilder replaceOldRank(Rank rank);
+  MessageBuilder replaceSeconds(long seconds, long secondsLeft);
 
   void send(CommandSender sender);
   void broadcast();
@@ -16,13 +17,7 @@ public interface MessageBuilder {
   String toString();
 
   MessageBuilder failIfEmpty();
-  default MessageBuilder failIf(boolean b) {
-    if (b) {
-      return new NullMessageBuilder();
-    } else {
-      return this;
-    }
-  }
+  MessageBuilder failIf(boolean b);
 
   default String toString(Player player) {
     return toString();

@@ -10,7 +10,6 @@ import sh.okx.rankup.events.PlayerPrestigeEvent;
 import sh.okx.rankup.events.PlayerRankupEvent;
 import sh.okx.rankup.hook.GroupProvider;
 import sh.okx.rankup.messages.Message;
-import sh.okx.rankup.messages.Variable;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
@@ -110,9 +109,7 @@ public class RankupHelper {
             .failIfEmpty()
             .replacePlayer(player)
             .replaceRank(rank)
-            .replaceKey(Variable.SECONDS.toString(), cooldownSeconds)
-            .replaceKey(Variable.SECONDS_LEFT.toString(), secondsLeft)
-            .replaceKey(Variable.SECONDS_LEFT.toString().toLowerCase(), secondsLeft)
+            .replaceSeconds(cooldownSeconds, secondsLeft)
             .send(player);
         return true;
       }
@@ -165,9 +162,14 @@ public class RankupHelper {
     Rank rank = rankElement.getRank();
     if (!rankElement.hasNext()) {
       Prestiges prestiges = plugin.getPrestiges();
-      plugin.getMessage(
-          prestiges == null || !prestiges.getByPlayer(player).hasNext() ? Message.NO_RANKUP
-              : Message.MUST_PRESTIGE)
+      Message pMessage = Message.NO_RANKUP;
+      if (prestiges != null) {
+        RankElement<Prestige> byPlayer = prestiges.getByPlayer(player);
+        if (byPlayer != null && byPlayer.hasNext()) {
+          pMessage = Message.MUST_PRESTIGE;
+        }
+      }
+      plugin.getMessage(pMessage)
           .failIf(!message)
           .replacePlayer(player)
           .replaceRank(rankups.getTree().last().getRank())
@@ -210,8 +212,8 @@ public class RankupHelper {
   public boolean checkPrestige(Player player, boolean message) {
     Prestiges prestiges = plugin.getPrestiges();
     RankElement<Prestige> prestigeElement = prestiges.getByPlayer(player);
-    if (prestigeElement == null || !prestigeElement.getRank()
-        .isEligible(player)) { // check if in ladder
+    if (prestigeElement == null
+        || !prestigeElement.getRank().isEligible(player)) { // check if in ladder
       plugin.getMessage(Message.NOT_HIGH_ENOUGH)
           .failIf(!message)
           .replacePlayer(player)
