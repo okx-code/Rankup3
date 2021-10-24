@@ -74,7 +74,7 @@ text:
   timeout: 10
 
 # placeholders:
-# https://github.com/okx-code/Rankup3/wiki/PAPI-Placeholders
+# https://okx.sh/rankup/Placeholders.html
 placeholders:
   # format for money. for more information, see
   # https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
