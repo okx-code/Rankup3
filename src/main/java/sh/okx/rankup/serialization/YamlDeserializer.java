@@ -43,7 +43,9 @@ public class YamlDeserializer {
         Set<String> rankup = rankupSection.getKeys(true);
         messages = new HashMap<>(rankup.size());
         for (String key : rankup) {
-          messages.put(MemorySection.createPath(rankupSection, key, section), rankupSection.getString(key));
+          if (!rankupSection.isConfigurationSection(key)) {
+            messages.put(MemorySection.createPath(rankupSection, key, section), rankupSection.getString(key));
+          }
         }
       } else {
         messages = Collections.emptyMap();

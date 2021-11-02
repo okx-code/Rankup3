@@ -35,9 +35,9 @@ public class RanksGui {
         ConfigurationSection basePath = plugin.getMessages().getConfigurationSection("rankup.ranksgui");
 
         String title = get(ConfigurationSection::getString, "title", playerPath, basePath, "Ranks");
-        int rows = get(ConfigurationSection::getInt, "rows", playerPath, basePath, 3);
-        int offset = get(ConfigurationSection::getInt, "offset", playerPath, basePath, 10);
-        int width = get(ConfigurationSection::getInt, "width", playerPath, basePath, 7);
+        int rows = get(this::getInt, "rows", playerPath, basePath, 3);
+        int offset = get(this::getInt, "offset", playerPath, basePath, 10);
+        int width = get(this::getInt, "width", playerPath, basePath, 7);
 
         inventory = Bukkit.createInventory(null, rows * 9, Colour.translate(title));
 
@@ -85,6 +85,19 @@ public class RanksGui {
         }
 
         player.openInventory(inventory);
+    }
+
+    private Integer getInt(ConfigurationSection section, String key) {
+        String string = section.getString(key);
+        if (string == null) {
+            return null;
+        } else {
+            try {
+                return Integer.parseInt(string);
+            } catch (IllegalArgumentException ex) {
+                return null;
+            }
+        }
     }
 
     private <T> T get(BiFunction<ConfigurationSection, String, T> fun, String path, ConfigurationSection primary, ConfigurationSection secondary, T def) {

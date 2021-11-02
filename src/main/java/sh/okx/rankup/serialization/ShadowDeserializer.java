@@ -57,10 +57,12 @@ public class ShadowDeserializer {
   private static void updateMap(Map<String, String> map, UnmodifiableConfig config, String prefix) {
     for (Entry message : config.entrySet()) {
       Object value = message.getValue();
-      if (value instanceof String) {
-        map.put(prefix + message.getKey(), (String) value);
-      } else if (value instanceof UnmodifiableConfig) {
-        updateMap(map, (UnmodifiableConfig) value, prefix + message.getKey() + ".");
+      if (value != null) {
+        if (value instanceof UnmodifiableConfig) {
+          updateMap(map, (UnmodifiableConfig) value, prefix + message.getKey() + ".");
+        } else {
+          map.put(prefix + message.getKey(), String.valueOf(value));
+        }
       }
     }
   }
