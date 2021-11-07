@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import sh.okx.rankup.providers.TestEconomyProvider;
 import sh.okx.rankup.hook.GroupProvider;
@@ -76,7 +77,7 @@ public abstract class RankupTest {
         }
     }
 
-    @BeforeEach
+    @AfterEach
     public void tearDown() {
         MockBukkit.unmock();
         System.clearProperty("RANKUP_TEST");

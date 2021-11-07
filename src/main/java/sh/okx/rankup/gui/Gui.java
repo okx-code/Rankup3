@@ -52,7 +52,8 @@ public class Gui implements InventoryHolder {
       return null;
     }
 
-    ItemStack[] items = new ItemStack[config.getInt("rows", 1) * 9];
+    Integer rows = Gui.getInt(config, "rows");
+    ItemStack[] items = new ItemStack[(rows == null ? 1 : rows) * 9];
 
     ItemStack fill = getItem(plugin, plugin.getSection(oldRank, basePath + ".fill"), player,
         oldRank, rank);
@@ -163,6 +164,19 @@ public class Gui implements InventoryHolder {
         for (int i = Integer.parseInt(parts[0]); i <= Integer.parseInt(parts[1]); i++) {
           items[i] = item;
         }
+      }
+    }
+  }
+
+  public static Integer getInt(ConfigurationSection section, String key) {
+    String string = section.getString(key);
+    if (string == null) {
+      return null;
+    } else {
+      try {
+        return Integer.parseInt(string);
+      } catch (IllegalArgumentException ex) {
+        return null;
       }
     }
   }
