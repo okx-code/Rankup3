@@ -13,7 +13,7 @@ jobs:
           java-version: 11
           distribution: 'adopt'
       - name: Gradle Test
-        run: ./gradlew test
+        run: ./gradlew test --no-daemon
       - name: Upload Tests
         uses: easingthemes/ssh-deploy@v2
         env:
