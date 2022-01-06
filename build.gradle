@@ -8,8 +8,9 @@ plugins {
 
 pitest {
     junit5PluginVersion = '0.15'
-    excludedClasses = ["Metrics.java"]
-    verbose = true
+    excludedClasses = ["sh.okx.rankup.Metrics*"]
+    timestampedReports = false
+    threads = 3
 }
 
 group 'sh.okx'
