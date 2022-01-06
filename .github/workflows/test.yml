@@ -1,8 +1,11 @@
 name: Test
-on: [push]
+on:
+  push:
+    paths:
+      - 'src/**'
 
 jobs:
-  test:
+  pitest:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:

@@ -10,7 +10,7 @@ pitest {
     junit5PluginVersion = '0.15'
     excludedClasses = ["sh.okx.rankup.Metrics*"]
     timestampedReports = false
-    threads = 3
+    threads = 2
 }
 
 group 'sh.okx'
