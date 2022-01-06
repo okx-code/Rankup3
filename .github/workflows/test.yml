@@ -10,8 +10,8 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: 17
-          distribution: 'temurin'
+          java-version: 11
+          distribution: 'adopt'
       - name: Gradle Test
         run: ./gradlew test
       - name: Upload Tests
@@ -19,7 +19,7 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-rvzt --delete"
-          SOURCE: "build/reports/tests"
+          SOURCE: "build/reports/tests/test/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
