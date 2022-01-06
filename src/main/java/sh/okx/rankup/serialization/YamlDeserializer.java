@@ -25,9 +25,9 @@ public class YamlDeserializer {
       Map<String, List<String>> prestigeRequirements;
       if (section.isConfigurationSection("requirements")) {
         requirements = null;
-        Set<String> keys = section.getKeys(false);
-        prestigeRequirements = new HashMap<>(keys.size());
         ConfigurationSection requirementsSection = section.getConfigurationSection("requirements");
+        Set<String> keys = requirementsSection.getKeys(false);
+        prestigeRequirements = new HashMap<>(keys.size());
         for (String key : keys) {
           prestigeRequirements.put(key, requirementsSection.getStringList(key));
         }

@@ -7,13 +7,13 @@ plugins {
 }
 
 pitest {
-    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
     junit5PluginVersion = '0.15'
     excludedClasses = ["Metrics.java"]
+    verbose = true
 }
 
 group 'sh.okx'
-version '3.13.1'
+version '3.13.2'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -45,7 +45,7 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
     compileOnly 'org.jetbrains:annotations:22.0.0'
-    compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
     compileOnly('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }
@@ -53,7 +53,7 @@ dependencies {
     compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    implementation ('me.clip:placeholderapi:2.10.9') {
+    compileOnly ('me.clip:placeholderapi:2.10.9') {
         exclude group: 'org.bstats'
     }
     compileOnly 'com.github.pyvesb:advanced-achievements:6.7.2'
@@ -62,7 +62,9 @@ dependencies {
         exclude group: 'com.sk89q.worldguard'
     }
     compileOnly 'com.github.BenCodez:VotingPlugin:6.0'
-    implementation 'com.github.LlmDl:Towny:25fc18a'
+
+    compileOnly 'com.github.LlmDl:Towny:25fc18a'
+    testImplementation 'com.github.LlmDl:Towny:25fc18a'
 
     implementation ('io.pebbletemplates:pebble:3.1.5') {
         exclude group: 'org.slf4j'

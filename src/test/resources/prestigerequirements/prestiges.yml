@@ -1,0 +1,6 @@
+first:
+  from: 'B'
+  to: 'A'
+  next: 'P1'
+  requirements:
+    - 'money 10000'

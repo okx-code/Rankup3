@@ -1,0 +1,8 @@
+a:
+  rank: 'A'
+  next: 'B'
+  requirements:
+    default:
+      - 'money 100'
+    p1:
+      - 'money 200'
