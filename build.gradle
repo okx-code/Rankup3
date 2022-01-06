@@ -3,6 +3,13 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id "io.freefair.lombok" version "6.0.0-m2"
     id "maven-publish"
+    id 'info.solidsoft.pitest' version '1.7.0'
+}
+
+pitest {
+    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+    junit5PluginVersion = '0.15'
+    excludedClasses = ["Metrics.java"]
 }
 
 group 'sh.okx'
@@ -30,8 +37,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.platform:junit-platform-launcher:1.8.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'com.github.MockBukkit:MockBukkit:04889261630cd6f5aaebd86a576bbcd12c442ea7'
 
     implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
@@ -46,7 +53,7 @@ dependencies {
     compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    compileOnly ('me.clip:placeholderapi:2.10.9') {
+    implementation ('me.clip:placeholderapi:2.10.9') {
         exclude group: 'org.bstats'
     }
     compileOnly 'com.github.pyvesb:advanced-achievements:6.7.2'
@@ -55,7 +62,7 @@ dependencies {
         exclude group: 'com.sk89q.worldguard'
     }
     compileOnly 'com.github.BenCodez:VotingPlugin:6.0'
-    compileOnly 'com.github.LlmDl:Towny:25fc18a'
+    implementation 'com.github.LlmDl:Towny:25fc18a'
 
     implementation ('io.pebbletemplates:pebble:3.1.5') {
         exclude group: 'org.slf4j'
