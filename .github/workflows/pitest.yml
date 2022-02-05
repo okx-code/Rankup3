@@ -1,0 +1,28 @@
+name: PIT test
+on:
+  push:
+    paths:
+      - 'src/**'
+
+jobs:
+  test:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: 'adopt'
+      - name: Gradle Test
+        run: ./gradlew pitest --no-daemon
+      - name: Upload Tests
+        uses: easingthemes/ssh-deploy@v2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-rvzt --delete"
+          SOURCE: "build/reports/pitest/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.PITEST_TARGET }}

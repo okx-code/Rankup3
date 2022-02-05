@@ -1,11 +1,12 @@
 package sh.okx.rankup;
 
+import com.electronwill.nightconfig.toml.TomlFormat;
 import java.io.File;
-import java.text.DecimalFormat;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,8 +38,7 @@ import sh.okx.rankup.hook.PermissionManager;
 import sh.okx.rankup.hook.VaultPermissionManager;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.messages.MessageBuilder;
-import sh.okx.rankup.messages.NullMessageBuilder;
-import sh.okx.rankup.messages.Variable;
+import sh.okx.rankup.messages.pebble.PebbleMessageBuilder;
 import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
@@ -83,12 +83,15 @@ import sh.okx.rankup.requirements.requirement.towny.TownyResidentRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
+import sh.okx.rankup.serialization.RankSerialized;
+import sh.okx.rankup.serialization.ShadowDeserializer;
+import sh.okx.rankup.serialization.YamlDeserializer;
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
 
 public class RankupPlugin extends JavaPlugin {
 
-  public static final int CONFIG_VERSION = 8;
+  public static final int CONFIG_VERSION = 10;
 
   @Getter
   private GroupProvider permissions;
@@ -132,7 +135,7 @@ public class RankupPlugin extends JavaPlugin {
 
     reload(true);
 
-    if (System.getProperty("TEST") == null) {
+    if (System.getProperty("RANKUP_TEST") == null) {
       Metrics metrics = new Metrics(this);
       metrics.addCustomChart(new Metrics.SimplePie("confirmation",
               () -> config.getString("confirmation-type", "unknown")));
@@ -235,6 +238,10 @@ public class RankupPlugin extends JavaPlugin {
     helper = new RankupHelper(this);
   }
 
+  public MessageBuilder newMessageBuilder(String message) {
+    return new PebbleMessageBuilder(this, message);
+  }
+
   public boolean error() {
     return error(null);
   }
@@ -314,7 +321,7 @@ public class RankupPlugin extends JavaPlugin {
         prestiges = null;
       }
 
-      rankups = new Rankups(this, loadConfig("rankups.yml"));
+      rankups = new Rankups(this, loadRankupConfig("rankups"));
       // check rankups are not in an infinite loop
 //      rankups.getOrderedList();
 
@@ -334,6 +341,7 @@ public class RankupPlugin extends JavaPlugin {
     saveLocale("fr");
     saveLocale("it");
     saveLocale("es");
+    saveLocale("nl");
   }
 
   private void saveLocale(String locale) {
@@ -342,6 +350,21 @@ public class RankupPlugin extends JavaPlugin {
     if (!file.exists()) {
       saveResource(name, false);
     }
+  }
+
+  private List<RankSerialized> loadRankupConfig(String name) {
+    File ymlFile = new File(getDataFolder(), name + ".yml");
+    File tomlFile = new File(getDataFolder(), name + ".toml");
+    if (tomlFile.exists()) {
+      try {
+        return ShadowDeserializer.deserialize(TomlFormat.instance().createParser().parse(new FileReader(tomlFile)));
+      } catch (FileNotFoundException ignored) {
+      }
+    }
+    if (!ymlFile.exists()) {
+      saveResource(ymlFile.getName(), false);
+    }
+    return YamlDeserializer.deserialize(YamlConfiguration.loadConfiguration(ymlFile));
   }
 
   private FileConfiguration loadConfig(String name) {
@@ -408,28 +431,12 @@ public class RankupPlugin extends JavaPlugin {
           new TokensRequirement(this, "tokenmanager-tokensh"),
           new TokensDeductibleRequirement(this, "tokenmanager-tokens"));
     }
-    if (Bukkit.getPluginManager().isPluginEnabled("SuperbVotes")) {
+    if (Bukkit.getPluginManager().isPluginEnabled("SuperbVote")) {
       requirements.addRequirements(new SuperbVoteVotesRequirement(this));
     }
   }
   private void setupEconomy() {
     economy = economyProvider.getEconomy();
-  }
-
-  public String formatMoney(double money) {
-    List<String> shortened = config.getStringList("shorten");
-    String suffix = "";
-
-    for (int i = shortened.size(); i > 0; i--) {
-      double value = Math.pow(10, 3 * i);
-      if (money >= value) {
-        money /= value;
-        suffix = shortened.get(i - 1);
-        break;
-      }
-    }
-
-    return placeholders.getMoneyFormat().format(money) + suffix;
   }
 
   public ConfigurationSection getSection(Rank rank, String path) {
@@ -445,94 +452,25 @@ public class RankupPlugin extends JavaPlugin {
     if (messages == null || !messages.isSet(message.getName())) {
       messages = this.messages;
     }
-    return MessageBuilder.of(messages, message);
+    return newMessageBuilder(messages.getString(message.getName()));
   }
 
   public MessageBuilder getMessage(Message message) {
-    return MessageBuilder.of(messages, message);
+    return newMessageBuilder(messages.getString(message.getName()));
   }
 
-  public MessageBuilder replaceMoneyRequirements(MessageBuilder builder, CommandSender sender,
-      Rank rank) {
-    if (builder instanceof NullMessageBuilder || rank == null) {
-      return builder;
-    }
-
-    Requirement money = rank.getRequirement(sender instanceof Player ? (Player) sender : null, "money");
-    if (money != null) {
-      Double amount = null;
-      Double total = null;
-      if (sender instanceof Player && rank.isIn((Player) sender)) {
-        if (economy != null) {
-          amount = money.getRemaining((Player) sender);
-          total = money.getTotal((Player) sender);
-        }
-      } else {
-        amount = money.getValueDouble();
-        total = 0D;
-      }
-      if (amount != null && economy != null) {
-        builder.replace(Variable.MONEY_NEEDED, formatMoney(amount));
-        builder.replace(Variable.MONEY, formatMoney(money.getValueDouble()));
-        builder.replace(Variable.MONEY_DONE, formatMoney(total - amount));
-      }
-    }
-    if (sender instanceof Player) {
-      replaceRequirements(builder, (Player) sender, rank);
-    }
-    return builder;
-  }
-
-  public MessageBuilder replaceRequirements(MessageBuilder builder, Player player, Rank rank) {
-    DecimalFormat simpleFormat = placeholders.getSimpleFormat();
-    DecimalFormat percentFormat = placeholders.getPercentFormat();
-    for (Requirement requirement : rank.getRequirements().getRequirements(player)) {
-      try {
-        replaceRequirements(builder, Variable.AMOUNT, requirement,
-            () -> simpleFormat.format(requirement.getTotal(player)));
-        if (rank.isIn(player)) {
-          replaceRequirements(builder, Variable.AMOUNT_NEEDED, requirement,
-              () -> simpleFormat.format(requirement.getRemaining(player)));
-          replaceRequirements(builder, Variable.PERCENT_LEFT, requirement,
-              () -> percentFormat.format(Math.max(0,
-                  (requirement.getRemaining(player) / requirement.getTotal(player)) * 100)));
-          replaceRequirements(builder, Variable.PERCENT_DONE, requirement,
-              () -> percentFormat.format(Math.min(100,
-                  (1 - (requirement.getRemaining(player) / requirement.getTotal(player))) * 100)));
-          replaceRequirements(builder, Variable.AMOUNT_DONE, requirement,
-              () -> simpleFormat
-                  .format(requirement.getTotal(player) - requirement.getRemaining(player)));
-        }
-      } catch (NumberFormatException ignored) {
-      }
-    }
-    return builder;
-  }
-
-  private void replaceRequirements(MessageBuilder builder, Variable variable, Requirement requirement, Supplier<Object> value) {
-    try {
-      builder.replace(variable + " " + requirement.getFullName(), value.get());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, Rank rankName) {
-    String oldRankName;
-    String oldRankDisplayName;
+  public MessageBuilder getMessage(CommandSender player, Message message, Rank oldRank, Rank rank) {
+    Rank actualOldRank;
     if (oldRank instanceof Prestige && oldRank.getRank() == null) {
-      oldRankName = ((Prestige) oldRank).getFrom();
-      oldRankDisplayName = rankups.getTree().last().getRank().getDisplayName();
+      actualOldRank = rankups.getByName(((Prestige) oldRank).getFrom()).getRank();
     } else {
-      oldRankName = oldRank.getRank();
-      oldRankDisplayName = oldRank.getDisplayName();
+      actualOldRank = oldRank;
     }
 
-    return replaceMoneyRequirements(getMessage(oldRank, message)
-        .replaceRanks(player, rankName)
-        .replace(Variable.OLD_RANK, oldRankName)
-        .replace(Variable.OLD_RANK_NAME, oldRankDisplayName), player, oldRank)
-        .replaceFromTo(oldRank);
+    return getMessage(oldRank, message)
+        .replacePlayer(player)
+        .replaceRank(rank)
+        .replaceOldRank(actualOldRank);
   }
 
   public void sendHeaderFooter(CommandSender sender, Rank rank, Message type) {
@@ -540,12 +478,12 @@ public class RankupPlugin extends JavaPlugin {
     if (rank == null) {
       builder = getMessage(type)
           .failIfEmpty()
-          .replace(Variable.PLAYER, sender.getName());
+          .replacePlayer(sender);
     } else {
       builder = getMessage(rank, type)
           .failIfEmpty()
-          .replaceRanks(sender, rank)
-          .replaceFromTo(rank);
+          .replacePlayer(sender)
+          .replaceRank(rank);
     }
     builder.send(sender);
   }

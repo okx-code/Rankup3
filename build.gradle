@@ -1,10 +1,25 @@
 plugins {
     id 'java'
-    id "io.freefair.lombok" version "5.1.0"
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id "io.freefair.lombok" version "6.0.0-m2"
+    id "maven-publish"
+    id 'info.solidsoft.pitest' version '1.7.0'
+}
+
+pitest {
+    junit5PluginVersion = '0.15'
+    excludedClasses = ["sh.okx.rankup.Metrics*"]
+    timestampedReports = false
+    threads = 2
 }
 
 group 'sh.okx'
-version '3.11.3'
+version '3.13.2'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenCentral()
@@ -23,34 +38,56 @@ repositories {
 }
 
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'com.github.seeseemelk:MockBukkit-v1.15:0.3.0'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'com.github.MockBukkit:MockBukkit:04889261630cd6f5aaebd86a576bbcd12c442ea7'
 
-    compileOnly 'org.jetbrains:annotations:16.0.2'
-    implementation 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT'
-    implementation('com.github.Realizedd:TokenManager:3.2.4') {
+    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+
+    compileOnly 'org.jetbrains:annotations:22.0.0'
+    compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
+    compileOnly('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }
 
-    implementation('com.github.MilkBowl:VaultAPI:1.7') {
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    implementation ('me.clip:placeholderapi:2.10.9') {
+    compileOnly ('me.clip:placeholderapi:2.10.9') {
         exclude group: 'org.bstats'
     }
-    implementation 'com.github.pyvesb:advanced-achievements:6.7.2'
-    implementation 'com.github.astei:Superbvote:700fca43659b438cb9bb36c218a7646d2f2ef315'
-    implementation('com.github.mcMMO-Dev:mcMMO:601297') {
+    compileOnly 'com.github.pyvesb:advanced-achievements:6.7.2'
+    compileOnly 'com.github.astei:Superbvote:700fca43659b438cb9bb36c218a7646d2f2ef315'
+    compileOnly('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
-    implementation 'com.github.BenCodez:VotingPlugin:6.0'
-    implementation 'com.github.LlmDl:Towny:25fc18a'
+    compileOnly 'com.github.BenCodez:VotingPlugin:6.8.1'
+
+    compileOnly 'com.github.LlmDl:Towny:25fc18a'
+    testImplementation 'com.github.LlmDl:Towny:25fc18a'
+
+    implementation ('io.pebbletemplates:pebble:3.1.5') {
+        exclude group: 'org.slf4j'
+    }
+    implementation 'com.electronwill.night-config:toml:3.6.4'
+}
+
+artifacts {
+    archives shadowJar
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    minimize()
+    relocate 'org.slf4j', 'sh.okx.rankup.export.org.slf4j'
 }
 
 // automatically copy the version to plugin.yml
 processResources {
     // do this again whenever version changes
     inputs.property 'version', project.version
+    duplicatesStrategy = 'include'
 
     // copy plugin.yml and replace version
     from(sourceSets.main.resources.srcDirs) {
@@ -64,8 +101,25 @@ processResources {
     }
 }
 
-task spigot(type: Jar) {
+task spigot(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     from sourceSets.main.runtimeClasspath
     destinationDirectory = file("./spigot/plugins/")
     archiveFileName = "Rankup.jar"
 }
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+

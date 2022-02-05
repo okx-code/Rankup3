@@ -1,18 +1,18 @@
 # Сообщения в этой секции могут быть изменены для каждого повышения уровня в rankups.yml
 rankup:
-  requirements-not-met: "&cВам нужно ещё {MONEY} денег для повышения уровня."
+  requirements-not-met: "&cВам нужно ещё {{rank.requirement('money').total | simple}} денег для повышения уровня."
   no-rankup: "&eУ Вас уже самый высокий ранг."
   # Оставьте это поле пустым, чтобы скрыть сообщение (success-public: '')
-  success-public: "&eРанг игрока &a{PLAYER} &eбыл повышен до: &d{RANK}"
-  success-private: "&aВаш ранг повысился до: &d{RANK}"
+  success-public: "&eРанг игрока &a{{player}} &eбыл повышен до: &d{{next.rank}}"
+  success-private: "&aВаш ранг повысился до: &d{{next.rank}}"
   # Используется как текст подтверждения
   confirmation: |-
-    &eВы уверены, что хотите ранг до &a{RANK}&e?
+    &eВы уверены, что хотите ранг до &a{{next.rank}}&e?
     &eВведите &c/rankup &eещё раз, чтобы подтвердить.
 
   gui:
     rows: 1
-    title: "Повысить до {RANK}"
+    title: "Повысить до {{next.rank}}"
     rankup:
       material: EMERALD_BLOCK
       # index can be separated by spaces to show in multiple groups
@@ -21,7 +21,7 @@ rankup:
       index: 0-3
       name: '&a&lConfirm'
       # lore is optional
-      lore: '&6Rankup to &b{RANK}'
+      lore: '&6Rankup to &b{{next.rank}}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
@@ -37,47 +37,47 @@ rankup:
 
   # Вы можете (вам стоит ;D) переписать это в rankups.yml, чтобы показать специфичные требования для каждого ранга.
   # Тем не менее, если Вы просто используете деньги или не нуждаетесь в смене сообщений для кажого ранга - Вы
-  # можете использовать комбинации из: {MONEY} {MONEY_NEEDED} {PERCENT_DONE <требование>} {PERCENT_LEFT <требование>}
-  # {AMOUNT <требование>} {AMOUNT_NEDDED <требование>}. "{MONEY}" и "{MONEY_NEEDED}" отличаются от
+  # можете использовать комбинации из: {{rank.requirement('money').total | simple}} {MONEY_NEEDED} {PERCENT_DONE <требование>} {PERCENT_LEFT <требование>}
+  # {AMOUNT <требование>} {AMOUNT_NEDDED <требование>}. "{{rank.requirement('money').total | simple}}" и "{MONEY_NEEDED}" отличаются от
   # {AMOUNT сумма} {AMOUNT_NEDDED сумма} тем, что они используют разный формат.
   # Вот пример показа требований только для денег
   # P.S. \xbb - "»" в Unicode.
   #list:
-  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &eза &7${MONEY}"
-  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &eза &a${MONEY} &e{PERCENT_DONE money}%"
-  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &eза &a${MONEY}"
+  #  complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &eза &7${{rank.requirement('money').total | simple}}"
+  #  current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &eза &a${{rank.requirement('money').total | simple}} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &eза &a${{rank.requirement('money').total | simple}}"
   list:
-    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
-    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
-    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
     # Пустая строка выключает заголовок/нижнюю часть
     header: ''
     footer: ''
   # Отправляется игроку, который попытался повысить уровень, когда ещё не прошёл кулдаун (откат/перезарядка)
   cooldown:
-    singular: "&cПожалуйста, подождите {SECONDS_LEFT} сек., чтобы повысить ранг снова."
-    plural: "&cПожалуйста, подождите {SECONDS_LEFT} сек., чтобы повысить ранг снова."
+    singular: "&cПожалуйста, подождите {{seconds_left}} сек., чтобы повысить ранг снова."
+    plural: "&cПожалуйста, подождите {{seconds_left}} сек., чтобы повысить ранг снова."
 # Сообщения престижа тоже могут быть изменены
 prestige:
-  requirements-not-met: "&cВам нужно {MONEY} денг для повышения престижа."
+  requirements-not-met: "&cВам нужно {{rank.requirement('money').total | simple}} денг для повышения престижа."
   no-prestige: "&eУ Вас уже самый высокий уровень престижа."
 
-  success-public: "Престиж игрока &a{PLAYER} &eповышен в: &d{RANK}"
-  success-private: "&aВаш престиж повышен в: &d{RANK}"
+  success-public: "Престиж игрока &a{{player}} &eповышен в: &d{{next.rank}}"
+  success-private: "&aВаш престиж повышен в: &d{{next.rank}}"
 
   confirmation: |-
-    &eВы уверены, что хотите престиж в &a{RANK}&e?
+    &eВы уверены, что хотите престиж в &a{{next.rank}}&e?
     &eВведите &c/prestige &eснова для подтверждения.
-  title: "Повысить престиж в {RANK}"
+  title: "Повысить престиж в {{next.rank}}"
 
   gui:
     rows: 1
-    title: "Prestige to {RANK}"
+    title: "Prestige to {{next.rank}}"
     rankup:
       material: GOLD_BLOCK
       index: 0-3
       name: '&a&lConfirm'
-      lore: '&6Prestige to &b{RANK}'
+      lore: '&6Prestige to &b{{next.rank}}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
@@ -90,15 +90,14 @@ prestige:
       material: BLACK_STAINED_GLASS_PANE
 
   list:
-    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
-    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
-    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
     header: ""
     footer: ""
   cooldown:
-    singular: "&cПожалуйста, подождите {SECONDS_LEFT} сек., чтобы повысить ранг снова."
-    plural: "&cПожалуйста, подождите {SECONDS_LEFT} сек., чтобы повысить ранг снова."
+    singular: "&cПожалуйста, подождите {{seconds_left}} сек., чтобы повысить ранг снова."
+    plural: "&cПожалуйста, подождите {{seconds_left}} сек., чтобы повысить ранг снова."
 
 not-high-enough: "&cВы не можете поднять уровень престижа в этом ранге"
 not-in-ladder: "&cПростите, но мне не можем найти какие-нибудь повышения для Вашей группы."
-invalid-rankup: "В конфигурации определён неверное повышение, пожалуйста, проверьте консоль."

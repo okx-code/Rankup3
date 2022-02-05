@@ -47,19 +47,18 @@ public class RankupExpansion implements Expansion {
                     replacePattern(parts[1]), parts.length > 2 ? parts[2] : "");
         } else if (params.startsWith("rank_requirement_")) {
             String[] parts = params.split("_", 5);
-            return getPlaceholderRequirement(player, rankups.getByName(parts[2]),
+            return getPlaceholderRequirement(player, rankups.getRankByName(parts[2]),
                     replacePattern(parts[3]), parts.length > 4 ? parts[4] : "");
-//      return placeholders.getSimpleFormat().format(orElse(rankups.getByName(parts[2]).getRequirement(parts[3]), Requirement::getValueDouble, 0));
         } else if (params.startsWith("rank_money_")) {
             String[] parts = params.split("_", 4);
-            double amount = Objects.requireNonNull(rankups.getByName(parts[2]), "Rankup " + parts[2] + " does not exist").getRequirement(player, "money").getValueDouble();
+            double amount = Objects.requireNonNull(rankups.getRankByName(parts[2]), "Rankup " + parts[2] + " does not exist").getRequirement(player, "money").getValueDouble();
             if (parts.length > 3 && parts[3].equalsIgnoreCase("left")) {
                 amount = amount - plugin.getEconomy().getBalance(player);
             }
-            return plugin.formatMoney(Math.max(0, amount));
+            return plugin.getPlaceholders().formatMoney(Math.max(0, amount));
         } else if (params.startsWith("status_")) {
             String[] parts = params.split("_",  2);
-            Rank statusRank = rankups.getByName(parts[1]);
+            Rank statusRank = rankups.getRankByName(parts[1]);
 
             if (statusRank == null) {
                 return null;
@@ -92,37 +91,56 @@ public class RankupExpansion implements Expansion {
                 } else {
                     return prestige.getRank();
                 }
+            case "current_prestige_name":
+                requirePrestiging(prestiges, params);
+                if (prestige == null || prestige.getRank() == null) {
+                    return getPlaceholder("no-prestige");
+                } else {
+                    return prestige.getDisplayName();
+                }
             case "next_prestige":
                 requirePrestiging(prestiges, params);
                 if (prestigeElement != null && !prestigeElement.hasNext()) {
                     return getPlaceholder("highest-rank");
                 }
-                return orElse(prestige, Prestige::getNext, prestiges.getFirst().getNext());
+                return orElse(prestigeElement, e -> e.getNext().getRank().getRank(), prestiges.getTree().getFirst().getNext().getRank().getRank());
+            case "next_prestige_name":
+                requirePrestiging(prestiges, params);
+                if (prestigeElement != null && !prestigeElement.hasNext()) {
+                    return getPlaceholder("highest-rank");
+                } else {
+                    return orElse(prestigeElement, e -> e.getNext().getRank().getDisplayName(), prestiges.getTree().getFirst().getNext().getRank().getDisplayName());
+                }
             case "prestige_money":
                 requirePrestiging(prestiges, params);
                 return String.valueOf(simplify(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0)));
             case "prestige_money_formatted":
                 requirePrestiging(prestiges, params);
-                return plugin.formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
+                return plugin.getPlaceholders().formatMoney(orElse(prestige, r -> r.isIn(player) ? r.getRequirement(player, "money").getValueDouble() : 0, 0D));
             case "current_rank":
-                if (rank == null) {
-                    return getPlaceholder("not-in-ladder");
-                } else {
-                    return rank.getRank();
-                }
+                return orElse(rank, Rank::getRank, getPlaceholder("not-in-ladder"));
+            case "current_rank_name":
+                return orElse(rank, Rank::getDisplayName, getPlaceholder("not-in-ladder"));
             case "next_rank":
                 if (rankElement != null && !rankElement.hasNext()) {
                     return getPlaceholder("highest-rank");
+                } else {
+                    return orElsePlaceholder(rankElement, e -> e.getNext().getRank().getRank(), "not-in-ladder");
                 }
-                return orElsePlaceholder(rank, r -> orElsePlaceholder(rank, Rank::getNext, "highest-rank"), "not-in-ladder");
+            case "next_rank_name":
+                if (rankElement != null && !rankElement.hasNext()) {
+                    return getPlaceholder("highest-rank");
+                } else {
+                    return orElsePlaceholder(rankElement, e -> e.getNext().getRank().getDisplayName(), "not-in-ladder");
+                }
             case "money":
                 return String.valueOf(getMoney(player, rank));
             case "money_formatted":
-                return plugin.formatMoney(getMoney(player, rank).doubleValue());
+                return placeholders.formatMoney(getMoney(player, rank).doubleValue());
             case "money_left":
                 return String.valueOf(Math.max(0, orElse(rank, r -> simplify(r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player)), 0).doubleValue()));
             case "money_left_formatted":
-                return plugin.formatMoney(Math.max(0D, orElse(rank, r -> r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player), 0D)));
+                return placeholders.formatMoney(Math.max(0D, orElse(rank, r -> r.getRequirement(player, "money").getValueDouble() - plugin.getEconomy().getBalance(player), 0D)));
             case "percent_left":
                 return String.valueOf(Math.max(0D, orElse(rank, r -> (1 - (plugin.getEconomy().getBalance(player) / r.getRequirement(player, "money").getValueDouble())) * 100, 0).doubleValue()));
             case "percent_left_formatted":

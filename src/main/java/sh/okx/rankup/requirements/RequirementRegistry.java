@@ -1,7 +1,9 @@
 package sh.okx.rankup.requirements;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,8 +31,8 @@ public class RequirementRegistry {
     return null;
   }
 
-  public Set<Requirement> getRequirements(Iterable<String> list) {
-    Set<Requirement> requirements = new HashSet<>();
+  public List<Requirement> getRequirements(Iterable<String> list) {
+    List<Requirement> requirements = new ArrayList<>();
 
     for (String req : list) {
       String[] parts = req.split(" ", 2);

@@ -3,9 +3,10 @@ package sh.okx.rankup.ranks.requirements;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
@@ -17,6 +18,22 @@ public class RankRequirementsFactory {
       return getPrestigeListRequirements(plugin, section.getConfigurationSection(REQUIREMENTS));
     } else {
       return getListRequirements(plugin, getRequirementStrings(section, REQUIREMENTS));
+    }
+  }
+
+  public static RankRequirements getRequirements(RankupPlugin plugin, List<String> requirements,
+      Map<String, List<String>> prestigeRequirements) {
+    if (prestigeRequirements != null) {
+      ConfigurationSection section = new MemoryConfiguration();
+      for (Map.Entry<String, List<String>> entry : prestigeRequirements.entrySet()) {
+        section.set(entry.getKey(), entry.getValue());
+      }
+      return getPrestigeListRequirements(plugin, section);
+    } else if (requirements != null) {
+      return getListRequirements(plugin, requirements);
+    } else {
+//      throw new IllegalArgumentException("No requirements set.");
+      return null;
     }
   }
 
@@ -33,12 +50,12 @@ public class RankRequirementsFactory {
     }
   }
 
-  private static Set<Requirement> stringsToRequirements(RankupPlugin plugin, Iterable<String> strings) {
+  private static List<Requirement> stringsToRequirements(RankupPlugin plugin, Iterable<String> strings) {
     return plugin.getRequirements().getRequirements(strings);
   }
 
   private static RankRequirements getListRequirements(RankupPlugin plugin, Iterable<String> list) {
-    Set<Requirement> requirements = stringsToRequirements(plugin, list);
+    List<Requirement> requirements = stringsToRequirements(plugin, list);
     return new ListRankRequirements(requirements);
   }
 

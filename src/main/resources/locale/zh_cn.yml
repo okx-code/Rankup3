@@ -1,24 +1,22 @@
 # 这部分的信息能在 rankups.yml 对不同的段位进行自定义。
 rankup:
-  requirements-not-met: "&c您需要 {MONEY} 游戏币才能晋级。"
+  requirements-not-met: "&c您需要 {{rank.requirement('money').total | simple}} 游戏币才能晋级。"
   no-rankup: "&e您目前已处于段位的顶端。"
   # 想设置字符串为空？ 
   # 一个例子: success-public: ""
   # 这将隐藏那条信息。
-  success-public: "&a{PLAYER} &e已经晋升至新的段位: &d{RANK}"
-  success-private: "&a您成功晋升到新的段位: &d{RANK}"
+  success-public: "&a{{player}} &e已经晋升至新的段位: &d{{next.rank}}"
+  success-private: "&a您成功晋升到新的段位: &d{{next.rank}}"
   # 用于二次确认的文本信息
   confirmation: |-
-    &e您确定您要晋级至 &a{RANK}&e?
+    &e您确定您要晋级至 &a{{next.rank}}&e?
     &e再次输入 &c/rankup &e以确认操作。
-  # 用于二次确认的 GUI 信息
-  title: "晋级至 {RANK}"
 
   must-prestige: "&c您必须再次输入 /rankup !"
 
   gui:
     rows: 1
-    title: "晋级至 {RANK}"
+    title: "晋级至 {{next.rank}}"
     rankup:
       material: EMERALD_BLOCK
       # 可以用空格分隔序号以显示在多个槽位组中
@@ -27,7 +25,7 @@ rankup:
       index: 0-3
       name: '&a&l确认'
       # lore 可有可无
-      lore: '&6晋级至 &b{RANK}'
+      lore: '&6晋级至 &b{{next.rank}}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
@@ -46,13 +44,13 @@ rankup:
     width: 7
     complete:
       material: GREEN_STAINED_GLASS_PANE
-      name: "&a段位等级 &7{RANK} &a(已达成)"
+      name: "&a段位等级 &7{{next.rank}} &a(已达成)"
     current:
       material: ORANGE_STAINED_GLASS_PANE
-      name: "&d晋升段位等级至 &7{RANK}"
+      name: "&d晋升段位等级至 &7{{next.rank}}"
     incomplete:
       material: RED_STAINED_GLASS_PANE
-      name: "&c段位等级 &7{RANK} &c(需要晋升)"
+      name: "&c段位等级 &7{{next.rank}} &c(需要晋升)"
     fill:
       material: BLACK_STAINED_GLASS_PANE
       name: ' '
@@ -61,42 +59,42 @@ rankup:
   # 您可以（也可能应该）在 rankups.yml
   # 显示每个等级的具体要求。
   # 但是，如果您只想使用游戏币作为晋升需求或不需要更改每个级别的消息，则可以使用以下任意组合：
-  # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
-  # {MONEY} 和 {MONEY_NEEDED} 相较于 {AMOUNT money} 和 {AMOUNT_NEEDED money} 在使用的格式上不尽相同。
+  # {{rank.requirement('money').total | simple}} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {{rank.requirement('money').total | simple}} 和 {MONEY_NEEDED} 相较于 {AMOUNT money} 和 {AMOUNT_NEEDED money} 在使用的格式上不尽相同。
   # 这里有一个只使用游戏币作为晋升条件的示例:
   #list:
-  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &e花费 &7${MONEY}"
-  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &e花费 &a${MONEY} &e{PERCENT_DONE money}%"
-  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &e花费 &a${MONEY}"
+  #  complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &e花费 &7${{rank.requirement('money').total | simple}}"
+  #  current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &e花费 &a${{rank.requirement('money').total | simple}} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &e花费 &a${{rank.requirement('money').total | simple}}"
   list:
-    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
-    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
-    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
     # 一个空字符串可以关闭 header(页眉)/footer(页脚)
     header: ""
     footer: ""
   # 这些信息将在玩家处于晋升冷却期间尝试升级后发送
   cooldown:
-    singular: "&c您必须等待 {SECONDS_LEFT} 秒才能进行晋升段位等级操作。"
-    plural: "&c您必须等待 {SECONDS_LEFT} 秒才能进行晋升段位等级操作。"
+    singular: "&c您必须等待 {{seconds_left}} 秒才能进行晋升段位等级操作。"
+    plural: "&c您必须等待 {{seconds_left}} 秒才能进行晋升段位等级操作。"
 # 声望信息也可以定制
 prestige:
-  requirements-not-met: "&c您需要 {MONEY} 游戏币才能进行声望等级升级。"
+  requirements-not-met: "&c您需要 {{rank.requirement('money').total | simple}} 游戏币才能进行声望等级升级。"
   no-prestige: "&e您目前已经处在最高的声望等级了。"
 
-  success-public: "&a{PLAYER} &e已经晋升至: &d{RANK}"
-  success-private: "&a您成功晋升声望至: &d{RANK}"
+  success-public: "&a{{player}} &e已经晋升至: &d{{next.rank}}"
+  success-private: "&a您成功晋升声望至: &d{{next.rank}}"
 
   confirmation: |-
-    &e您确定要晋升声望至 &a{RANK}&e?
+    &e您确定要晋升声望至 &a{{next.rank}}&e?
     &e再次输入 &c/prestige &e确认操作。
   gui:
-    title: "声望晋升至 {RANK}"
+    title: "声望晋升至 {{next.rank}}"
     rankup:
       material: GOLD_BLOCK
       index: 0-3
       name: '&a&l确认'
-      lore: '&6声望晋升至 &b{RANK}'
+      lore: '&6声望晋升至 &b{{next.rank}}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
@@ -109,15 +107,14 @@ prestige:
       material: BLACK_STAINED_GLASS_PANE
 
   list:
-    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
-    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
-    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
     header: ""
     footer: ""
   cooldown:
-    singular: "&c您必须等待 {SECONDS_LEFT} 秒才能再次晋升声望等级。"
-    plural: "&c您必须等待 {SECONDS_LEFT} 秒才能再次晋升声望等级。"
+    singular: "&c您必须等待 {{seconds_left}} 秒才能再次晋升声望等级。"
+    plural: "&c您必须等待 {{seconds_left}} 秒才能再次晋升声望等级。"
 
 not-high-enough: "&c您无法在您当前等级上进行声望晋升!"
 not-in-ladder: "&c抱歉，我们找不到您所在小组的任何段位等级。使用 /ranks 列出所有段位等级。"
-invalid-rankup: "&c配置中定义了无效的 段位晋升，请检查控制台获取更多信息。"

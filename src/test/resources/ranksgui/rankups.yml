@@ -1,0 +1,6 @@
+a:
+  rank: 'a'
+  next: 'b'
+  rankup:
+    ranksgui:
+      rows: 4

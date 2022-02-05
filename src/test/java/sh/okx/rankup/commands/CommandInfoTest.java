@@ -1,12 +1,14 @@
-package sh.okx.rankup;
+package sh.okx.rankup.commands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import sh.okx.rankup.RankupTest;
 
-public class RankupCommandTest extends RankupTest {
+public class CommandInfoTest extends RankupTest {
   @Test
   public void testPlaceholders() {
     // placeholders command should never throw an exception

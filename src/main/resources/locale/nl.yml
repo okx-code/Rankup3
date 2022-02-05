@@ -1,0 +1,118 @@
+# De berichten in deze afdeling kunnen worden aangepast voor elke Rankup in rankups.yml
+rankup:
+  requirements-not-met: "&cJe hebt {{rank.requirement('money').total | simple }} geld nodig om te ranken."
+  no-rankup: "&eJe bent op de hoogste rang."
+  # Zet de string leeg, bijvoorbeeld: success-public: ""
+  # Om het bericht te verbergen.
+  success-public: "&a{{player}} &eis gerankt naar: &d{{next.rank}}"
+  success-private: "&aJe bent gerankt naar: &d{{next.rank}}"
+  # Gebruikt voor tekst bevestiging.
+  confirmation: |-
+    &eWeet je zeker dat je de volgende rang &a{{next.rank}} &ewilt?
+    &eType nogmaals &c/rankup &eom te bevestigen.
+  must-prestige: "&cJe moet prestigen om verder te ranken!"
+
+  gui:
+    rows: 1
+    title: "Rank naar {{next.rank}}"
+    rankup:
+      material: EMERALD_BLOCK
+      # "index" kan worden verdeeld tot groupen door spaties te gebruiken.
+      # Bijvoorbeeld: 0-3 9-12 18-21
+      # Je kan ook apparte getallen gebruiken in plaats van een bereik.
+      index: 0-3
+      name: '&a&lBevestigen'
+      # "lore" is optioneel.
+      lore: '&6Rank naar &b{{next.rank}}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lAnnuleren'
+    fill:
+      name: ' '
+      # Als je versies 1.8-1.12 gebruikt en je wilt dit veranderen,
+      # moet je <MATERIAL:data> gebruiken, bijvoorbeeld STAINED_GLASS_PANE:8
+      # Dit werkt voor zowel "rankup" als "cancel".
+      material: BLACK_STAINED_GLASS_PANE
+
+  ranksgui:
+    title: "Rangen"
+    rows: 3
+    offset: 10
+    width: 7
+    complete:
+      material: GREEN_STAINED_GLASS_PANE
+      name: "&aRang &7{{next.rank}} &a(compleet)"
+    current:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: "&dRank naar &7{{next.rank}}"
+    incomplete:
+      material: RED_STAINED_GLASS_PANE
+      name: "&cRang &7{{next.rank}} &c(vereist hogere rang)"
+    fill:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+
+
+  # Je kan (en waarschijnlijk moet) deze overschrijven in de rankups.yml.
+  # Om specifieke eisen te weergeven voor elke rang.
+  # Hoewel als je de "money" eis gebruikt, hoef je niet het bericht te veranderen voor elke rang. Je kan een combinatie gebruiken van:
+  # {{rank.requirement('money').total | simple}} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {{rank.requirement('money').total | simple}} en {MONEY_NEEDED} zijn anders dan {AMOUNT money} en {AMOUNT_NEEDED money} want ze gebruiken een verschillend formaat.
+  # Hier is een voorbeeld met alleen de "money" eis:
+  #list:
+  #  complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &evoor &7${{rank.requirement('money').total | simple}}"
+  #  current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &evoor &a${{rank.requirement('money').total | simple}} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &evoor &a${{rank.requirement('money').total | simple}}"
+  list:
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
+    # Een lege string ("") schakelt het bericht uit.
+    header: ""
+    footer: ""
+  # Verzonden wanneer een speler probeert te ranken terwijl ze in cooldown zitten.
+  cooldown:
+    singular: "&cJe moet {{seconds_left}} seconde wachten om weer te ranken."
+    plural: "&cJe moet {{seconds_left}} secondes wachten om weer te ranken."
+# Prestige berichten kunnen ook worden aangepast.
+prestige:
+  requirements-not-met: "&cJe hebt {{rank.requirement('money').total | simple}} geld nodig om te prestigen."
+  no-prestige: "&eJe bent op de hoogste prestige."
+
+  success-public: "&a{{player}} &eis geprestiged naar: &d{{next.rank}}"
+  success-private: "&aJe bent geprestiged naar: &d{{next.rank}}"
+
+  confirmation: |-
+    &eWeet je zeker dat je wilt prestigen naar &a{{next.rank}}&e?
+    &eType nogmaals &c/prestige &eom te bevestigen.
+  gui:
+    title: "Prestige naar {{next.rank}}"
+    rankup:
+      material: GOLD_BLOCK
+      index: 0-3
+      name: '&a&lBevestigen'
+      lore: '&6Prestige naar &b{{next.rank}}'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lAnnuleren'
+    fill:
+      name: ' '
+      # Als je versies 1.8-1.12 gebruikt en je wilt dit veranderen,
+      # moet je <MATERIAL:data> gebruiken, bijvoorbeeld STAINED_GLASS_PANE:8
+      # Dit werkt voor zowel "rankup" als "cancel".
+      material: BLACK_STAINED_GLASS_PANE
+
+  list:
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
+    header: ""
+    footer: ""
+  cooldown:
+    singular: "&cJe moet {{seconds_left}} seconde wachten om weer te prestigen."
+    plural: "&cJe moet {{seconds_left}} secondes wachten om weer te prestigen."
+
+not-high-enough: "&cJe kan niet prestigen in jouw rang!"
+not-in-ladder: "&cSorry, maar we konden geen rangen vinden voor de group(en) waar jij in zit. Gebruik /ranks om de lijst van rangen te weergeven."

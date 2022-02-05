@@ -61,7 +61,10 @@ permissions:
   rankup.maxrankup:
     default: true
   rankup.playtime:
+    description: Use all /rankup3 playtime subcommands for anyone.
     children:
       rankup.playtime.get: true
-      rankup.playtime.set: true
+    default: op
+  rankup.playtime.get:
+    description: Use /rankup3 playtime get for anyone.
     default: op

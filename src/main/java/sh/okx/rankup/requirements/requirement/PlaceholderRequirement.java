@@ -28,6 +28,8 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
     switch (parts[1]) {
       case "=":
         return parsed.equals(value) ? 1 : 0;
+      case "!=":
+        return parsed.equals(value) ? 0 : 1;
     }
 
     // numeric operations
@@ -35,15 +37,15 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
     double v = Double.parseDouble(value.replace(",", ""));
     switch (parts[1]) {
       case ">":
-        return p > v ? v : 0;
+        return p > v ? 1 : 0;
       case ">=":
         return Math.min(p, v);
       case "<":
-        return p < v ? v : 0;
+        return p < v ? 1 : 0;
       case "<=":
         return p <= v ? 1 : 0;
       case "==":
-        return p == v ? v : 0;
+        return p == v ? 1 : 0;
     }
     throw new IllegalArgumentException("Invalid operation: " + parts[1]);
   }
@@ -52,17 +54,19 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
   public double getTotal(Player player) {
     String[] parts = getParts(player);
 
-    if (parts[1].equalsIgnoreCase("=")) {
-      return 1;
-    } else {
-      return Double.parseDouble(parts[2]);
+    switch (parts[1]) {
+      case ">=":
+        return Double.parseDouble(parts[2]);
+      default:
+        return 1;
     }
   }
 
   private String[] getParts(Player player) {
     String[] parts = getValueString().split(" ");
     if (parts.length < 3) {
-      throw new IllegalArgumentException("Placeholder requirements must be in the form %placeholder% <operation> string");
+      throw new IllegalArgumentException(
+          "Placeholder requirements must be in the form %placeholder% <operation> string");
     }
     String parsed = PlaceholderAPI.setPlaceholders(player, parts[0]);
     if (!PlaceholderAPI.containsPlaceholders(parts[0]) || parsed.equals(parts[0])) {

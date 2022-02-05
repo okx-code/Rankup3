@@ -1,5 +1,6 @@
 package sh.okx.rankup.prestige;
 
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -8,14 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
-import sh.okx.rankup.messages.MessageBuilder;
+import sh.okx.rankup.messages.pebble.PebbleMessageBuilder;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.requirements.ListRankRequirements;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
-
-import java.util.List;
-import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -33,7 +31,7 @@ public class Prestige extends Rank {
 
   public static Prestige deserialize(RankupPlugin plugin, ConfigurationSection section) {
     List<String> requirementsList = section.getStringList("requirements");
-    Set<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
+    List<Requirement> requirements = plugin.getRequirements().getRequirements(requirementsList);
 
     return new Prestige(section, plugin,
         section.getString("next"),
@@ -47,9 +45,10 @@ public class Prestige extends Rank {
   @Override
   public void runCommands(Player player, Rank next) {
     for (String command : commands) {
-      String string = new MessageBuilder(command)
-          .replaceRanks(player, this, next)
-          .replaceFromTo(this)
+      String string = new PebbleMessageBuilder(this.plugin, command)
+          .replacePlayer(player)
+          .replaceOldRank(this)
+          .replaceRank(next)
           .toString();
       if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
         string = PlaceholderAPI.setPlaceholders(player, string);

@@ -26,6 +26,7 @@ import sh.okx.rankup.util.ItemUtil;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Gui implements InventoryHolder {
+
   @Getter
   private final boolean returnToRanksGui;
   @Getter
@@ -37,7 +38,8 @@ public class Gui implements InventoryHolder {
   @Getter
   private boolean prestige;
 
-  public static Gui of(Player player, Rank oldRank, Rank rank, RankupPlugin plugin, boolean returnToRanksGui) {
+  public static Gui of(Player player, Rank oldRank, Rank rank, RankupPlugin plugin,
+      boolean returnToRanksGui) {
     Gui gui = new Gui(returnToRanksGui);
     gui.prestige = oldRank instanceof Prestige;
 
@@ -45,15 +47,20 @@ public class Gui implements InventoryHolder {
     String basePath = type + ".gui";
     ConfigurationSection config = plugin.getSection(oldRank, basePath);
     if (config == null) {
-      plugin.getLogger().severe("You must update your config.yml and locale/en.yml to be able to use the GUI! Your configuration files are outdated.");
+      plugin.getLogger().severe(
+          "You must update your config.yml and locale/en.yml to be able to use the GUI! Your configuration files are outdated.");
       return null;
     }
 
-    ItemStack[] items = new ItemStack[config.getInt("rows", 1) * 9];
+    Integer rows = Gui.getInt(config, "rows");
+    ItemStack[] items = new ItemStack[(rows == null ? 1 : rows) * 9];
 
-    ItemStack fill = getItem(plugin, plugin.getSection(oldRank, basePath + ".fill"), player, oldRank, rank);
-    ItemStack cancel = getItem(plugin, plugin.getSection(oldRank, basePath + ".cancel"), player, oldRank, rank);
-    ItemStack rankup = getItem(plugin, plugin.getSection(oldRank, basePath + ".rankup"), player, oldRank, rank);
+    ItemStack fill = getItem(plugin, plugin.getSection(oldRank, basePath + ".fill"), player,
+        oldRank, rank);
+    ItemStack cancel = getItem(plugin, plugin.getSection(oldRank, basePath + ".cancel"), player,
+        oldRank, rank);
+    ItemStack rankup = getItem(plugin, plugin.getSection(oldRank, basePath + ".rankup"), player,
+        oldRank, rank);
 
     addItem(items, plugin.getSection(oldRank, basePath + ".rankup"), rankup);
     addItem(items, plugin.getSection(oldRank, basePath + ".cancel"), cancel);
@@ -63,26 +70,30 @@ public class Gui implements InventoryHolder {
     gui.cancel = cancel;
 
     Inventory inventory = Bukkit.createInventory(gui, items.length,
-        Colour.translate(plugin.replaceMoneyRequirements(
+        Colour.translate(
             plugin.getMessage(oldRank, gui.prestige ? Message.PRESTIGE_TITLE : Message.TITLE)
-                .replaceRanks(player, oldRank, rank)
-                .replaceFromTo(oldRank), player, oldRank).toString()));
+                .replacePlayer(player)
+                .replaceOldRank(oldRank)
+                .replaceRank(rank).toString(player)));
     inventory.setContents(items);
     gui.inventory = inventory;
     return gui;
   }
 
-  public static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, RankElement<Rank> element) {
+  public static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player,
+      RankElement<Rank> element) {
     if (element == null) {
       return getItem(plugin, section, player, null, null);
     } else {
       RankElement<Rank> next = element.getNext();
-      return getItem(plugin, section, player, element.getRank(), (next == null ? element : next).getRank());
+      return getItem(plugin, section, player, element.getRank(),
+          (next == null ? element : next).getRank());
     }
   }
 
   @SuppressWarnings("deprecation")
-  public static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player, Rank oldRank, Rank rank) {
+  public static ItemStack getItem(RankupPlugin plugin, ConfigurationSection section, Player player,
+      Rank oldRank, Rank rank) {
     if (section == null) {
       return null;
     }
@@ -111,23 +122,26 @@ public class Gui implements InventoryHolder {
 
     ItemMeta meta = item.getItemMeta();
     if (section.contains("lore")) {
-      meta.setLore(Arrays.stream(format(plugin, section.getString("lore"), player, oldRank, rank).split("\n"))
+      meta.setLore(Arrays
+          .stream(format(plugin, section.getString("lore"), player, oldRank, rank).split("\n"))
           .map(string -> ChatColor.RESET + string)
           .collect(Collectors.toList()));
     }
     if (section.contains("name")) {
-      meta.setDisplayName(ChatColor.RESET + format(plugin, section.getString("name"), player, oldRank, rank));
+      meta.setDisplayName(
+          ChatColor.RESET + format(plugin, section.getString("name"), player, oldRank, rank));
     }
     item.setItemMeta(meta);
     return item;
   }
 
-  private static String format(RankupPlugin plugin, String message, Player player, Rank oldRank, Rank rank) {
-    MessageBuilder builder = new MessageBuilder(message);
+  private static String format(RankupPlugin plugin, String message, Player player, Rank oldRank,
+      Rank rank) {
+    MessageBuilder builder = plugin.newMessageBuilder(message);
     if (oldRank != null && rank != null) {
-      builder = builder.replaceRanks(player, oldRank, rank);
+      builder = builder.replacePlayer(player).replaceOldRank(oldRank).replaceRank(rank);
     }
-    return Colour.translate(plugin.replaceMoneyRequirements(builder, player, oldRank).toString());
+    return builder.toString(player);
   }
 
   private static void addItem(ItemStack[] items, ConfigurationSection section, ItemStack item) {
@@ -150,6 +164,19 @@ public class Gui implements InventoryHolder {
         for (int i = Integer.parseInt(parts[0]); i <= Integer.parseInt(parts[1]); i++) {
           items[i] = item;
         }
+      }
+    }
+  }
+
+  public static Integer getInt(ConfigurationSection section, String key) {
+    String string = section.getString(key);
+    if (string == null) {
+      return null;
+    } else {
+      try {
+        return Integer.parseInt(string);
+      } catch (IllegalArgumentException ex) {
+        return null;
       }
     }
   }

@@ -201,7 +201,7 @@ public class InfoCommand implements TabExecutor {
           element = next;
         }
         return true;
-      } else if (args[0].equalsIgnoreCase("playtime") && (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime.set"))) {
+      } else if (args[0].equalsIgnoreCase("playtime") && (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime"))) {
         Statistic playOneTick;
         try {
           playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
@@ -241,7 +241,7 @@ public class InfoCommand implements TabExecutor {
             }
             player.sendMessage(ChatColor.LIGHT_PURPLE + who + " played for " + minutes + " minutes.");
             return true;
-          } else if (args[1].equalsIgnoreCase("set") && sender.hasPermission("rankup.playtime.set")) {
+          } else if (args[1].equalsIgnoreCase("set") && sender.hasPermission("rankup.playtime")) {
             if (args.length < 4) {
               sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>" + ChatColor.YELLOW + " Update the playtime statistic for a player");
               return true;
@@ -264,6 +264,39 @@ public class InfoCommand implements TabExecutor {
             player.setStatistic(playOneTick, minutes * 20 * 60);
             player.sendMessage(ChatColor.LIGHT_PURPLE + "Updated playtime for " + player.getName() + " to " + minutes + " minutes");
             return true;
+          } else if (args[1].equalsIgnoreCase("add") && sender.hasPermission("rankup.playtime")) {
+            if (args.length < 4) {
+              sender.sendMessage(ChatColor.GREEN + "/" + label + " " + args[0] + " add <player> <minutes>" + ChatColor.YELLOW + " Increase the playtime statistic for a player");
+              return true;
+            }
+
+            Player player = Bukkit.getPlayer(args[2]);
+            if (player == null) {
+              sender.sendMessage(ChatColor.GRAY + "Player not found");
+              return true;
+            }
+
+            int minutes;
+            try {
+              minutes = Integer.parseInt(args[3]);
+            } catch (NumberFormatException e) {
+              sender.sendMessage(ChatColor.GRAY + "Invalid number: " + args[3]);
+              return true;
+            }
+
+            int oldMinutes = player.getStatistic(playOneTick) / 20 / 60;
+            if (minutes > 0) {
+              player.incrementStatistic(playOneTick, minutes * 20 * 60);
+            } else if (minutes < 0) {
+              if (oldMinutes + minutes < 0) {
+                player.sendMessage(ChatColor.GRAY + "Playtime cannot be negative");
+                return true;
+              }
+              player.decrementStatistic(playOneTick, -minutes * 20 * 60);
+            }
+            int newMinutes = oldMinutes + minutes;
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "Increased playtime for " + player.getName() + " to " + oldMinutes + (minutes >= 0 ? "+" : "") + minutes + "=" + newMinutes + " minutes");
+            return true;
           }
         }
         if (sender.hasPermission("rankup.playtime.get")) {
@@ -271,16 +304,17 @@ public class InfoCommand implements TabExecutor {
               ChatColor.GREEN + "/" + label + " " + args[0] + " get [player] " + ChatColor.YELLOW
                   + " Get amount of minutes played");
         }
-        if (sender.hasPermission("rankup.playtime.set")) {
+        if (sender.hasPermission("rankup.playtime")) {
           sender.sendMessage(
               ChatColor.GREEN + "/" + label + " " + args[0] + " set <player> <minutes>"
                   + ChatColor.YELLOW + " Update the playtime statistic for a player");
+          sender.sendMessage(
+              ChatColor.GREEN + "/" + label + " " + args[0] + " add <player> <minutes>"
+                  + ChatColor.YELLOW + " Increase the playtime statistic for a player");
         }
         return true;
       }
     }
-
-    // Set playtime & get playtime for other players?
 
     PluginDescriptionFile description = plugin.getDescription();
     String version = description.getVersion();
@@ -322,7 +356,7 @@ public class InfoCommand implements TabExecutor {
         list.add("forceprestige");
         list.add("rankdown");
       }
-      if (sender.hasPermission("rankup.playtime")) {
+      if (sender.hasPermission("rankup.playtime.get") || sender.hasPermission("rankup.playtime")) {
         list.add("playtime");
       }
       return StringUtil.copyPartialMatches(args[0], list, new ArrayList<>());
@@ -333,6 +367,16 @@ public class InfoCommand implements TabExecutor {
         return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
       } else if (args[0].equalsIgnoreCase("rankdown") && sender.hasPermission("rankup.force")) {
         return StringUtil.copyPartialMatches(args[1], players(), new ArrayList<>());
+      } else if (args[0].equalsIgnoreCase("playtime")) {
+        List<String> options = new ArrayList<>();
+        if (sender.hasPermission("rankup.playtime.get")) {
+          options.add("get");
+        }
+        if (sender.hasPermission("rankup.playtime")) {
+          options.add("set");
+          options.add("add");
+        }
+        return StringUtil.copyPartialMatches(args[1], options, new ArrayList<>());
       }
     }
     return Collections.emptyList();

@@ -1,14 +1,12 @@
 package sh.okx.rankup.ranks.requirements;
 
+import java.util.Map;
+import java.util.Objects;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.prestige.Prestige;
 import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.requirements.Requirement;
-
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 public class PrestigeListRankRequirements implements RankRequirements {
   private final RankupPlugin plugin;
@@ -25,7 +23,7 @@ public class PrestigeListRankRequirements implements RankRequirements {
   }
 
   @Override
-  public Set<Requirement> getRequirements(Player player) {
+  public Iterable<Requirement> getRequirements(Player player) {
     return getRankRequirements(player).getRequirements(player);
   }
 

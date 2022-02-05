@@ -2,7 +2,9 @@ package sh.okx.rankup.requirements.requirement;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
@@ -10,6 +12,19 @@ import sh.okx.rankup.requirements.Requirement;
 import java.util.Arrays;
 
 public class ItemRequirement extends ProgressiveRequirement {
+  public static final boolean USE_STORAGE_CONTENTS;
+
+  static {
+    boolean getStorageContentsMethodExists;
+    try {
+      Inventory.class.getMethod("getStorageContents");
+      getStorageContentsMethodExists = true;
+    } catch (NoSuchMethodException e) {
+      getStorageContentsMethodExists = false;
+    }
+    USE_STORAGE_CONTENTS = getStorageContentsMethodExists;
+  }
+
   public ItemRequirement(RankupPlugin plugin, String name) {
     super(plugin, name, true);
   }
@@ -25,7 +40,14 @@ public class ItemRequirement extends ProgressiveRequirement {
 
   @Override
   public double getProgress(Player player) {
-    return Arrays.stream(player.getInventory().getStorageContents())
+    PlayerInventory inventory = player.getInventory();
+    ItemStack[] contents;
+    if (USE_STORAGE_CONTENTS) {
+      contents = inventory.getStorageContents();
+    } else {
+      contents = inventory.getContents();
+    }
+    return Arrays.stream(contents)
         .filter(this::matchItem)
         .mapToInt(ItemStack::getAmount).sum();
   }

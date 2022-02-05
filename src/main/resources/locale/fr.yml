@@ -1,19 +1,19 @@
 # the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
-  requirements-not-met: "&cIl vous faut {MONEY} d'argent pour passer au rang suivant."
+  requirements-not-met: "&cIl vous faut {{rank.requirement('money').total | simple}} d'argent pour passer au rang suivant."
   no-rankup: "&eVous avez atteint le rang maximum."
   # set to an empty string, ie: success-public: ""
   # to hide that message.
-  success-public: "&a{PLAYER} &eest passé(e) au rang: &d{RANK}"
-  success-private: "&aVous êtes passé(e) au rang: &d{RANK}"
+  success-public: "&a{{player}} &eest passé(e) au rang: &d{{next.rank}}"
+  success-private: "&aVous êtes passé(e) au rang: &d{{next.rank}}"
   # used for the text confirmation
   confirmation: |-
-    &eÊtes-vous sûr(e) de vouloir passer au rang &a{RANK}&e?
+    &eÊtes-vous sûr(e) de vouloir passer au rang &a{{next.rank}}&e?
     &eTapez &c/rankup &eà nouveau pour confirmer.
 
   gui:
     rows: 1
-    title: "Passer au rang {RANK}"
+    title: "Passer au rang {{next.rank}}"
     rankup:
       material: EMERALD_BLOCK
       # index can be separated by spaces to show in multiple groups
@@ -22,7 +22,7 @@ rankup:
       index: 0-3
       name: '&a&lConfirm'
       # lore is optional
-      lore: '&6Rankup to &b{RANK}'
+      lore: '&6Rankup to &b{{next.rank}}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
@@ -39,45 +39,45 @@ rankup:
   # you can (and probably should) you override these in rankups.yml
   # to show the specific requirements for each rank.
   # however if you are just using money or don't need to change the message per rank, you can use any combination of:
-  # {MONEY} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
-  # {MONEY} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
+  # {{rank.requirement('money').total | simple}} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {{rank.requirement('money').total | simple}} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
   # here is an example of showing the requirements for just money:
   #list:
-  #  complete: "&7{OLD_RANK} &8\xbb &7{RANK} &efor &7${MONEY}"
-  #  current: "&c{OLD_RANK} &e\xbb &c{RANK} &efor &a${MONEY} &e{PERCENT_DONE money}%"
-  #  incomplete: "&r{OLD_RANK} &e\xbb &r{RANK} &efor &a${MONEY}"
+  #  complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &efor &7${{rank.requirement('money').total | simple}}"
+  #  current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &efor &a${{rank.requirement('money').total | simple}} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &efor &a${{rank.requirement('money').total | simple}}"
   list:
-    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
-    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
-    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
     # an empty string disables the header/footer
     header: ""
     footer: ""
   # sent when a player tries to rankup when they are on cooldown
   cooldown:
-    singular: "&cVous devez attendre encore {SECONDS_LEFT} seconde pour de nouveau passer un rang."
-    plural: "&cVous devez attendre encore {SECONDS_LEFT} secondes pour de nouveau passer un rang."
+    singular: "&cVous devez attendre encore {{seconds_left}} seconde pour de nouveau passer un rang."
+    plural: "&cVous devez attendre encore {{seconds_left}} secondes pour de nouveau passer un rang."
 # prestige messages can also be customised
 prestige:
-  requirements-not-met: "&cIl vous faut {MONEY} d'argent pour passer au rang suivant."
+  requirements-not-met: "&cIl vous faut {{rank.requirement('money').total | simple}} d'argent pour passer au rang suivant."
   no-prestige: "&eVous avez atteint le prestige maximum."
 
-  success-public: "&a{PLAYER} &eest passé(e) au prestige: &d{RANK}"
-  success-private: "&aVous êtes passé(e) au prestige: &d{RANK}"
+  success-public: "&a{{player}} &eest passé(e) au prestige: &d{{next.rank}}"
+  success-private: "&aVous êtes passé(e) au prestige: &d{{next.rank}}"
 
   confirmation: |-
-    &eÊtes-vous sûr(e) de vouloir passer au prestige &a{RANK}&e?
+    &eÊtes-vous sûr(e) de vouloir passer au prestige &a{{next.rank}}&e?
     &eTapez &c/prestige &eà nouveau pour confirmer.
-  title: "Passer au prestige {RANK}"
+  title: "Passer au prestige {{next.rank}}"
 
   gui:
     rows: 1
-    title: "Prestige to {RANK}"
+    title: "Prestige to {{next.rank}}"
     rankup:
       material: GOLD_BLOCK
       index: 0-3
       name: '&a&lConfirm'
-      lore: '&6Prestige to &b{RANK}'
+      lore: '&6Prestige to &b{{next.rank}}'
     cancel:
       material: REDSTONE_BLOCK
       index: 5-8
@@ -90,15 +90,14 @@ prestige:
       material: BLACK_STAINED_GLASS_PANE
 
   list:
-    complete: "&7{OLD_RANK} &8\xbb &7{RANK}"
-    current: "&c{OLD_RANK} &e\xbb &c{RANK}"
-    incomplete: "&r{OLD_RANK} &e\xbb &r{RANK}"
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
     header: ""
     footer: ""
   cooldown:
-    singular: "&cVous devez attendre encore {SECONDS_LEFT} seconde pour de nouveau passer un rang."
-    plural: "&cVous devez attendre encore {SECONDS_LEFT} secondes pour de nouveau passer un rang."
+    singular: "&cVous devez attendre encore {{seconds_left}} seconde pour de nouveau passer un rang."
+    plural: "&cVous devez attendre encore {{seconds_left}} secondes pour de nouveau passer un rang."
 
 not-high-enough: "&cVous ne pouvez pas passer de prestige à votre rang !"
 not-in-ladder: "&cDésolé, mais nous n'avons pas trouvé de rang pour le(s) groupe(s) dans lequel(s) vous êtes. Tapez /ranks pour voir la liste des rangs."
-invalid-rankup: "La configuration de Rankup est invalide, veuillez vérifier la console."

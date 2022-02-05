@@ -1,12 +1,22 @@
 package sh.okx.rankup.ranks;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.ArrayList;
+import java.util.List;
 import sh.okx.rankup.RankupPlugin;
+import sh.okx.rankup.serialization.RankSerialized;
 
 public class Rankups extends RankList<Rank> {
 
-  public Rankups(RankupPlugin plugin, FileConfiguration config) {
-    super(plugin, config, section -> Rankup.deserialize(plugin, section));
+  public Rankups(RankupPlugin plugin, List<RankSerialized> serializedRanks) {
+    super(plugin, convert(plugin, serializedRanks));
+  }
+
+  private static List<Rankup> convert(RankupPlugin plugin, List<RankSerialized> ranks) {
+    List<Rankup> rankups = new ArrayList<>(ranks.size());
+    for (RankSerialized rank : ranks) {
+      rankups.add(Rankup.deserialize(plugin, rank));
+    }
+    return rankups;
   }
 
   @Override

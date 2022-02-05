@@ -58,9 +58,10 @@ public class PrestigeCommand implements CommandExecutor {
         Prestige next = rankElement.getNext().getRank();
         Rank nextRank = next == null ? prestiges.getTree().last().getRank() : next;
 
-        plugin.replaceMoneyRequirements(plugin.getMessage(prestige, Message.PRESTIGE_CONFIRMATION)
-            .replaceRanks(player, prestige, nextRank), player, prestige)
-            .replaceFromTo(prestige)
+        plugin.getMessage(prestige, Message.PRESTIGE_CONFIRMATION)
+            .replacePlayer(player)
+            .replaceOldRank(prestige)
+            .replaceRank(nextRank)
             .send(player);
         break;
       case "gui":

@@ -1,4 +1,7 @@
-package sh.okx.rankup.hook;
+package sh.okx.rankup.providers;
+
+import sh.okx.rankup.hook.GroupProvider;
+import sh.okx.rankup.hook.PermissionManager;
 
 public class TestPermissionManager implements PermissionManager {
     private final GroupProvider groupProvider;

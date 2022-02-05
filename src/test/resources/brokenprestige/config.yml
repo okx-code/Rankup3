@@ -1,0 +1,36 @@
+version: 10
+locale: en
+autorankup-interval: 0
+ranks: true
+prestiges: true
+ranks-gui: false
+prestige: true # enable prestige
+notify-update: true
+permission-rankup: false
+confirmation-type: 'gui'
+cooldown: 1
+max-rankup:
+  enabled: false
+  individual-messages: true
+text:
+  timeout: 10
+placeholders:
+  money-format: "#,##0.##"
+  percent-format: "0.##"
+  simple-format: "#.##"
+  not-in-ladder: "None"
+  no-prestige: "None"
+  highest-rank: "None"
+  status:
+    complete: "Complete"
+    current: "Current"
+    incomplete: "Incomplete"
+  last-rank-display-name: "last rank"
+shorten:
+  - 'K'
+  - 'M'
+  - 'B'
+  - 'T'
+  - 'Q'
+  - 'Qu'
+  - 'S'

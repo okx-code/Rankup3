@@ -1,5 +1,5 @@
 # this is used for letting you know that you need to update/change your config file
-version: 9
+version: 10
 
 # the locale to use for messages
 # all messages can be customised but this allows you to
@@ -75,7 +75,7 @@ text:
   timeout: 10
 
 # placeholders:
-# https://github.com/okx-code/Rankup3/wiki/PAPI-Placeholders
+# https://okx.sh/rankup/Placeholders.html
 placeholders:
   # format for money. for more information, see
   # https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
@@ -101,6 +101,7 @@ placeholders:
 # set to an empty list to disable
 # for each entry here, it counts as increasing by a factor of 1,000
 # the first represents thousands (1,000) then millions (1,000,000) then billions (1,000,000,000) etc.
+# this is used in the "| shortmoney" filter
 shorten:
 - 'K'
 - 'M'

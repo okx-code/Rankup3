@@ -1,11 +1,10 @@
 package sh.okx.rankup.ranks.requirements;
 
-import java.util.Set;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.requirements.Requirement;
 
 public interface RankRequirements {
-  Set<Requirement> getRequirements(Player player);
+  Iterable<Requirement> getRequirements(Player player);
 
   boolean hasRequirements(Player player);
   Requirement getRequirement(Player player, String name);

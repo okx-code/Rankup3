@@ -1,13 +1,13 @@
 package sh.okx.rankup.messages;
 
-import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class MessageBuilderTest {
   @Test
   public void testFailIfEmpty() {
-    assertThat(new MessageBuilder("").failIfEmpty(), instanceOf(NullMessageBuilder.class));
+    assertTrue(new StringMessageBuilder("").failIfEmpty() instanceof NullMessageBuilder);
   }
 }
