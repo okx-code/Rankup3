@@ -81,9 +81,7 @@ public abstract class RankList<T extends Rank> {
   }
 
   public T getRankByName(String name) {
-    if (name == null) {
-      return null;
-    }
+    if (name == null || tree == null){return null;}
     for (T rank : tree) {
       if (name.equalsIgnoreCase(rank.getRank())) {
         return rank;
@@ -93,9 +91,7 @@ public abstract class RankList<T extends Rank> {
   }
 
   public RankElement<T> getByName(String name) {
-    if (name == null) {
-      return null;
-    }
+    if (name == null || tree == null){return null;}
     List<RankElement<T>> rankElements = tree.asList();
     for (RankElement<T> rank : rankElements) {
       if (name.equalsIgnoreCase(rank.getRank().getRank())) {
@@ -107,6 +103,7 @@ public abstract class RankList<T extends Rank> {
 
 
   public RankElement<T> getByPlayer(Player player) {
+    if (tree == null){return null;}
     List<RankElement<T>> list = tree.asList();
     Collections.reverse(list);
     for (RankElement<T> t : list) {
@@ -118,6 +115,7 @@ public abstract class RankList<T extends Rank> {
   }
 
   public T getRankByPlayer(Player player) {
+    if (tree == null){return null;}
     List<RankElement<T>> list = tree.asList();
     Collections.reverse(list);
     for (RankElement<T> t : list) {
