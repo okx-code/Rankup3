@@ -33,6 +33,10 @@ public class RequirementContext {
     return requirement.getName();
   }
 
+  public String getSub(){
+    return requirement.getSub();
+  }
+
   public double getQuotient() {
     return getProgress() / getTotal();
   }
