@@ -38,11 +38,11 @@ public class RequirementContext {
   }
 
   public double getQuotient() {
-    return getProgress() / getTotal();
+    return (getTotal() > 0 ? (getProgress() / getTotal()) : 1);
   }
 
   public double getPercent() {
-    return getProgress() / getTotal() * 100;
+    return getQuotient() * 100;
   }
 
   public String toString() {
