@@ -115,6 +115,8 @@ public class RankupPlugin extends JavaPlugin {
   @Getter
   private RankupHelper helper;
   protected AutoRankup autoRankup = new AutoRankup(this);
+  @Getter
+  private String[] locales = {"en","pt_br","ru","zh_cn","fr","it","es","nl"};
   private String errorMessage;
   private PermissionManager permissionManager = new VaultPermissionManager(this);
   private EconomyProvider economyProvider = new VaultEconomyProvider();
@@ -295,7 +297,7 @@ public class RankupPlugin extends JavaPlugin {
   private void loadConfigs(boolean init) {
     saveLocales();
 
-    String locale = config.getString("locale", "en");
+    String locale = config.getString("locale", locales[0]);
     File localeFile = new File(new File(getDataFolder(), "locale"), locale + ".yml");
     messages = YamlConfiguration.loadConfiguration(localeFile);
 
@@ -334,14 +336,7 @@ public class RankupPlugin extends JavaPlugin {
   }
 
   private void saveLocales() {
-    saveLocale("en");
-    saveLocale("pt_br");
-    saveLocale("ru");
-    saveLocale("zh_cn");
-    saveLocale("fr");
-    saveLocale("it");
-    saveLocale("es");
-    saveLocale("nl");
+    for (String locale : locales){saveLocale(locale);}
   }
 
   private void saveLocale(String locale) {
