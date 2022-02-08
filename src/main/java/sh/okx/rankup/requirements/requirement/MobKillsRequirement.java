@@ -10,8 +10,8 @@ import sh.okx.rankup.requirements.Requirement;
 import java.util.Objects;
 
 public class MobKillsRequirement extends ProgressiveRequirement {
-  public MobKillsRequirement(RankupPlugin plugin) {
-    super(plugin, "mob-kills", true);
+  public MobKillsRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name, true);
   }
 
   protected MobKillsRequirement(Requirement clone) {

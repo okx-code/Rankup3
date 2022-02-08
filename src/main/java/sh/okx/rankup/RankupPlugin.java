@@ -380,59 +380,67 @@ public class RankupPlugin extends JavaPlugin {
     requirements.addRequirements(
         new XpLevelRequirement(this, "xp-levelh"),
         new XpLevelDeductibleRequirement(this, "xp-level"),
-        new PlaytimeMinutesRequirement(this),
-        new AdvancementRequirement(this),
-        new GroupRequirement(this),
-        new PermissionRequirement(this),
-        new PlaceholderRequirement(this),
-        new WorldRequirement(this),
-        new BlockBreakRequirement(this),
-        new PlayerKillsRequirement(this),
-        new MobKillsRequirement(this),
+        new PlaytimeMinutesRequirement(this, "playtime-minutes"),
+        new AdvancementRequirement(this, "advancement"),
+        new GroupRequirement(this, "group"),
+        new PermissionRequirement(this, "permission"),
+        new PlaceholderRequirement(this, "placeholder"),
+        new WorldRequirement(this, "world"),
+        new BlockBreakRequirement(this, "block-break"),
+        new PlayerKillsRequirement(this, "player-kills"),
+        new MobKillsRequirement(this, "mob-kills"),
         new ItemRequirement(this, "itemh"),
         new ItemDeductibleRequirement(this, "item"),
-        new UseItemRequirement(this),
-        new TotalMobKillsRequirement(this),
-        new CraftItemRequirement(this));
+        new UseItemRequirement(this, "use-item"),
+        new TotalMobKillsRequirement(this, "total-mob-kills"),
+        new CraftItemRequirement(this, "craft-item"));
     if (economy != null) {
       requirements.addRequirements(
-          new MoneyRequirement(this, "moneyh"),
-          new MoneyDeductibleRequirement(this, "money"));
+        new MoneyRequirement(this, "moneyh"),
+        new MoneyDeductibleRequirement(this, "money")
+      );
     }
 
     PluginManager pluginManager = Bukkit.getPluginManager();
     if (pluginManager.isPluginEnabled("mcMMO")) {
       requirements.addRequirements(
-          new McMMOSkillRequirement(this),
-          new McMMOPowerLevelRequirement(this));
+        new McMMOSkillRequirement(this, "mcmmo"),
+        new McMMOPowerLevelRequirement(this, "mcmmo-power-level")
+      );
     }
     if (pluginManager.isPluginEnabled("AdvancedAchievements")) {
       requirements.addRequirements(
-          new AdvancedAchievementsAchievementRequirement(this),
-          new AdvancedAchievementsTotalRequirement(this));
+        new AdvancedAchievementsAchievementRequirement(this, "advancedachievements-achievement"),
+        new AdvancedAchievementsTotalRequirement(this, "advancedachievements-total")
+      );
     }
     if (pluginManager.isPluginEnabled("VotingPlugin")) {
       requirements.addRequirements(
-          new VotingPluginVotesRequirement(this),
-          new VotingPluginPointsRequirement(this, "votingplugin-pointsh"),
-          new VotingPluginPointsDeductibleRequirement(this, "votingplugin-points"));
+        new VotingPluginVotesRequirement(this, "votingplugin-votes"),
+        new VotingPluginPointsRequirement(this, "votingplugin-pointsh"),
+        new VotingPluginPointsDeductibleRequirement(this, "votingplugin-points")
+      );
     }
     if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
       requirements.addRequirements(
-          new TownyResidentRequirement(this),
-          new TownyMayorRequirement(this),
-          new TownyMayorNumberResidentsRequirement(this),
-          new TownyKingRequirement(this),
-          new TownyKingNumberResidentsRequirement(this),
-          new TownyKingNumberTownsRequirement(this));
+        new TownyResidentRequirement(this, "towny-resident"),
+        new TownyMayorRequirement(this, "towny-mayor"),
+        new TownyMayorNumberResidentsRequirement(this, "towny-mayor-residents"),
+        new TownyKingRequirement(this, "towny-king"),
+        new TownyKingNumberResidentsRequirement(this, "towny-king-residents"),
+        new TownyKingNumberTownsRequirement(this, "towny-king-towns")
+      );
     }
     if (Bukkit.getPluginManager().isPluginEnabled("TokenManager")) {
       requirements.addRequirements(
-          new TokensRequirement(this, "tokenmanager-tokensh"),
-          new TokensDeductibleRequirement(this, "tokenmanager-tokens"));
+        new TokensRequirement(this, "tokenmanager-tokensh"),
+        new TokensDeductibleRequirement(this, "tokenmanager-tokens")
+      );
     }
     if (Bukkit.getPluginManager().isPluginEnabled("SuperbVote")) {
-      requirements.addRequirements(new SuperbVoteVotesRequirement(this));
+      requirements.addRequirements(
+        new SuperbVoteVotesRequirement(this, "superbvote-votes")
+      );
     }
   }
   private void setupEconomy() {

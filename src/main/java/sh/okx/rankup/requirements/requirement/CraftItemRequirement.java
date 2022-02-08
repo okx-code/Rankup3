@@ -8,8 +8,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class CraftItemRequirement extends ProgressiveRequirement {
-  public CraftItemRequirement(RankupPlugin plugin) {
-    super(plugin, "craft-item", true);
+  public CraftItemRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name, true);
   }
 
   protected CraftItemRequirement(CraftItemRequirement clone) {

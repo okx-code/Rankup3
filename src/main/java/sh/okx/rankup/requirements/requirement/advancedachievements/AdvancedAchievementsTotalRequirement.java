@@ -7,8 +7,8 @@ import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 
 public class AdvancedAchievementsTotalRequirement extends ProgressiveRequirement {
-  public AdvancedAchievementsTotalRequirement(RankupPlugin plugin) {
-    super(plugin, "advancedachievements-total");
+  public AdvancedAchievementsTotalRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   private AdvancedAchievementsTotalRequirement(Requirement clone) {

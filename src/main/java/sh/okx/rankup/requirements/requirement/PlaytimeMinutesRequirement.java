@@ -10,8 +10,8 @@ public class PlaytimeMinutesRequirement extends ProgressiveRequirement {
   private static final int TICKS_PER_MINUTE = 20 * 60;
   private Statistic playOneTick;
 
-  public PlaytimeMinutesRequirement(RankupPlugin plugin) {
-    super(plugin, "playtime-minutes");
+  public PlaytimeMinutesRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
     try {
       playOneTick = Statistic.valueOf("PLAY_ONE_MINUTE");
     } catch (IllegalArgumentException e) {

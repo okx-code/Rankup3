@@ -8,8 +8,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class VotingPluginVotesRequirement extends ProgressiveRequirement {
-  public VotingPluginVotesRequirement(RankupPlugin plugin) {
-    super(plugin, "votingplugin-votes");
+  public VotingPluginVotesRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected VotingPluginVotesRequirement(Requirement clone) {

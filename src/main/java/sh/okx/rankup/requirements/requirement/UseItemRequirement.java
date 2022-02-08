@@ -8,8 +8,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class UseItemRequirement extends ProgressiveRequirement {
-  public UseItemRequirement(RankupPlugin plugin) {
-    super(plugin, "use-item", true);
+  public UseItemRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name, true);
   }
 
   protected UseItemRequirement(UseItemRequirement clone) {

@@ -6,8 +6,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class TownyKingNumberTownsRequirement extends ProgressiveRequirement {
-  public TownyKingNumberTownsRequirement(RankupPlugin plugin) {
-    super(plugin, "towny-king-towns");
+  public TownyKingNumberTownsRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected TownyKingNumberTownsRequirement(TownyKingNumberTownsRequirement clone) {

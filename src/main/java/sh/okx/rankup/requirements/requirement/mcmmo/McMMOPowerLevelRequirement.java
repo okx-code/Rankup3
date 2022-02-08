@@ -7,8 +7,8 @@ import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
 
 public class McMMOPowerLevelRequirement extends ProgressiveRequirement {
-  public McMMOPowerLevelRequirement(RankupPlugin plugin) {
-    super(plugin, "mcmmo-power-level");
+  public McMMOPowerLevelRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected McMMOPowerLevelRequirement(Requirement clone) {

@@ -10,8 +10,8 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
 
   public static final double DELTA = 0.00001D;
 
-  public PlaceholderRequirement(RankupPlugin plugin) {
-    super(plugin, "placeholder");
+  public PlaceholderRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   public PlaceholderRequirement(PlaceholderRequirement clone) {

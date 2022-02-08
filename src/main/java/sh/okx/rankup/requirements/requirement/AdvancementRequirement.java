@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  * @author Link, with modifications from Okx
  */
 public class AdvancementRequirement extends Requirement {
-  public AdvancementRequirement(RankupPlugin plugin) {
-    super(plugin, "advancement");
+  public AdvancementRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected AdvancementRequirement(Requirement clone) {
