@@ -216,9 +216,9 @@ public class RankupPlugin extends JavaPlugin {
     }
 
     setupEconomy();
-
     closeInventories();
-    loadConfigs(init);
+    loadConfigs();
+    testConfigs(init);
 
     long time = (long) (config.getDouble("autorankup-interval") * 60 * 20);
     if (time > 0) {
@@ -300,13 +300,15 @@ public class RankupPlugin extends JavaPlugin {
     }
   }
 
-  private void loadConfigs(boolean init) {
+  private void loadConfigs() {
     saveLocales();
 
     String locale = config.getString("locale", locales[0]);
     File localeFile = new File(new File(getDataFolder(), "locale"), locale + ".yml");
     messages = YamlConfiguration.loadConfiguration(localeFile);
+  }
 
+  private void testConfigs(boolean init){
     if (init) {
       Bukkit.getScheduler().runTask(this, () -> {
         refreshRanks();
@@ -314,6 +316,18 @@ public class RankupPlugin extends JavaPlugin {
       });
     } else {
       refreshRanks();
+    }
+  }
+
+  private void saveLocales() {
+    for (String locale : locales){saveLocale(locale);}
+  }
+
+  private void saveLocale(String locale) {
+    String name = "locale/" + locale + ".yml";
+    File file = new File(getDataFolder(), name);
+    if (!file.exists()) {
+      saveResource(name, false);
     }
   }
 
@@ -338,18 +352,6 @@ public class RankupPlugin extends JavaPlugin {
     } catch (Exception e) {
       this.errorMessage = e.getClass().getName() + ": " + e.getMessage();
       e.printStackTrace();
-    }
-  }
-
-  private void saveLocales() {
-    for (String locale : locales){saveLocale(locale);}
-  }
-
-  private void saveLocale(String locale) {
-    String name = "locale/" + locale + ".yml";
-    File file = new File(getDataFolder(), name);
-    if (!file.exists()) {
-      saveResource(name, false);
     }
   }
 
