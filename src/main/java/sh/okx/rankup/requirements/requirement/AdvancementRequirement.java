@@ -25,22 +25,19 @@ public class AdvancementRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    for (String string : getValuesString()) {
-      Iterator<Advancement> advancementIterator = Bukkit.advancementIterator();
-      while (advancementIterator.hasNext()) {
-        Advancement adv = advancementIterator.next();
-        String key = adv.getKey().getKey();
-        Pattern pattern = Pattern.compile(string.replace("*", ".*").replace("-", ""));
-        if (pattern.matcher(key).find()) {
-          boolean positive = !string.startsWith("-");
-
-          AdvancementProgress progress = player.getAdvancementProgress(adv);
-          if (progress.isDone() == positive) {
-            return true;
-          }
+    String string = getValueString();
+    Iterator<Advancement> advancementIterator = Bukkit.advancementIterator();
+    while (advancementIterator.hasNext()) {
+      Advancement adv = advancementIterator.next();
+      Pattern pattern = Pattern.compile(string.replace("*", ".*").replace("-", ""));
+      if (pattern.matcher(adv.getKey().getKey()).find()) {
+        boolean positive = !string.startsWith("-");
+        AdvancementProgress progress = player.getAdvancementProgress(adv);
+        if (progress.isDone() == positive) {
+          return true;
+        } else {
+          return false;
         }
-
-
       }
     }
     return false;
