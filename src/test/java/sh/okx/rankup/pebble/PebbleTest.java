@@ -24,7 +24,7 @@ public class PebbleTest extends RankupTest {
     list.add("L2");
     list.add("L3");
     ctx.put("list", list);
-    PebbleTextProcessor processor = new PebbleTextProcessor(ctx, null);
+    PebbleTextProcessor processor = new PebbleTextProcessor(null, ctx, null);
     assertEquals("L2", processor.process("{{ list[one] }}"));
   }
 
@@ -41,5 +41,35 @@ public class PebbleTest extends RankupTest {
         .send(player);
 
     player.assertSaid("true");
+  }
+
+  @Test
+  public void testRequirementAbsent() {
+    PlayerMock player = server.addPlayer();
+
+    plugin.getPermissions().addGroup(player.getUniqueId(), "B");
+    RankElement<Rank> rankElement = plugin.getRankups().getByPlayer(player);
+
+    plugin.newMessageBuilder("{{ rank.has('xp-level') ? rank.req('xp-level').total | simple : 'none' }}")
+        .replacePlayer(player)
+        .replaceOldRank(rankElement.getRank())
+        .send(player);
+
+    player.assertSaid("none");
+  }
+
+  @Test
+  public void testRequirementPresent() {
+    PlayerMock player = server.addPlayer();
+
+    plugin.getPermissions().addGroup(player.getUniqueId(), "C");
+    RankElement<Rank> rankElement = plugin.getRankups().getByPlayer(player);
+
+    plugin.newMessageBuilder("{{ rank.has('xp-level') ? rank.req('xp-level').total | simple : 'none' }}")
+        .replacePlayer(player)
+        .replaceOldRank(rankElement.getRank())
+        .send(player);
+
+    player.assertSaid("2");
   }
 }

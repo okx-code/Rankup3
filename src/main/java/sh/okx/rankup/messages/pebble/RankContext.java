@@ -43,6 +43,14 @@ public class RankContext {
     return getRequirement(requirement);
   }
 
+  public boolean getHas(String requirement) {
+    return rank.getRequirement(player, requirement) != null;
+  }
+
+  public boolean getHas(String requirement, String sub) {
+    return rank.getRequirement(player, requirement + "#" + sub) != null;
+  }
+
   public RequirementContext getReq(String requirement, String sub) {
     return getRequirement(requirement, sub);
   }

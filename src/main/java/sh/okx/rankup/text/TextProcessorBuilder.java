@@ -3,6 +3,7 @@ package sh.okx.rankup.text;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import sh.okx.rankup.placeholders.Placeholders;
@@ -17,8 +18,8 @@ public class TextProcessorBuilder {
     return this;
   }
 
-  public TextProcessorBuilder pebble(Map<String, Object> context, Placeholders options) {
-    processors.add(new PebbleTextProcessor(context, options));
+  public TextProcessorBuilder pebble(Logger logger, Map<String, Object> context, Placeholders options) {
+    processors.add(new PebbleTextProcessor(logger, context, options));
     return this;
   }
 
