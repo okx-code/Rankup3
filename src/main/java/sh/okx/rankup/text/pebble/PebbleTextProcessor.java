@@ -11,18 +11,18 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.bukkit.plugin.java.JavaPlugin;
-import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.messages.pebble.InvalidRequirementException;
 import sh.okx.rankup.placeholders.Placeholders;
 import sh.okx.rankup.text.TextProcessor;
 
 public class PebbleTextProcessor implements TextProcessor {
 
+  private final Logger logger;
   private final Map<String, Object> context;
   private final Placeholders options;
 
-  public PebbleTextProcessor(Map<String, Object> context, Placeholders options) {
+  public PebbleTextProcessor(Logger logger, Map<String, Object> context, Placeholders options) {
+    this.logger = logger;
     this.context = context;
     this.options = options;
   }
@@ -60,7 +60,6 @@ public class PebbleTextProcessor implements TextProcessor {
         if (ex.getCause() instanceof InvocationTargetException) {
           if (ex.getCause().getCause() instanceof InvalidRequirementException) {
             InvalidRequirementException cause = (InvalidRequirementException) ex.getCause().getCause();
-            Logger logger = JavaPlugin.getPlugin(RankupPlugin.class).getLogger();
             logger.severe("Unknown requirement \"" + cause.getRequirement() + "\" on rank \"" + cause.getRank().getRank() + "\" in message:");
             for (String line : string.split("\n")) {
               logger.severe(line);

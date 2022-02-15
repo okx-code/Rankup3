@@ -24,7 +24,7 @@ java {
 repositories {
     mavenCentral()
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     maven {
         url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
@@ -57,12 +57,14 @@ dependencies {
     compileOnly ('me.clip:placeholderapi:2.10.9') {
         exclude group: 'org.bstats'
     }
-    compileOnly 'com.github.pyvesb:advanced-achievements:6.7.2'
+    compileOnly 'com.github.pyvesb:advanced-achievements:6.7.2' 
     compileOnly 'com.github.astei:Superbvote:700fca43659b438cb9bb36c218a7646d2f2ef315'
     compileOnly('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
-    compileOnly 'com.github.BenCodez:VotingPlugin:6.8.1'
+    compileOnly ('com.github.BenCodez:VotingPlugin:6.8.1') {
+        transitive = false
+    }
 
     compileOnly 'com.github.LlmDl:Towny:25fc18a'
     testImplementation 'com.github.LlmDl:Towny:25fc18a'

@@ -38,7 +38,8 @@ public class RequirementContext {
   }
 
   public double getQuotient() {
-    return (getTotal() > 0 ? (getProgress() / getTotal()) : 1);
+    double total = getTotal();
+    return total == 0 ? 1 : getProgress() / total;
   }
 
   public double getPercent() {

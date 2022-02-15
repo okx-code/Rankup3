@@ -111,7 +111,7 @@ public class PebbleMessageBuilder implements MessageBuilder {
     return new TextProcessorBuilder()
         .legacy(context, plugin.getPlaceholders())
         .papi(player)
-        .pebble(context, plugin.getPlaceholders())
+        .pebble(plugin.getLogger(), context, plugin.getPlaceholders())
         .papi(player)
         .colour()
         .create();
