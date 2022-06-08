@@ -1,7 +1,7 @@
 # the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
   requirements-not-met: "&cRütbe atlamak için {{rank.requirement('money').total | money}} paraya ihtiyacın var."
-  no-rankup: "&eEn yükset rütbedesin."
+  no-rankup: "&eEn yüksek rütbedesin."
   # set to an empty string, ie: success-public: ""
   # to hide that message.
   success-public: "&a{{player}} &d{{next.rank}} &erütbesine atladı!"
