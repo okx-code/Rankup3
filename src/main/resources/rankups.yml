@@ -5,40 +5,81 @@
 # Join the discord server for live support: https://discord.gg/maB4382 (buyers only)
 #
 
-# this name doesn't matter
-Aexample:
-  # the name of the group
-  # players have to be in this rank to rankup
+# This name must be unique
+# but can be anything you like.
+ExampleA:
+
+  # The name of the group players
+  # have to be in order to rank up.
+  #
+  # Prioritize displaynames!
   rank: 'A'
-  # the name of the rank a player can rankup to
+
+  # The name of the group players
+  # will rank up to next.
+  #
+  # Prioritize displaynames!
   next: 'B'
-  # List of requirements to go to the next rank
-  # This example will charge 1000 money to rankup from A to B.
-  # https://okx.sh/rankup/List-of-Requirements.html
-  # custom requirements can also be added by other plugins.
+
+  # List of requirements to go to the next rank.
+  # This example will charge 1000 money to rank up from A to B.
+
+  # Learn more https://okx.sh/rankup/List-of-Requirements.html
   requirements:
     - 'money 1000'
-  # the console will run these commands when a player ranks up
-  # nb: groups are automatically changed with vault
-  #commands:
-  # this will run when a player ranks up from A to B.
-  #- 'say {{player}} well done for ranking up from {{rank.rank}} to {{next.rank}}!'
-Bexample:
+
+ExampleB:
   rank: 'B'
   next: 'C'
+
+  # This message will be sent
+  # in the server chat.
+  success-public: "&a{{player}} &ehas ranked up to: &d{{next.rank}}"
   requirements:
     - 'money 2500'
-Cexample:
+
+ExampleC:
   rank: 'C'
   next: 'D'
   requirements:
     - 'money 5000'
     - 'xp-level 2'
-  # you can have a custom messages for each rank
-  # the paths of these messages are the same as in the messages for your locale
+
+  # You can have a custom messages for each rank!
+  # the paths of these messages are the same as in the messages for your locale.
   rankup:
-    requirements-not-met: '&cYou need 5000 money and 2 levels of XP to rankup to D.'
-    list:
-      complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &e(5000 money, 2 XP levels)"
-      current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &e(5000 money, 2 XP levels)"
-      incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &e(5000 money, 2 XP levels)"
+
+    # The following message contains a placeholder.
+
+    # Quick breakdown:
+    # - rank.req = specifies the rank.
+    # - money    = specifies the requirement.
+    # - total    = specifies what you want from the placeholder.
+    # - simple   = formats the placeholder.
+    # Learn more: https://okx.sh/rankup/Text-Templating.html
+
+    requirements-not-met: "&cYou need {{ rank.req('money').total | simple }} money and {{ rank.req('xp-level').total | simple }} levels of XP to rank up to {{next.rank}}."
+
+ExampleD:
+  rank: 'D'
+  next: 'E'
+  requirements:
+    - 'money 10000'
+    - 'xp-level 5'
+  rankup:
+
+    # Small intro to multi-line syntax
+    # -> Notice the | after requirements-not-met.
+    #    It means it's a multi-line message.
+    #
+    # -> The actual message is on the following
+    #    line indented by 2 spaces.
+    #
+    # -> Notice that the message doesn't
+    #    double quotes ("") like the others.
+
+    requirements-not-met: |
+      &cYou need:
+      &c- {{ rank.req('money').total | simple }} money 
+      &c- {{ rank.req('xp-level').total | simple }} XP levels
+      &cTo rank up to {{next.rank}}!
