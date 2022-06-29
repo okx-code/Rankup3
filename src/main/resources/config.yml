@@ -1,83 +1,94 @@
-# this is used for letting you know that you need to update/change your config file
+# This is used for letting you know that you need to update/change your config file.
+# Do not change this.
 version: 10
 
-# the locale to use for messages
-# all messages can be customised but this allows you to
-# choose messages that are already translated
-# locales can be found in the locale/ folder
+# The locale to use for messages.
+# All messages can be customised but this allows you to.
+# Choose messages that are already translated.
+# Locales can be found in the locale/ folder.
 locale: en
 
-# interval (in minutes) to check to autorankup players
-# ranking up manually will always be enabled
-# set to 0 to disable
+# Interval (in minutes) to check to autorankup players.
+# Ranking up manually will always be enabled.
+# Set to 0 to disable.
+
+# Players will need the rankup.auto permission to make use of this!
+# Permission is given by default.
 autorankup-interval: 0
 
-# whether /ranks and /prestiges should be enabled (true) or disabled (false)
+# Whether /ranks and /prestiges should be enabled (true) or disabled (false)
 # /rankup3 reload will not do anything if this is changed,
-# you will have to restart your server.
+# You will have to restart your server.
 ranks: true
-# you can alternatively negate the permission rankup.prestiges
-# this will also make the command not autocomplete in 1.13
+
+# You can alternatively negate the permission rankup.prestiges.
+# This will also make the command not autocomplete in 1.13+.
 prestiges: true
 
-# whether to enable the /ranks GUI.
-# will override the /ranks command
+# Whether to enable the /ranks GUI.
+# Will override the /ranks command.
 ranks-gui: false
 
-# whether or not /prestige and /prestiges should be enabled.
-# when a player reaches the top rank, they can do /prestige to return to the first rank,
+# Whether /prestige and /prestiges should be enabled.
+# When a player reaches the top rank, they can /prestige to return to the first rank,
 # but you will be able to grant them an additional "prestige" group or additional items.
 #
-# if you do not want this command to autocomplete, make sure
+# If you do not want this command to autocomplete, make sure
 # you negate the permission rankup.prestige with your permissions plugin.
-# if enabled, a prestiges.yml file will be generated with some example prestiges
-# You must restart your server when you change this for it to work!
+# If enabled, a prestiges.yml file will be generated with some example prestiges
+# you must restart your server when you change this for it to work!
 prestige: false
 
-# if true, players with the permission rankup.notify will receive notifications when they join
+# If true, players with the permission rankup.notify will receive notifications when they join
 # to update if the server is on an older version of Rankup.
 notify-update: true
 
-# if rankups and prestiges should be by permissions
-#   if false, players will be checked for if they have a group of the same name as in rankups.yml,
-# and automatically added and taken away from those groups.
-#   if true, players will be checked for the permission rankup.rank.RANK, where RANK
-# is the rankup in rankups.yml.
-# true also enables MANUAL MODE: Nothing will automatically change on rankup.
-# You must use 'commands:' to change a player's group or permission when true. https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#1-commands
+# +------------------------------------------------------+
+# | Don't change this unless you know what you're doing! |
+# +------------------------------------------------------+
+# Changing this setting to "true" can lead to your rankups.yml no longer working.
+#
+# Learn more about this:
+# https://okx.sh/rankup/Advanced-Configuration/Permission-Rankup.html
 permission-rankup: false
 
-# how people should confirm ranking up
-# options are: gui, text or none
+# How people should confirm ranking up
+# Options are: gui, text or none
 confirmation-type: 'gui'
 
-# how long, in seconds, people have to wait between a successful /rankup or /prestige
+# How long in seconds people have to wait between a successful /rankup or /prestige
 # set to 0 to disable.
 cooldown: 1
 
-# if enabled, players can run /maxrankup to rankup as many times as possible,
+# If enabled, players can run /maxrankup to rankup as many times as possible,
 # before they fail the requirements for the next rank.
-# the permission rankup.maxrankup is used for this command, but it is given by default.
-# note that /maxrankup, if enabled, has no confirmation.
+# The permission rankup.maxrankup is used for this command, but it is given by default.
+# Note that /maxrankup, if enabled, has no confirmation.
 max-rankup:
   # You must restart your server if you enable or disable /maxrankup!
   enabled: false
-  # whether to send a message for each rankup a player does
-  # if set to true, the chat may be spammed for each rankup a player goes through with /maxrankup
-  # if set to false, only the last rankup will be shown (if a player starts on rank A, then does
-  # /maxrankup and ranks up to B and then C, it will just say "player has ranked up to C")
-  individual-messages: true
 
-# options when using the text rankup confirmation
+  # Whether to send a message for each rank a player ranks up for.
+  # -> If true, the chat may be spammed for each rankup a player goes through with /maxrankup
+  #      Example: a player starts on rank A, but can rankup to rank D, the chat will say:
+  #        "player has ranked up to B"
+  #        "player has ranked up to C"
+  #        "player has ranked up to D"
+  # -> If false, only the last rankup will be shown
+  #      Example: a player starts on rank A, but can rankup to rank D, the chat will say:
+  #        "player has ranked up to D".
+  individual-messages: false
+
+# Options when using the text rankup confirmation
 text:
-  # the time in seconds for a player to
-  # confirm by typing /rankup again
+  # The time in seconds for a player to
+  # confirm by typing /rankup again.
   timeout: 10
 
-# placeholders:
+# Placeholders:
 # https://okx.sh/rankup/Placeholders.html
 placeholders:
-  # format for money. for more information, see
+  # Format for money. for more information, see
   # https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
   money-format: "#,##0.##"
   percent-format: "0.##"
@@ -96,12 +107,12 @@ placeholders:
     incomplete: "Incomplete"
   last-rank-display-name: "last rank"
 
-# what to shorten money by.
+# What to shorten money by.
 # ie 1000 -> 1k
-# set to an empty list to disable
-# for each entry here, it counts as increasing by a factor of 1,000
-# the first represents thousands (1,000) then millions (1,000,000) then billions (1,000,000,000) etc.
-# this is used in the "| shortmoney" filter
+# Set to an empty list to disable
+# For each entry here, it counts as increasing by a factor of 1,000
+# The first represents thousands (1,000) then millions (1,000,000) then billions (1,000,000,000) etc.
+# This is used in the "| shortmoney" filter
 shorten:
 - 'K'
 - 'M'
