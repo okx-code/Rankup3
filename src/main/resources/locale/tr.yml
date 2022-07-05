@@ -1,0 +1,120 @@
+# the messages in this section can be customised for each rankup in rankups.yml.
+rankup:
+  requirements-not-met: "&cRütbe atlamak için {{rank.requirement('money').total | money}} paraya ihtiyacın var."
+  no-rankup: "&eEn yüksek rütbedesin."
+  # set to an empty string, ie: success-public: ""
+  # to hide that message.
+  success-public: "&a{{player}} &d{{next.rank}} &erütbesine atladı!"
+  success-private: "&d{{next.rank}} &arütbesine atladın, tebrikler!"
+  # used for the text confirmation
+  confirmation: |-
+    &a{{next.rank}} &erütbesine atlamak istediğine emin misin?
+    &eRütbe atlamak için tekrardan &c/rankup &eyazarak rütbe
+    &eatlayacağını onayla.
+  must-prestige: "&cDaha fazla rütbe atlamak için prestij yapmalısın."
+
+  gui:
+    rows: 1
+    title: "{{next.rank}} rütbesine atla"
+    rankup:
+      material: EMERALD_BLOCK
+      # index can be separated by spaces to show in multiple groups
+      # for example: 0-3 9-12 18-21
+      # you can also just use a single number instead of a range.
+      index: 0-3
+      name: '&a&lOnayla'
+      # lore is optional
+      lore: '&b{{next.rank}} &6rütbesine atla'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lİptal Et'
+    fill:
+      name: ' '
+      # if you are using a 1.8-1.12 and you want to change this
+      # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
+      # this works for both the rankup and cancel blocks as well
+      material: BLACK_STAINED_GLASS_PANE
+
+  ranksgui:
+    title: "Rütbeler"
+    rows: 3
+    offset: 10
+    width: 7
+    complete:
+      material: GREEN_STAINED_GLASS_PANE
+      name: "&aRütbe &7{{next.rank}} &a(tamamlandı)"
+    current:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: "&7{{next.rank}} &drütbesine atla"
+    incomplete:
+      material: RED_STAINED_GLASS_PANE
+      name: "&cRütbe &7{{next.rank}} &c(rütbe atlama gerektirir)"
+    fill:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+
+
+  # you can (and probably should) you override these in rankups.yml
+  # to show the specific requirements for each rank.
+  # however if you are just using money or don't need to change the message per rank, you can use any combination of:
+  # {{rank.requirement('money').total | simple}} {MONEY_NEEDED} {PERCENT_DONE <requirement>} {PERCENT_LEFT <requirement>} {AMOUNT <requirement>} {AMOUNT_NEEDED <requirement>}
+  # {{rank.requirement('money').total | simple}} and {MONEY_NEEDED} are different from {AMOUNT money} and {AMOUNT_NEEDED money} in that they use a different format.
+  # here is an example of showing the requirements for just money:
+  #list:
+  #  complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}} &efor &7${{rank.requirement('money').total | simple}}"
+  #  current: "&c{{rank.rank}} &e\xbb &c{{next.rank}} &efor &a${{rank.requirement('money').total | simple}} &e{PERCENT_DONE money}%"
+  #  incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}} &efor &a${{rank.requirement('money').total | simple}}"
+  list:
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
+    # an empty string disables the header/footer
+    header: ""
+    footer: ""
+  # sent when a player tries to rankup when they are on cooldown
+  cooldown:
+    singular: "&cRütbe atlamak için {{seconds_left}} saniye beklemelisin."
+    plural: "&cRütbe atlamak için {{seconds_left}} saniye(ler) beklemelisin."
+# prestige messages can also be customised
+prestige:
+  requirements-not-met: "&cPrestij yapmak için {{rank.requirement('money').total | money}} paraya ihtiyacın var."
+  no-prestige: "&eEn yüksek prestijdesin."
+
+  success-public: "&a{{player}} &d{{next.rank}} &erütbesine prestijledi!"
+  success-private: "&d{{next.rank}} &arütbesine prestijledin, tebrikler!"
+
+  confirmation: |-
+    &a{{next.rank}} &erütbesine prestijlemek istediğine emin misin?
+    &ePrestij yapmak için tekrardan &c/prestige &eyazarak prestij
+    &eyapacağını onayla.
+  gui:
+    title: "{{next.rank}} rütbesine prestijle"
+    rankup:
+      material: GOLD_BLOCK
+      index: 0-3
+      name: '&a&lOnayla'
+      lore: '&b{{next.rank}} &6rütbesine prestijle'
+    cancel:
+      material: REDSTONE_BLOCK
+      index: 5-8
+      name: '&c&lİptal Et'
+    fill:
+      name: ' '
+      # if you are using a 1.8-1.12 and you want to change this
+      # you can use MATERIAL:data, for example STAINED_GLASS_PANE:8
+      # this works for both the rankup and cancel blocks as well
+      material: BLACK_STAINED_GLASS_PANE
+
+  list:
+    complete: "&7{{rank.rank}} &8\xbb &7{{next.rank}}"
+    current: "&c{{rank.rank}} &e\xbb &c{{next.rank}}"
+    incomplete: "&r{{rank.rank}} &e\xbb &r{{next.rank}}"
+    header: ""
+    footer: ""
+  cooldown:
+    singular: "&cPrestij yapmak için {{seconds_left}} saniye beklemelisin."
+    plural: "&cPrestij yapmak için {{seconds_left}} saniye(ler) beklemelisin."
+
+not-high-enough: "&cŞu anki rütben ile prestij yapamazsın."
+not-in-ladder: "&cÜzgünüz, ancak sahip olduğun gruplar için atlanacak bir rütbe bulamadık. Atlanılabilecek rütbeleri görüntülemek için /ranks komutunu kullan."
