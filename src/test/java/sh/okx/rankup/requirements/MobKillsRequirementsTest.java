@@ -16,7 +16,7 @@ public class MobKillsRequirementsTest extends RankupTest {
   }
 
   @Test
-  public void testPrestigeRequirements() {
+  public void testMobKillsRequirements() {
     PlayerMock player = server.addPlayer();
 
     player.setStatistic(Statistic.KILL_ENTITY, EntityType.SNOWMAN, 2);
