@@ -1,27 +1,32 @@
 #
 # If you are adding your own ranks, make sure to delete the example ranks!
 # Need help setting the plugin up?
-# Read an example: https://github.com/okx-code/Rankup3/wiki/Configuration-Example
 # Join the discord server for live support: https://discord.gg/maB4382 (buyers only)
+# Read a Configuration Example: https://github.com/okx-code/Rankup3/wiki/Configuration-Example#minimum-requirements-to-use-rankup
+# Documentation of this file: https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#how-to-rankups
+# Read an Advanced Example: https://github.com/okx-code/Rankup3/wiki/Advanced-Configuration-Example#what-more
 #
-
-ExampleA: # This name doesn't matter, it can be anything you want!
-  rank: 'A' # This is the rank where you start from. Use the displayname if you have it!
-  next: 'B' # This is the rank where you go next. Read it as "From A to B"
+# The following name is never seen in-game. https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#1-heading
+ExampleA: # It can say anything, but must be unique from all other section names. Headings with duplicate names may cause a multiple root nodes error.
+  rank: 'A' # This is the group/permission players must start at. https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#2-rank
+  next: 'B' # This is the group/permission players move up to. Use the <name> part from "displayname.<name>" if you use displaynames!https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#3-next
+  # Read it as "Rankup from A to B". Luckperms starts players in group 'default'.
   requirements:  # Here go your requirements. You can have as many as you want.
-# List of requirements: https://github.com/okx-code/Rankup3/wiki/List-of-Requirements
-    - 'money 5000'
-    - 'xp-level 5'
-
-ExampleB:
+    - 'money 5000' # player must pay 5000
+    - 'xp-level 5' # player must pay 5 levels
+    # List of requirements: https://github.com/okx-code/Rankup3/wiki/List-of-Requirements
+ExampleBee: # mob-kills requirement example
   rank: 'B'
   next: 'C'
-  requirements:
-    - 'money 10000'
-    - 'xp-level 10'
-  rankup: # requirements-not-met is a custom message that gets displayed when you DON'T meet the requirements.
-    requirements-not-met: "&3You need &d&n$10K &3and &d&n10 XP levels&3!" # It supports (RGB if 1.16+) color codes.
-
+  requirements: # https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#4-requirements
+    # https://github.com/okx-code/Rankup3/wiki/List-of-Requirements#how-to-specify-sub-requirements-in-placeholders
+    - 'mob-kills Bee 1' # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/package-summary.html
+    # https://github.com/okx-code/Rankup3/wiki/List-of-Requirements#list
+    - 'moneyh 10000' # This requirement only checks the player's balance rather than require the value as payment.
+    - 'xp-levelh 10' # This requirement only checks the player's level rather than require the value as payment.
+  rankup: # https://github.com/okx-code/Rankup3/wiki/How-to-rankups.yml-and-prestiges.yml#3-rankup
+    requirements-not-met: "&3You need &d&n$10K &3and &d&n10 XP levels&3!" # Supports RGB color codes like #&hexnum if 1.16+. Otherwise, use old native or bukkit codes like §x§9§D§6§5§F§F
+  # requirements-not-met is a custom message displayed when the player fails to meet all the prior listed requirements.
 ExampleC:
   rank: 'C'
   next: 'D'
@@ -29,26 +34,24 @@ ExampleC:
     - 'money 15000'
     - 'xp-level 12'
     - 'total-mob-kills 15'
-  rankup: # Introduction to placeholders and multi-line messages!
-    requirements-not-met: |- # These 2 characters indicate to Rankup that it's a multi-line message.
-# List of placeholders: https://github.com/okx-code/Rankup3/wiki/Config-Placeholders
+  rankup: # Information on Customized Messsages https://github.com/okx-code/Rankup3/wiki/Configuration-Example#wrong-message
+    requirements-not-met: |- # These 2 characters indicate a multi-line message.
       &3You need:
       &c- &d&n${AMOUNT money}
-      &c- &d&n{AMOUNT xp-level) &3XP levels
+      &c- &d&n{AMOUNT xp-level} &3XP levels
       &c- &d&n{AMOUNT total-mob-kills} &3mob kills
       &3 to reach &c&l{RANK}&3!
-
+    # All correctly indented lines following those 2 characters, will be included in the message.
+    # These comments are not identically indented, and therefore will not appear in the message output!
+    # FAQ for multi-line messages: https://github.com/okx-code/Rankup3/wiki/FAQ#how-do-i-write-multi-line-messages
+    # We used config-placeholders here to autofill the message with the requirement values!
+    # This lists all placeholders: https://github.com/okx-code/Rankup3/wiki/Config-Placeholders
 ExampleD:
   rank: 'D'
   next: 'E'
   requirements:
-    - 'moneyh 30000' # This requirement doesn't remove the money from the player's balance.
-    - 'mob-kills zombie 20' # This requirement has a sub-requirement.
-    - 'advancement story/iron_tools'
+    - 'advancement story/iron_tools' # https://minecraft.fandom.com/wiki/Advancement#List_of_advancements
+    - 'block-break STONE 1000' # only available in versions 1.13+ https://github.com/okx-code/Rankup3/wiki/FAQ#what-rankup-version-do-i-need-for-minecraft-version-117116115114113112111110191817
   rankup:
-    requirements-not-met: |-
-      &3You need:
-      &c- &d&n${AMOUNT moneyh}
-      &c- &d&n{AMOUNT mob-kills#zombie} &3zombie kills
-      &c- &d&nThe "isn't it an iron pick" &3advancement.
-      &3 to reach &c&l{RANK}&3!
+    requirements-not-met: 'You have {AMOUNT_DONE block-break#STONE}/{AMOUNT block-break#stone}.\n{AMOUNT_NEEDED block-break#STONE} stone left to break.'
+    # FAQ for multi-line messages: https://github.com/okx-code/Rankup3/wiki/FAQ#how-do-i-write-multi-line-messages
