@@ -180,7 +180,13 @@ public class RankupPlugin extends JavaPlugin {
     getCommand("rankup3").setExecutor(new InfoCommand(this, notifier));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
     getServer().getPluginManager().registerEvents(
-        new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update"), "rankup.notify"), this);
+      new JoinUpdateNotifier(
+        notifier,
+        () -> getConfig().getBoolean("notify-update"),
+        "rankup.notify"
+      ),
+      this
+    );
 
     placeholders = new Placeholders(this);
     placeholders.register();
@@ -262,12 +268,12 @@ public class RankupPlugin extends JavaPlugin {
       sender.sendMessage(
           ChatColor.RED + "Could not load Rankup, check console for more information.");
     } else {
-      getLogger().severe("Failed to load Rankup");
+      getLogger().severe("Rankup failed to load!");
     }
     for (String line : errorMessage.split("\n")) {
       getLogger().severe(line);
     }
-    getLogger().severe("More information can be found in the console log at startup");
+    getLogger().severe("More information can be found in the console log at startup.");
     return true;
   }
 
