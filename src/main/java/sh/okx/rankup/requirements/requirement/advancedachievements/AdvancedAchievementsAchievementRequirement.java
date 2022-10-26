@@ -27,6 +27,11 @@ public class AdvancedAchievementsAchievementRequirement extends Requirement {
   }
 
   @Override
+  public String getSub() {
+    return getValueString();
+  }
+
+  @Override
   public double getTotal(Player player) {
     return 1;
   }

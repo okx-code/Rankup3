@@ -52,4 +52,9 @@ public class AdvancementRequirement extends Requirement {
   public double getValueDouble() {
     return 1;
   }
+
+  @Override
+  public String getSub(){
+    return getValueString();
+  }
 }

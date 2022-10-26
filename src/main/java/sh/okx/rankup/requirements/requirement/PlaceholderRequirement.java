@@ -78,8 +78,13 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
 
   @Override
   public String getFullName() {
+    return name + "#" + getSub();
+  }
+
+  @Override
+  public String getSub() {
     String[] parts = getValueString().split(" ");
-    return name + "#" + parts[0].replace("%", "");
+    return parts[0].replace("%", "");
   }
 
   @Override
