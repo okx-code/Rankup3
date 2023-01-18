@@ -49,7 +49,7 @@ permission-rankup: false
 # if players can use /rankup noconfirm to bypass any confirmation
 # the permission rankup.noconfirm is used for this command, but it is true by default
 # the console can always do /rankup noconfirm <player>
-enable-noconfirm: true
+enable-noconfirm: false
 
 # how people should confirm ranking up
 # options are: gui, text or none

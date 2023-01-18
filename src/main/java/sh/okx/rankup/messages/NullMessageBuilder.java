@@ -30,7 +30,7 @@ public class NullMessageBuilder implements MessageBuilder {
 
   @Override
   public MessageBuilder replaceSeconds(long seconds, long secondsLeft) {
-    return null;
+    return this;
   }
 
   @Override

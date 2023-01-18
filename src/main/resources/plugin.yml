@@ -36,6 +36,7 @@ permissions:
       rankup.prestiges: true
       rankup.auto: true
       rankup.maxrankup: true
+      rankup.noconfirm: true
   rankup.admin:
     children:
       # if a player can see if the plugin needs updating when they run /pru
@@ -47,6 +48,7 @@ permissions:
       # if a player receives notifications to update rankup when they log in.
       rankup.notify: true
       rankup.playtime: true
+      rankup.noconfirm.other: true
     default: op
   rankup.rankup:
     default: true
@@ -59,6 +61,8 @@ permissions:
   rankup.auto:
     default: true
   rankup.maxrankup:
+    default: true
+  rankup.noconfirm:
     default: true
   rankup.playtime:
     description: Use all /rankup3 playtime subcommands for anyone.

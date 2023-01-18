@@ -1,8 +1,10 @@
 package sh.okx.rankup.commands;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.WeakHashMap;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,6 +31,11 @@ public class RankupCommand implements CommandExecutor {
       return true;
     }
 
+    if (plugin.getConfig().getBoolean("enable-noconfirm", true) && args.length > 0 && args[0].equalsIgnoreCase("noconfirm")) {
+      handleNoConfirm(sender, label, Arrays.copyOfRange(args, 1, args.length));
+      return true;
+    }
+
     // check if player
     if (!(sender instanceof Player)) {
       return false;
@@ -39,6 +46,7 @@ public class RankupCommand implements CommandExecutor {
     if (!plugin.getHelper().checkRankup(player)) {
       return true;
     }
+
     RankElement<Rank> rankElement = rankups.getByPlayer(player);
 
     FileConfiguration config = plugin.getConfig();
@@ -78,5 +86,24 @@ public class RankupCommand implements CommandExecutor {
         throw new IllegalArgumentException("Invalid confirmation type " + confirmationType);
     }
     return true;
+  }
+
+  private void handleNoConfirm(CommandSender sender, String label, String[] args) {
+    if (sender.hasPermission("rankup.noconfirm.other") && args.length > 0) {
+      Player player = Bukkit.getPlayer(args[0]);
+      if (player == null) {
+        sender.sendMessage(ChatColor.RED + "Player not found: " + args[0]);
+      } else {
+        plugin.getHelper().rankup(player);
+        sender.sendMessage(ChatColor.GREEN + "Triggered no-confirmation rankup for " + player.getName());
+      }
+    } else {
+      if (!(sender instanceof Player)) {
+        sender.sendMessage("/" + label + " noconfirm <player>");
+        return;
+      }
+
+      plugin.getHelper().rankup((Player) sender);
+    }
   }
 }
