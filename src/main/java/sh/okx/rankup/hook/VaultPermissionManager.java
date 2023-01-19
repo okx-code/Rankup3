@@ -1,6 +1,8 @@
 package sh.okx.rankup.hook;
 
+import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import sh.okx.rankup.RankupPlugin;
 
@@ -26,6 +28,14 @@ public class VaultPermissionManager implements PermissionManager {
     if (!provider.hasGroupSupport()) {
       return null;
     }
+    String lpContext = plugin.getConfig().getString("luckperms-context");
+    if (lpContext != null && !lpContext.isEmpty()) {
+      RegisteredServiceProvider<LuckPerms> lpProvider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+      if (lpProvider != null) {
+        return LuckPermsGroupProvider.createFromString(lpProvider.getProvider(), lpContext);
+      }
+    }
+
     return new VaultGroupProvider(provider);
   }
 

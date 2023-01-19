@@ -46,6 +46,15 @@ notify-update: true
 # use commands to change a player's group or permission.
 permission-rankup: false
 
+# if not empty, these are the contexts to use when modifying groups if LuckPerms is enabled
+# if empty, this will be based on your LuckPerms config.yml 'use-vault-server' and 'vault-server'
+# this option will only if permission-rankup is disabled
+#
+# luckperms-context: 'server=global' # to make all rankups global
+# luckperms-context: 'server=survival' # to make all rankups specific to survival
+# luckperms-context: 'server=survival world=world_nether' # to make all rankups specific to the nether world in survival
+luckperms-context: ''
+
 # if players can use /rankup noconfirm to bypass any confirmation
 # the permission rankup.noconfirm is used for this command, but it is true by default
 # the console can always do /rankup noconfirm <player>
