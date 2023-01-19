@@ -14,7 +14,7 @@ pitest {
 }
 
 group 'sh.okx'
-version '3.13.3'
+version '3.14'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
