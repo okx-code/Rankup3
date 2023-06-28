@@ -1,13 +1,10 @@
 package sh.okx.rankup.ranks;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
+
+import java.util.*;
 
 public abstract class RankList<T extends Rank> {
 

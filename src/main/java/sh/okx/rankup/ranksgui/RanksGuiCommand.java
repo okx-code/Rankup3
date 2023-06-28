@@ -18,6 +18,9 @@ public class RanksGuiCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return false;
         }
+        if (plugin.error(sender)) {
+            return true;
+        }
         Player player = (Player) sender;
 
         listener.open(new RanksGui(plugin, player));

@@ -1,7 +1,6 @@
 package sh.okx.rankup.requirements.requirement.votingplugin;
 
 import com.bencodez.votingplugin.topvoter.TopVoter;
-import com.bencodez.votingplugin.user.UserManager;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.ProgressiveRequirement;
@@ -18,7 +17,7 @@ public class VotingPluginVotesRequirement extends ProgressiveRequirement {
 
   @Override
   public double getProgress(Player player) {
-    return UserManager.getInstance().getVotingPluginUser(player).getTotal(TopVoter.AllTime);
+    return VotingPluginUtil.getInstance().getUserManager().getVotingPluginUser(player).getTotal(TopVoter.AllTime);
   }
 
   @Override
