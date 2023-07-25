@@ -177,11 +177,11 @@ public class RankupExpansion implements Expansion {
             case "left":
                 return placeholders.getSimpleFormat().format(orElse(requirement, r -> r.getRemaining(player), 0));
             case "done":
-                return placeholders.getSimpleFormat().format(orElse(requirement, r -> r.getValueDouble() - r.getRemaining(player), 0));
+                return placeholders.getSimpleFormat().format(orElse(requirement, r -> r.getTotal(player) - r.getRemaining(player), 0));
             case "percent_left":
-                return placeholders.getPercentFormat().format(orElse(requirement, r -> (r.getRemaining(player) / r.getValueDouble()) * 100, 0));
+                return placeholders.getPercentFormat().format(orElse(requirement, r -> (r.getRemaining(player) / r.getTotal(player)) * 100, 0));
             case "percent_done":
-                return placeholders.getPercentFormat().format(orElse(requirement, r -> (1 - (r.getRemaining(player) / r.getValueDouble())) * 100, 100));
+                return placeholders.getPercentFormat().format(orElse(requirement, r -> (1 - (r.getRemaining(player) / r.getTotal(player))) * 100, 100));
             default:
                 return null;
         }

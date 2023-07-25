@@ -1,0 +1,5 @@
+a:
+  rank: 'a'
+  next: 'b'
+  requirements:
+    - 'world the_nether'
