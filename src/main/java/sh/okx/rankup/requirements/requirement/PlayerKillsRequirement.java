@@ -7,8 +7,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class PlayerKillsRequirement extends ProgressiveRequirement {
-  public PlayerKillsRequirement(RankupPlugin plugin) {
-    super(plugin, "player-kills");
+  public PlayerKillsRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected PlayerKillsRequirement(Requirement clone) {

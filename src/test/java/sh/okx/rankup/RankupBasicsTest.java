@@ -41,7 +41,7 @@ public class RankupBasicsTest extends RankupTest {
   public void testLastRank() {
     PlayerMock player = server.addPlayer();
 
-    groupProvider.addGroup(player.getUniqueId(), "D");
+    groupProvider.addGroup(player.getUniqueId(), "E");
 
     plugin.getHelper().rankup(player);
 

@@ -173,7 +173,7 @@ public class RankupExpansion implements Expansion {
         Requirement requirement = rank.getRequirement(player, requirementName);
         switch (params) {
             case "":
-                return orElse(requirement, Requirement::getValueString, "0");
+                return orElse(requirement, Requirement::getValue, "0");
             case "left":
                 return placeholders.getSimpleFormat().format(orElse(requirement, r -> r.getRemaining(player), 0));
             case "done":
