@@ -37,7 +37,7 @@ public class RequirementContext {
   }
 
   public String getSub(){
-    return requirement.hasSubRequirement() ? requirement.getSub() : requirement.getValue();
+    return requirement.hasSubRequirement() ? requirement.getSub() : "";
   }
 
   public String getValue(){
