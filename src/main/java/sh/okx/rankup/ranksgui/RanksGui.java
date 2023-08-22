@@ -63,12 +63,11 @@ public class RanksGui {
 
             RankElement<Rank> rankElement0 = rankElement;
             ItemStack item = get((section, path0) -> Gui.getItem(plugin, section.getConfigurationSection(path0), player, rankElement0), path, rankPath, basePath, null);
-
-            inventory.setItem(index++, item);
-            if (index > rows * 9) {
-                throw new IllegalArgumentException("Ranks GUI is too small for the number of ranks. Increase the number of rows on the ranks GUI.");
+            if (index > rows * width - offset) {
+                throw new IllegalArgumentException("Ranks GUI is set to " + (rows * width - offset) + ", which is too small for " + index + " ranks. Set a larger valid ranks GUI.");
             }
-            if (index == rowIndex) {
+            inventory.setItem(index, item);
+            if (++index == rowIndex) {
                 rowIndex += 9;
                 index += 9 - width;
             }

@@ -5,8 +5,8 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class TownyMayorRequirement extends Requirement {
-  public TownyMayorRequirement(RankupPlugin plugin) {
-    super(plugin, "towny-mayor");
+  public TownyMayorRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected TownyMayorRequirement(Requirement clone) {

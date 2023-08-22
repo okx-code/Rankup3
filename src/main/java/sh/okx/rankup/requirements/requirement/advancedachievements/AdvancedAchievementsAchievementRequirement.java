@@ -4,26 +4,33 @@ import com.hm.achievement.api.AdvancedAchievementsAPI;
 import com.hm.achievement.api.AdvancedAchievementsAPIFetcher;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
-import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.requirements.ProgressiveRequirement;
 
-public class AdvancedAchievementsAchievementRequirement extends Requirement {
-  public AdvancedAchievementsAchievementRequirement(RankupPlugin plugin) {
-    super(plugin, "advancedachievements-achievement");
+public class AdvancedAchievementsAchievementRequirement extends ProgressiveRequirement
+{
+  public AdvancedAchievementsAchievementRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
-  protected AdvancedAchievementsAchievementRequirement(Requirement clone) {
+  protected AdvancedAchievementsAchievementRequirement(ProgressiveRequirement clone) {
     super(clone);
   }
 
   @Override
   public boolean check(Player player) {
     AdvancedAchievementsAPI api = AdvancedAchievementsAPIFetcher.fetchInstance().get();
-    return api.hasPlayerReceivedAchievement(player.getUniqueId(), getValueString());
+    for (String achievement : getValuesString()) {
+      if (api.hasPlayerReceivedAchievement(player.getUniqueId(), achievement)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @Override
   public String getFullName() {
-    return super.getFullName() + "#" + getValueString();
+    return super.getFullName() + "#" + getValue();
   }
 
   @Override
@@ -32,7 +39,13 @@ public class AdvancedAchievementsAchievementRequirement extends Requirement {
   }
 
   @Override
-  public Requirement clone() {
+  public double getProgress(Player player)
+  {
+    return this.check(player) ? 1 : 0;
+  }
+
+  @Override
+  public ProgressiveRequirement clone() {
     return new AdvancedAchievementsAchievementRequirement(this);
   }
 }

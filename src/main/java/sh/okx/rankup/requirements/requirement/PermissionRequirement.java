@@ -5,8 +5,8 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class PermissionRequirement extends Requirement {
-  public PermissionRequirement(RankupPlugin plugin) {
-    super(plugin, "permission");
+  public PermissionRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected PermissionRequirement(Requirement clone) {

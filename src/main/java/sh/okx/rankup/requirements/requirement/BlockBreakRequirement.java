@@ -8,8 +8,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class BlockBreakRequirement extends ProgressiveRequirement {
-  public BlockBreakRequirement(RankupPlugin plugin) {
-    super(plugin, "block-break", true);
+  public BlockBreakRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name, true);
   }
 
   protected BlockBreakRequirement(BlockBreakRequirement clone) {

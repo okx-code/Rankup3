@@ -3,6 +3,9 @@ package sh.okx.rankup.messages.pebble;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.requirements.Requirement;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RequirementContext {
 
   private final Player player;
@@ -33,6 +36,18 @@ public class RequirementContext {
     return requirement.getName();
   }
 
+  public String getSub(){
+    return requirement.hasSubRequirement() ? requirement.getSub() : requirement.getValue();
+  }
+
+  public String getValue(){
+    return requirement.getValue();
+  }
+
+  public List<String> getValues(){
+    return Arrays.asList(requirement.getValuesString());
+  }
+
   public double getQuotient() {
     double total = getTotal();
     return total == 0 ? 1 : getProgress() / total;
@@ -43,6 +58,6 @@ public class RequirementContext {
   }
 
   public String toString() {
-    return "Requirement[" + requirement.getFullName() + "]";
+    return "Requirements[" + requirement.getFullName() + "]";
   }
 }

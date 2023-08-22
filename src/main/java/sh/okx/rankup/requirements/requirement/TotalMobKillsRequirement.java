@@ -7,8 +7,8 @@ import sh.okx.rankup.requirements.ProgressiveRequirement;
 import sh.okx.rankup.requirements.Requirement;
 
 public class TotalMobKillsRequirement extends ProgressiveRequirement {
-  public TotalMobKillsRequirement(RankupPlugin plugin) {
-    super(plugin, "total-mob-kills");
+  public TotalMobKillsRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   private TotalMobKillsRequirement(Requirement clone) {

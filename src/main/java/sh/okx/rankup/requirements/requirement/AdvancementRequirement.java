@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  * @author Link, with modifications from Okx
  */
 public class AdvancementRequirement extends Requirement {
-  public AdvancementRequirement(RankupPlugin plugin) {
-    super(plugin, "advancement");
+  public AdvancementRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected AdvancementRequirement(Requirement clone) {
@@ -25,22 +25,19 @@ public class AdvancementRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    for (String string : getValuesString()) {
-      Iterator<Advancement> advancementIterator = Bukkit.advancementIterator();
-      while (advancementIterator.hasNext()) {
-        Advancement adv = advancementIterator.next();
-        String key = adv.getKey().getKey();
-        Pattern pattern = Pattern.compile(string.replace("*", ".*").replace("-", ""));
-        if (pattern.matcher(key).find()) {
-          boolean positive = !string.startsWith("-");
-
-          AdvancementProgress progress = player.getAdvancementProgress(adv);
-          if (progress.isDone() == positive) {
-            return true;
-          }
+    String string = getValue();
+    Iterator<Advancement> advancementIterator = Bukkit.advancementIterator();
+    while (advancementIterator.hasNext()) {
+      Advancement adv = advancementIterator.next();
+      Pattern pattern = Pattern.compile(string.replace("*", ".*").replace("-", ""));
+      if (pattern.matcher(adv.getKey().getKey()).find()) {
+        boolean positive = !string.startsWith("-");
+        AdvancementProgress progress = player.getAdvancementProgress(adv);
+        if (progress.isDone() == positive) {
+          return true;
+        } else {
+          return false;
         }
-
-
       }
     }
     return false;

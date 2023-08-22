@@ -8,6 +8,7 @@ public abstract class Requirement implements Cloneable {
   protected final RankupPlugin plugin;
   @Getter
   protected final String name;
+  @Getter
   private String value;
   @Getter
   private String sub;
@@ -43,10 +44,6 @@ public abstract class Requirement implements Cloneable {
     } else {
       this.value = value;
     }
-  }
-
-  public String getValueString() {
-    return value;
   }
 
   public String[] getValuesString() {

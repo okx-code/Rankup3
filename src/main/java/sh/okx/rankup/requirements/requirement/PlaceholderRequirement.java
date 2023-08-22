@@ -10,8 +10,8 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
 
   public static final double DELTA = 0.00001D;
 
-  public PlaceholderRequirement(RankupPlugin plugin) {
-    super(plugin, "placeholder");
+  public PlaceholderRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   public PlaceholderRequirement(PlaceholderRequirement clone) {
@@ -63,7 +63,7 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
   }
 
   private String[] getParts(Player player) {
-    String[] parts = getValueString().split(" ");
+    String[] parts = getValue().split(" ");
     if (parts.length < 3) {
       throw new IllegalArgumentException(
           "Placeholder requirements must be in the form %placeholder% <operation> string");
@@ -78,8 +78,13 @@ public class PlaceholderRequirement extends ProgressiveRequirement {
 
   @Override
   public String getFullName() {
-    String[] parts = getValueString().split(" ");
-    return name + "#" + parts[0].replace("%", "");
+    return name + "#" + getSub();
+  }
+
+  @Override
+  public String getSub() {
+    String[] parts = getValue().split(" ");
+    return parts[0].replace("%", "");
   }
 
   @Override

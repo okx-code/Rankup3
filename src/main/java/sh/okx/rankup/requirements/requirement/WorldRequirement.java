@@ -5,8 +5,8 @@ import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.requirements.Requirement;
 
 public class WorldRequirement extends Requirement {
-  public WorldRequirement(RankupPlugin plugin) {
-    super(plugin, "world");
+  public WorldRequirement(RankupPlugin plugin, String name) {
+    super(plugin, name);
   }
 
   protected WorldRequirement(Requirement clone) {
@@ -15,8 +15,7 @@ public class WorldRequirement extends Requirement {
 
   @Override
   public boolean check(Player player) {
-    String[] worlds = getValuesString();
-    for (String world : worlds) {
+    for (String world : getValuesString()) {
       return player.getWorld().getName().equalsIgnoreCase(world);
     }
     return false;
