@@ -62,7 +62,7 @@ dependencies {
     compileOnly('com.github.mcMMO-Dev:mcMMO:601297') {
         exclude group: 'com.sk89q.worldguard'
     }
-    compileOnly ('com.bencodez:votingplugin:6.13.1') {
+    compileOnly ('com.bencodez:votingplugin:6.14.1') {
         transitive = false
     }
 

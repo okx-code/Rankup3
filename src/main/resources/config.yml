@@ -44,6 +44,9 @@ notify-update: true
 #   if true, players will be checked for the permission rankup.rank.RANK, where RANK
 # is the rankup in rankups.yml. Nothing will automatically happen on rankup, so you must
 # use commands to change a player's group or permission.
+# THIS IS MORE DIFFICULT TO USE. DO NOT ENABLE THIS UNLESS YOU ARE HAPPY TO ACKNOWLEDGE THAT IT MAKES MORE WORK FOR YOU.
+# By default, Rankup will automatically change groups when someone ranks up, using your permissions plugin.
+# You only need to enable this if you really need the flexibility.
 permission-rankup: false
 
 # if not empty, these are the contexts to use when modifying groups if LuckPerms is enabled

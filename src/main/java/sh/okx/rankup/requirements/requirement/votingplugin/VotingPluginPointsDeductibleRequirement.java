@@ -1,5 +1,6 @@
 package sh.okx.rankup.requirements.requirement.votingplugin;
 
+import com.bencodez.votingplugin.VotingPluginMain;
 import com.bencodez.votingplugin.user.VotingPluginUser;
 import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
@@ -18,7 +19,7 @@ public class VotingPluginPointsDeductibleRequirement extends VotingPluginPointsR
 
   @Override
   public void apply(Player player, double multiplier) {
-    VotingPluginUser user = VotingPluginUtil.getInstance().getUserManager().getVotingPluginUser(player);
+    VotingPluginUser user = VotingPluginMain.getPlugin().getVotingPluginUserManager().getVotingPluginUser(player);
     if(!user.removePoints(getValueInt()))  {
       plugin.getLogger().warning("Unable to remove VotingPlugin points");
     }
