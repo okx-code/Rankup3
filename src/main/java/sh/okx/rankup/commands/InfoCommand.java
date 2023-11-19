@@ -1,10 +1,5 @@
 package sh.okx.rankup.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Statistic;
@@ -23,6 +18,8 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
 import sh.okx.rankup.util.UpdateNotifier;
+
+import java.util.*;
 
 public class InfoCommand implements TabExecutor {
   private final RankupPlugin plugin;
@@ -262,7 +259,7 @@ public class InfoCommand implements TabExecutor {
             }
 
             player.setStatistic(playOneTick, minutes * 20 * 60);
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "Updated playtime for " + player.getName() + " to " + minutes + " minutes");
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Updated playtime for " + player.getName() + " to " + minutes + " minutes");
             return true;
           } else if (args[1].equalsIgnoreCase("add") && sender.hasPermission("rankup.playtime")) {
             if (args.length < 4) {
@@ -289,13 +286,13 @@ public class InfoCommand implements TabExecutor {
               player.incrementStatistic(playOneTick, minutes * 20 * 60);
             } else if (minutes < 0) {
               if (oldMinutes + minutes < 0) {
-                player.sendMessage(ChatColor.GRAY + "Playtime cannot be negative");
+                sender.sendMessage(ChatColor.GRAY + "Playtime cannot be negative");
                 return true;
               }
               player.decrementStatistic(playOneTick, -minutes * 20 * 60);
             }
             int newMinutes = oldMinutes + minutes;
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "Increased playtime for " + player.getName() + " to " + oldMinutes + (minutes >= 0 ? "+" : "") + minutes + "=" + newMinutes + " minutes");
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Increased playtime for " + player.getName() + " to " + oldMinutes + (minutes >= 0 ? "+" : "") + minutes + "=" + newMinutes + " minutes");
             return true;
           }
         }
