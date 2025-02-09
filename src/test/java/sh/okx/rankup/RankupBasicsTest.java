@@ -1,14 +1,14 @@
 package sh.okx.rankup;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.messages.Message;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RankupBasicsTest extends RankupTest {
   @Test
@@ -18,7 +18,7 @@ public class RankupBasicsTest extends RankupTest {
     // requirement of $1000
     plugin.getEconomy().setPlayer(player, 1000);
     // give them group A
-    groupProvider.addGroup(player.getUniqueId(), "A");
+    groupProvider.transferGroup(player.getUniqueId(), null, "A");
     // give the permission to auto rankup
     player.addAttachment(plugin, "rankup.auto", true);
 
@@ -41,7 +41,7 @@ public class RankupBasicsTest extends RankupTest {
   public void testLastRank() {
     PlayerMock player = server.addPlayer();
 
-    groupProvider.addGroup(player.getUniqueId(), "D");
+    groupProvider.transferGroup(player.getUniqueId(), null, "D");
 
     plugin.getHelper().rankup(player);
 
@@ -56,7 +56,7 @@ public class RankupBasicsTest extends RankupTest {
 
     plugin.getEconomy().setPlayer(player, 500);
 
-    groupProvider.addGroup(player.getUniqueId(), "A");
+    groupProvider.transferGroup(player.getUniqueId(), null, "A");
     plugin.getHelper().rankup(player);
 
     RankElement<Rank> element = plugin.getRankups().getTree().getFirst();

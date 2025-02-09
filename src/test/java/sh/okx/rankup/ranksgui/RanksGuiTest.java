@@ -1,11 +1,12 @@
 package sh.okx.rankup.ranksgui;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.inventory.Inventory;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RanksGuiTest extends RankupTest {
 
@@ -16,7 +17,7 @@ public class RanksGuiTest extends RankupTest {
   @Test
   public void testRowsWithGroup() {
     PlayerMock player = server.addPlayer();
-    plugin.getPermissions().addGroup(player.getUniqueId(), "a");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "a");
 
     player.addAttachment(plugin, "rankup.ranks", true);
     server.dispatchCommand(player, "ranks");

@@ -1,17 +1,18 @@
 package sh.okx.rankup.pebble;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import sh.okx.rankup.RankupTest;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.text.pebble.PebbleTextProcessor;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PebbleTest extends RankupTest {
   @Test
@@ -32,7 +33,7 @@ public class PebbleTest extends RankupTest {
   public void testIterable() {
     PlayerMock player = server.addPlayer();
 
-    plugin.getPermissions().addGroup(player.getUniqueId(), "C");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null,"C");
     RankElement<Rank> rankElement = plugin.getRankups().getByPlayer(player);
 
     plugin.newMessageBuilder("{{ rank.requirements is iterable }}")
@@ -47,7 +48,7 @@ public class PebbleTest extends RankupTest {
   public void testRequirementAbsent() {
     PlayerMock player = server.addPlayer();
 
-    plugin.getPermissions().addGroup(player.getUniqueId(), "B");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "B");
     RankElement<Rank> rankElement = plugin.getRankups().getByPlayer(player);
 
     plugin.newMessageBuilder("{{ rank.has('xp-level') ? rank.req('xp-level').total | simple : 'none' }}")
@@ -62,7 +63,7 @@ public class PebbleTest extends RankupTest {
   public void testRequirementPresent() {
     PlayerMock player = server.addPlayer();
 
-    plugin.getPermissions().addGroup(player.getUniqueId(), "C");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "C");
     RankElement<Rank> rankElement = plugin.getRankups().getByPlayer(player);
 
     plugin.newMessageBuilder("{{ rank.has('xp-level') ? rank.req('xp-level').total | simple : 'none' }}")

@@ -1,8 +1,9 @@
 package sh.okx.rankup.hook;
 
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class PermissionGroupProvider implements GroupProvider {
 
@@ -13,12 +14,7 @@ public class PermissionGroupProvider implements GroupProvider {
   }
 
   @Override
-  public void addGroup(UUID uuid, String group) {
-    // no-op
-  }
-
-  @Override
-  public void removeGroup(UUID uuid, String group) {
+  public void transferGroup(UUID uuid, String oldGroup, String group) {
     // no-op
   }
 

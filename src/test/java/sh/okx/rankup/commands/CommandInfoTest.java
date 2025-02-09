@@ -1,12 +1,12 @@
 package sh.okx.rankup.commands;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandInfoTest extends RankupTest {
   @Test
@@ -26,7 +26,7 @@ public class CommandInfoTest extends RankupTest {
     PlayerMock player = server.addPlayer();
     player.addAttachment(plugin, "rankup.force", true);
     plugin.getEconomy().setPlayer(player, 11);
-    groupProvider.addGroup(player.getUniqueId(), "A");
+    groupProvider.transferGroup(player.getUniqueId(), null, "A");
 
     plugin.getCommand("rankup3").execute(player, "pru", new String[] {"forcerankup", player.getName()});
 

@@ -1,10 +1,10 @@
 package sh.okx.rankup.commands;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class DisabledNoConfirmCommandTest extends RankupTest {
 
@@ -18,7 +18,7 @@ public class DisabledNoConfirmCommandTest extends RankupTest {
     player.addAttachment(plugin, "rankup.rankup", true);
     player.addAttachment(plugin, "rankup.noconfirm", true);
 
-    plugin.getPermissions().addGroup(player.getUniqueId(), "A");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "A");
     plugin.getEconomy().setPlayer(player, 10000);
 
     plugin.getCommand("rankup").execute(player, "rankup", new String[] {"noconfirm"});

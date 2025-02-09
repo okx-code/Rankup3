@@ -1,8 +1,5 @@
 package sh.okx.rankup.gui;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +20,10 @@ import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.util.Colour;
 import sh.okx.rankup.util.ItemUtil;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Gui implements InventoryHolder {
@@ -97,6 +98,11 @@ public class Gui implements InventoryHolder {
     if (section == null) {
       return null;
     }
+    ItemStack serializedItem = section.getItemStack("item");
+    if (serializedItem != null) {
+        return serializedItem;
+    }
+
     String materialName = section.getString("material").toUpperCase();
 
     ItemStack item;

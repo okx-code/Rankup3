@@ -146,9 +146,10 @@ public class InfoCommand implements TabExecutor {
         Rank prevRank = prevRankElement.getRank();
 
         if (prevRankElement.getRank() != null) {
-          plugin.getPermissions().removeGroup(player.getUniqueId(), currentRank.getRank());
+          plugin.getPermissions().transferGroup(player.getUniqueId(), currentRank.getRank(), prevRank.getRank());
+        } else {
+          plugin.getPermissions().transferGroup(player.getUniqueId(), null, prevRank.getRank());
         }
-        plugin.getPermissions().addGroup(player.getUniqueId(), prevRank.getRank());
 
         sender.sendMessage(ChatColor.GREEN + "Successfully forced "
                 + ChatColor.GOLD + player.getName()

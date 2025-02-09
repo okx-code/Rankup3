@@ -2,25 +2,23 @@ package sh.okx.rankup.providers;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
-import java.util.UUID;
 import sh.okx.rankup.hook.GroupProvider;
 
+import java.util.UUID;
+
 public class TestGroupProvider implements GroupProvider {
-    private Multimap<UUID, String> groups = ArrayListMultimap.create();
+  private Multimap<UUID, String> groups = ArrayListMultimap.create();
 
-    @Override
-    public boolean inGroup(UUID uuid, String group) {
-        return groups.containsEntry(uuid, group.toLowerCase());
-    }
+  @Override
+  public boolean inGroup(UUID uuid, String group) {
+    return groups.containsEntry(uuid, group.toLowerCase());
+  }
 
-    @Override
-    public void addGroup(UUID uuid, String group) {
-        groups.put(uuid, group.toLowerCase());
+  @Override
+  public void transferGroup(UUID uuid, String oldGroup, String group) {
+    if (oldGroup != null) {
+      groups.remove(uuid, oldGroup.toLowerCase());
     }
-
-    @Override
-    public void removeGroup(UUID uuid, String group) {
-        groups.remove(uuid, group.toLowerCase());
-    }
+    groups.put(uuid, group.toLowerCase());
+  }
 }

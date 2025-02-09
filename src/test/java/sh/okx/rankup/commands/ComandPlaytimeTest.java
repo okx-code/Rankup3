@@ -2,7 +2,7 @@ package sh.okx.rankup.commands;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.ChatColor;
 import org.bukkit.Statistic;
 import org.junit.jupiter.api.Test;

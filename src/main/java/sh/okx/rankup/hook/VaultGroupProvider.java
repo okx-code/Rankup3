@@ -28,18 +28,14 @@ public class VaultGroupProvider implements GroupProvider {
   }
 
   @Override
-  public void addGroup(UUID uuid, String group) {
+  public void transferGroup(UUID uuid, String oldGroup, String group) {
     Objects.requireNonNull(uuid);
     Objects.requireNonNull(group);
+
+    if (oldGroup != null) {
+      permission.playerRemoveGroup(null, Bukkit.getOfflinePlayer(uuid), oldGroup);
+    }
 
     permission.playerAddGroup(null, Bukkit.getOfflinePlayer(uuid), group);
-  }
-
-  @Override
-  public void removeGroup(UUID uuid, String group) {
-    Objects.requireNonNull(uuid);
-    Objects.requireNonNull(group);
-
-    permission.playerRemoveGroup(null, Bukkit.getOfflinePlayer(uuid), group);
   }
 }

@@ -1,13 +1,13 @@
 package sh.okx.rankup.messages;
 
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
 
 import java.text.DecimalFormat;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RankupPlaceholderTest extends RankupTest {
   public RankupPlaceholderTest() {
@@ -21,7 +21,7 @@ public class RankupPlaceholderTest extends RankupTest {
 
     plugin.getEconomy().setPlayer(player, 1000);
 
-    groupProvider.addGroup(player.getUniqueId(), "A");
+    groupProvider.transferGroup(player.getUniqueId(), null, "A");
     plugin.getHelper().rankup(player);
 
     // success-public message must be the same for both players
@@ -41,7 +41,7 @@ public class RankupPlaceholderTest extends RankupTest {
 
     plugin.getEconomy().setPlayer(player, 100);
 
-    groupProvider.addGroup(player.getUniqueId(), "A");
+    groupProvider.transferGroup(player.getUniqueId(), null, "A");
     plugin.getHelper().rankup(player);
 
     DecimalFormat decimal = new DecimalFormat("#.#");

@@ -1,9 +1,8 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id "io.freefair.lombok" version "6.0.0-m2"
-    id "maven-publish"
     id 'info.solidsoft.pitest' version '1.7.0'
+    id 'com.gradleup.shadow' version '9.0.0-beta8'
+    id 'io.freefair.lombok' version "8.12.1"
 }
 
 pitest {
@@ -14,11 +13,11 @@ pitest {
 }
 
 group 'sh.okx'
-version '3.14.4'
+version '3.15'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
@@ -38,18 +37,21 @@ repositories {
     maven {
         url 'https://nexus.neetgames.com/repository/maven-releases/'
     }
+    maven {
+        url 'https://repo.papermc.io/repository/maven-public/'
+    }
 }
 
 dependencies {
     testImplementation 'org.junit.platform:junit-platform-launcher:1.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testImplementation 'com.github.MockBukkit:MockBukkit:04889261630cd6f5aaebd86a576bbcd12c442ea7'
+    testImplementation 'com.github.MockBukkit:MockBukkit:v4.31.1'
 
     implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
     compileOnly 'org.jetbrains:annotations:22.0.0'
-    compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
     compileOnly('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }
@@ -57,7 +59,7 @@ dependencies {
     compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    compileOnly ('me.clip:placeholderapi:2.10.9') {
+    compileOnly('me.clip:placeholderapi:2.10.9') {
         exclude group: 'org.bstats'
     }
     compileOnly 'com.github.pyvesb:advanced-achievements:8.0.2'
@@ -65,7 +67,7 @@ dependencies {
     compileOnly('com.gmail.nossr50.mcMMO:mcMMO:2.2.004') {
         exclude group: 'com.sk89q.worldguard'
     }
-    compileOnly ('com.bencodez:votingplugin:6.14.1') {
+    compileOnly('com.bencodez:votingplugin:6.14.1') {
         transitive = false
     }
 
@@ -74,7 +76,7 @@ dependencies {
     compileOnly 'com.github.LlmDl:Towny:25fc18a'
     testImplementation 'com.github.LlmDl:Towny:25fc18a'
 
-    implementation ('io.pebbletemplates:pebble:3.1.5') {
+    implementation('io.pebbletemplates:pebble:3.1.5') {
         exclude group: 'org.slf4j'
     }
     implementation 'com.electronwill.night-config:toml:3.6.4'
@@ -120,13 +122,3 @@ test {
         events "passed", "skipped", "failed"
     }
 }
-
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
-}
-

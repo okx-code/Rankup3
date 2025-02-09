@@ -1,8 +1,5 @@
 package sh.okx.rankup;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -15,6 +12,10 @@ import sh.okx.rankup.prestige.Prestiges;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
 import sh.okx.rankup.ranks.Rankups;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Actually performs the ranking up and prestiging for the plugin and also manages the cooldowns
@@ -38,9 +39,10 @@ public class RankupHelper {
 
   public void doRankup(Player player, RankElement<Rank> rank) {
     if (rank.getRank() != null) {
-      permissions.removeGroup(player.getUniqueId(), rank.getRank().getRank());
+      permissions.transferGroup(player.getUniqueId(), rank.getRank().getRank(), rank.getNext().getRank().getRank());
+    } else {
+      permissions.transferGroup(player.getUniqueId(), null, rank.getNext().getRank().getRank());
     }
-    permissions.addGroup(player.getUniqueId(), rank.getNext().getRank().getRank());
 
     rank.getRank().runCommands(player, rank.getNext().getRank());
 
@@ -65,13 +67,9 @@ public class RankupHelper {
   public void doPrestige(Player player, RankElement<Prestige> prestige) {
     Prestige rank = prestige.getRank();
 
-    permissions.removeGroup(player.getUniqueId(), rank.getFrom());
-    permissions.addGroup(player.getUniqueId(), rank.getTo());
+    permissions.transferGroup(player.getUniqueId(), rank.getFrom(), rank.getTo());
 
-    if (rank.getRank() != null) {
-      permissions.removeGroup(player.getUniqueId(), rank.getRank());
-    }
-    permissions.addGroup(player.getUniqueId(), prestige.getNext().getRank().getRank());
+    permissions.transferGroup(player.getUniqueId(), rank.getRank(), prestige.getNext().getRank().getRank());
 
     rank.runCommands(player, prestige.getNext().getRank());
 

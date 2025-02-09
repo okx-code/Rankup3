@@ -1,7 +1,7 @@
 package sh.okx.rankup;
 
 
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.Location;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.placeholders.RankupExpansion;
@@ -16,8 +16,11 @@ public class WorldRequirementTest extends RankupTest {
 
   @Test
   public void testStatusComplete() {
+    server.addSimpleWorld("world");
+    server.addSimpleWorld("the_nether");
+
     PlayerMock player = server.addPlayer();
-    groupProvider.addGroup(player.getUniqueId(), "a");
+    groupProvider.transferGroup(player.getUniqueId(), null, "a");
 
     RankupExpansion expansion = plugin.getPlaceholders().getExpansion();
     assertEquals("0", expansion.placeholder(player, "requirement_world_percent_done"));

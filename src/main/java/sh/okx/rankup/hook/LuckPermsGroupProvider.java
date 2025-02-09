@@ -1,12 +1,13 @@
 package sh.okx.rankup.hook;
 
-import java.util.UUID;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.context.ContextSet;
 import net.luckperms.api.context.ImmutableContextSet;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
+
+import java.util.UUID;
 
 public class LuckPermsGroupProvider implements GroupProvider {
 
@@ -39,7 +40,7 @@ public class LuckPermsGroupProvider implements GroupProvider {
   public boolean inGroup(UUID uuid, String group) {
     User user = luckPerms.getUserManager().getUser(uuid);
     for (Group lpGroup : user.getInheritedGroups(user.getQueryOptions().toBuilder().context(contextSet).build())) {
-      if (lpGroup.getName().equals(group)) {
+      if (lpGroup.getName().equalsIgnoreCase(group)) {
         return true;
       }
     }
@@ -47,17 +48,12 @@ public class LuckPermsGroupProvider implements GroupProvider {
   }
 
   @Override
-  public void addGroup(UUID uuid, String group) {
+  public void transferGroup(UUID uuid, String oldGroup, String group) {
     User user = luckPerms.getUserManager().getUser(uuid);
+    if (oldGroup != null) {
+      user.data().remove(InheritanceNode.builder(oldGroup).context(contextSet).build());
+    }
     user.data().add(InheritanceNode.builder(group).context(contextSet).build());
-
-    luckPerms.getUserManager().saveUser(user);
-  }
-
-  @Override
-  public void removeGroup(UUID uuid, String group) {
-    User user = luckPerms.getUserManager().getUser(uuid);
-    user.data().remove(InheritanceNode.builder(group).context(contextSet).build());
 
     luckPerms.getUserManager().saveUser(user);
   }

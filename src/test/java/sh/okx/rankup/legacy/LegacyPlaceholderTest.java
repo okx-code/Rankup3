@@ -1,9 +1,10 @@
 package sh.okx.rankup.legacy;
 
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import java.text.DecimalFormat;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
+
+import java.text.DecimalFormat;
 
 public class LegacyPlaceholderTest extends RankupTest {
   public LegacyPlaceholderTest() {
@@ -17,7 +18,7 @@ public class LegacyPlaceholderTest extends RankupTest {
     plugin.getEconomy().setPlayer(player, 100);
     player.setLevel(1);
 
-    groupProvider.addGroup(player.getUniqueId(), "A");
+    groupProvider.transferGroup(player.getUniqueId(), null, "A");
     plugin.getHelper().rankup(player);
 
     DecimalFormat moneyFormat = new DecimalFormat("#,##0.##");

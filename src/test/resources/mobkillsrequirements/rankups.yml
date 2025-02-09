@@ -3,4 +3,4 @@ a:
   next: 'B'
   requirements:
     - 'mob-kills snow_golem 3' # entity name
-    - 'mob-kills mushroom_cow 3' # entity enum value
+    - 'mob-kills mooshroom 3' # entity enum value

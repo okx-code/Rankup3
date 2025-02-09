@@ -1,12 +1,13 @@
 package sh.okx.rankup.toml;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.ChatColor;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
 import sh.okx.rankup.ranks.Rankups;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TomlTest extends RankupTest {
 
@@ -21,7 +22,7 @@ public class TomlTest extends RankupTest {
     Rankups ranks = plugin.getRankups();
     assertEquals(1500, ranks.getFirst().getRequirement(null, "money").getValueDouble());
 
-    plugin.getPermissions().addGroup(player.getUniqueId(), "C");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "C");
     player.addAttachment(plugin, "rankup.rankup", true);
     plugin.getHelper().rankup(player);
 
@@ -31,7 +32,7 @@ public class TomlTest extends RankupTest {
   @Test
   public void testRankup() {
     PlayerMock player = server.addPlayer();
-    plugin.getPermissions().addGroup(player.getUniqueId(), "B");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "B");
     plugin.getEconomy().setPlayer(player, 10000);
     player.addAttachment(plugin, "rankup.rankup", true);
 
@@ -43,7 +44,7 @@ public class TomlTest extends RankupTest {
   @Test
   public void testRanks() {
     PlayerMock player = server.addPlayer();
-    plugin.getPermissions().addGroup(player.getUniqueId(), "C");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "C");
 
     player.addAttachment(plugin, "rankup.ranks", true);
     plugin.getCommand("ranks").execute(player, "ranks", new String[0]);

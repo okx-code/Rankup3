@@ -58,6 +58,9 @@ permission-rankup: false
 # luckperms-context: 'server=survival world=world_nether' # to make all rankups specific to the nether world in survival
 luckperms-context: ''
 
+# enable this option if you want Rankup to use the names of LuckPerms group, rather than their display names
+use-luckperms-group-names: false
+
 # if players can use /rankup noconfirm to bypass any confirmation
 # the permission rankup.noconfirm is used for this command, but it is true by default
 # the console can always do /rankup noconfirm <player>

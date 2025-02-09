@@ -1,10 +1,11 @@
 package sh.okx.rankup.requirements;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.junit.jupiter.api.Test;
 import sh.okx.rankup.RankupTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PrestigeRequirementsTest extends RankupTest {
 
@@ -16,8 +17,8 @@ public class PrestigeRequirementsTest extends RankupTest {
   public void testPrestigeRequirements() {
     PlayerMock player = server.addPlayer();
 
-    plugin.getPermissions().addGroup(player.getUniqueId(), "p1");
-    plugin.getPermissions().addGroup(player.getUniqueId(), "a");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "p1");
+    plugin.getPermissions().transferGroup(player.getUniqueId(), null, "a");
 
     plugin.getEconomy().setPlayer(player, 200);
 

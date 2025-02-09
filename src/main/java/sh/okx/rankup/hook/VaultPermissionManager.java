@@ -29,7 +29,8 @@ public class VaultPermissionManager implements PermissionManager {
       return null;
     }
     String lpContext = plugin.getConfig().getString("luckperms-context");
-    if (lpContext != null && !lpContext.isEmpty()) {
+    boolean useLuckPermsGroupNames = plugin.getConfig().getBoolean("use-luckperms-group-names", false);
+    if (useLuckPermsGroupNames || (lpContext != null && !lpContext.isEmpty())) {
       RegisteredServiceProvider<LuckPerms> lpProvider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
       if (lpProvider != null) {
         return LuckPermsGroupProvider.createFromString(lpProvider.getProvider(), lpContext);

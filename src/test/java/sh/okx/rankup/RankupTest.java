@@ -1,7 +1,7 @@
 package sh.okx.rankup;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

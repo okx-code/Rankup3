@@ -11,11 +11,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import sh.okx.rankup.commands.*;
+import sh.okx.rankup.commands.InfoCommand;
+import sh.okx.rankup.commands.MaxRankupCommand;
+import sh.okx.rankup.commands.PrestigeCommand;
+import sh.okx.rankup.commands.PrestigesCommand;
+import sh.okx.rankup.commands.RanksCommand;
+import sh.okx.rankup.commands.RankupCommand;
 import sh.okx.rankup.economy.Economy;
 import sh.okx.rankup.economy.EconomyProvider;
 import sh.okx.rankup.economy.VaultEconomyProvider;
@@ -38,7 +41,24 @@ import sh.okx.rankup.ranksgui.RanksGuiCommand;
 import sh.okx.rankup.ranksgui.RanksGuiListener;
 import sh.okx.rankup.requirements.Requirement;
 import sh.okx.rankup.requirements.RequirementRegistry;
-import sh.okx.rankup.requirements.requirement.*;
+import sh.okx.rankup.requirements.requirement.AdvancementRequirement;
+import sh.okx.rankup.requirements.requirement.BlockBreakRequirement;
+import sh.okx.rankup.requirements.requirement.CraftItemRequirement;
+import sh.okx.rankup.requirements.requirement.GroupRequirement;
+import sh.okx.rankup.requirements.requirement.ItemDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.ItemRequirement;
+import sh.okx.rankup.requirements.requirement.MobKillsRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.MoneyRequirement;
+import sh.okx.rankup.requirements.requirement.PermissionRequirement;
+import sh.okx.rankup.requirements.requirement.PlaceholderRequirement;
+import sh.okx.rankup.requirements.requirement.PlayerKillsRequirement;
+import sh.okx.rankup.requirements.requirement.PlaytimeMinutesRequirement;
+import sh.okx.rankup.requirements.requirement.TotalMobKillsRequirement;
+import sh.okx.rankup.requirements.requirement.UseItemRequirement;
+import sh.okx.rankup.requirements.requirement.WorldRequirement;
+import sh.okx.rankup.requirements.requirement.XpLevelDeductibleRequirement;
+import sh.okx.rankup.requirements.requirement.XpLevelRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsAchievementRequirement;
 import sh.okx.rankup.requirements.requirement.advancedachievements.AdvancedAchievementsTotalRequirement;
 import sh.okx.rankup.requirements.requirement.mcmmo.McMMOPowerLevelRequirement;
@@ -46,7 +66,12 @@ import sh.okx.rankup.requirements.requirement.mcmmo.McMMOSkillRequirement;
 import sh.okx.rankup.requirements.requirement.superbvote.SuperbVoteVotesRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.tokenmanager.TokensRequirement;
-import sh.okx.rankup.requirements.requirement.towny.*;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberResidentsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingNumberTownsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyKingRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyMayorNumberResidentsRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyMayorRequirement;
+import sh.okx.rankup.requirements.requirement.towny.TownyResidentRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsDeductibleRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginPointsRequirement;
 import sh.okx.rankup.requirements.requirement.votingplugin.VotingPluginVotesRequirement;
@@ -97,8 +122,7 @@ public class RankupPlugin extends JavaPlugin {
     super();
   }
 
-  protected RankupPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file, PermissionManager permissionManager, EconomyProvider economyProvider) {
-    super(loader, description, dataFolder, file);
+  protected RankupPlugin(PermissionManager permissionManager, EconomyProvider economyProvider) {
     this.permissionManager = permissionManager;
     this.economyProvider = economyProvider;
   }
