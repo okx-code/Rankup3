@@ -80,6 +80,7 @@ import sh.okx.rankup.serialization.ShadowDeserializer;
 import sh.okx.rankup.serialization.YamlDeserializer;
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
+import sh.okx.rankup.util.folia.FoliaScheduler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -129,29 +130,29 @@ public class RankupPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    UpdateNotifier notifier = new UpdateNotifier(new VersionChecker(this));
+//    UpdateNotifier notifier = new UpdateNotifier(new VersionChecker(this));
 
     reload(true);
 
-    if (System.getProperty("RANKUP_TEST") == null) {
-      Metrics metrics = new Metrics(this);
-      metrics.addCustomChart(new Metrics.SimplePie("confirmation",
-              () -> config.getString("confirmation-type", "unknown")));
-      metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
-        Map<String, Integer> map = new HashMap<>();
-        addAllRequirements(map, rankups);
-        if (prestiges != null) {
-          addAllRequirements(map, prestiges);
-        }
-        return map;
-      }));
-      metrics.addCustomChart(new Metrics.SimplePie("prestige",
-              () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
-      metrics.addCustomChart(new Metrics.SimplePie("permission-rankup",
-              () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
-      metrics.addCustomChart(new Metrics.SimplePie("notify-update",
-              () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
-    }
+//    if (System.getProperty("RANKUP_TEST") == null) {
+//      Metrics metrics = new Metrics(this);
+//      metrics.addCustomChart(new Metrics.SimplePie("confirmation",
+//              () -> config.getString("confirmation-type", "unknown")));
+//      metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
+//        Map<String, Integer> map = new HashMap<>();
+//        addAllRequirements(map, rankups);
+//        if (prestiges != null) {
+//          addAllRequirements(map, prestiges);
+//        }
+//        return map;
+//      }));
+//      metrics.addCustomChart(new Metrics.SimplePie("prestige",
+//              () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
+//      metrics.addCustomChart(new Metrics.SimplePie("permission-rankup",
+//              () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
+//      metrics.addCustomChart(new Metrics.SimplePie("notify-update",
+//              () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
+//    }
 
     if (config.getBoolean("ranks")) {
       if (config.getBoolean("ranks-gui")) {
@@ -173,10 +174,10 @@ public class RankupPlugin extends JavaPlugin {
     }
 
     getCommand("rankup").setExecutor(new RankupCommand(this));
-    getCommand("rankup3").setExecutor(new InfoCommand(this, notifier));
+    getCommand("rankup3").setExecutor(new InfoCommand(this, null)); // notifier));
     getServer().getPluginManager().registerEvents(new GuiListener(this), this);
-    getServer().getPluginManager().registerEvents(
-        new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update"), "rankup.notify"), this);
+//    getServer().getPluginManager().registerEvents(
+//        new JoinUpdateNotifier(notifier, () -> getConfig().getBoolean("notify-update"), "rankup.notify"), this);
 
     placeholders = new Placeholders(this);
     placeholders.register();
@@ -298,10 +299,13 @@ public class RankupPlugin extends JavaPlugin {
     messages = YamlConfiguration.loadConfiguration(localeFile);
 
     if (init) {
-      Bukkit.getScheduler().runTask(this, () -> {
+      final Runnable runnable = () -> {
         refreshRanks();
         error();
-      });
+      };
+
+      if (FoliaScheduler.isFolia()) FoliaScheduler.getGlobalRegionScheduler().execute(this, runnable);
+      else Bukkit.getScheduler().runTask(this, runnable);
     } else {
       refreshRanks();
     }

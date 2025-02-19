@@ -5,6 +5,7 @@ author: Okx
 depend: [Vault]
 softdepend: [PlaceholderAPI, mcMMO, AdvancedAchievements, Towny, SuperbVote, VotingPlugin, LuckPerms]
 api-version: 1.13
+folia-supported: true
 
 commands:
   rankup:

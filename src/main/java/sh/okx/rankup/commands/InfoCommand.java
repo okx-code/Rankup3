@@ -336,7 +336,7 @@ public class InfoCommand implements TabExecutor {
     }
 
     if (sender.hasPermission("rankup.checkversion")) {
-      notifier.notify(sender, false);
+      //notifier.notify(sender, false);
     }
 
     return true;

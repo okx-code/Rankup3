@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import sh.okx.rankup.RankupPlugin;
 import sh.okx.rankup.ranks.requirements.RankRequirements;
 import sh.okx.rankup.requirements.Requirement;
+import sh.okx.rankup.util.folia.FoliaScheduler;
 
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,11 +47,17 @@ public class Rank {
   }
 
   public void runCommands(Player player, Rank next) {
-    for (String command : commands) {
-      String string = plugin.newMessageBuilder(command).replacePlayer(player).replaceOldRank(this).replaceRank(next).toString(player);
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
-    }
+    final Runnable runnable = () -> {
+      for (String command : commands) {
+        String string = plugin.newMessageBuilder(command).replacePlayer(player).replaceOldRank(this).replaceRank(next).toString(player);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
+      }
+    };
+
+    if (FoliaScheduler.isFolia()) FoliaScheduler.getGlobalRegionScheduler().run(plugin, $ -> runnable.run());
+    else runnable.run();
   }
+
 
   @Override
   public String toString() {
