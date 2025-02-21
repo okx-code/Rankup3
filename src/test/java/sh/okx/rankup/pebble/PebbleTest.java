@@ -1,7 +1,7 @@
 package sh.okx.rankup.pebble;
 
 import org.junit.jupiter.api.Test;
-import org.mockbukkit.mockbukkit.entity.PlayerMock;
+import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import sh.okx.rankup.RankupTest;
 import sh.okx.rankup.ranks.Rank;
 import sh.okx.rankup.ranks.RankElement;
