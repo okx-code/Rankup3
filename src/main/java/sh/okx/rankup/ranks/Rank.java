@@ -58,7 +58,6 @@ public class Rank {
     else runnable.run();
   }
 
-
   @Override
   public String toString() {
     return "Rank{" +
