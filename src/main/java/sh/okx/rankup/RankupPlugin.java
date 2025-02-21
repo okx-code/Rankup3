@@ -11,8 +11,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import sh.okx.rankup.commands.InfoCommand;
 import sh.okx.rankup.commands.MaxRankupCommand;
 import sh.okx.rankup.commands.PrestigeCommand;
@@ -122,7 +124,8 @@ public class RankupPlugin extends JavaPlugin {
     super();
   }
 
-  protected RankupPlugin(PermissionManager permissionManager, EconomyProvider economyProvider) {
+  protected RankupPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file, PermissionManager permissionManager, EconomyProvider economyProvider) {
+    super(loader, description, dataFolder, file);
     this.permissionManager = permissionManager;
     this.economyProvider = economyProvider;
   }
@@ -136,7 +139,7 @@ public class RankupPlugin extends JavaPlugin {
     if (System.getProperty("RANKUP_TEST") == null) {
       Metrics metrics = new Metrics(this);
       metrics.addCustomChart(new Metrics.SimplePie("confirmation",
-              () -> config.getString("confirmation-type", "unknown")));
+          () -> config.getString("confirmation-type", "unknown")));
       metrics.addCustomChart(new Metrics.AdvancedPie("requirements", () -> {
         Map<String, Integer> map = new HashMap<>();
         addAllRequirements(map, rankups);
@@ -146,11 +149,11 @@ public class RankupPlugin extends JavaPlugin {
         return map;
       }));
       metrics.addCustomChart(new Metrics.SimplePie("prestige",
-              () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
+          () -> config.getBoolean("prestige") ? "enabled" : "disabled"));
       metrics.addCustomChart(new Metrics.SimplePie("permission-rankup",
-              () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
+          () -> config.getBoolean("permission-rankup") ? "enabled" : "disabled"));
       metrics.addCustomChart(new Metrics.SimplePie("notify-update",
-              () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
+          () -> config.getBoolean("notify-update") ? "enabled" : "disabled"));
     }
 
     if (config.getBoolean("ranks")) {
@@ -324,7 +327,6 @@ public class RankupPlugin extends JavaPlugin {
 //      rankups.getOrderedList();
 
 
-
     } catch (RuntimeException e) {
       this.errorMessage = e.getClass().getName() + ": " + e.getMessage();
       e.printStackTrace();
@@ -433,6 +435,7 @@ public class RankupPlugin extends JavaPlugin {
       requirements.addRequirements(new SuperbVoteVotesRequirement(this));
     }
   }
+
   private void setupEconomy() {
     economy = economyProvider.getEconomy();
   }

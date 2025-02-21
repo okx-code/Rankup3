@@ -1,7 +1,14 @@
 package sh.okx.rankup;
 
-import org.mockbukkit.mockbukkit.MockBukkit;
-import org.mockbukkit.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import sh.okx.rankup.hook.GroupProvider;
+import sh.okx.rankup.providers.TestEconomyProvider;
+import sh.okx.rankup.providers.TestGroupProvider;
+import sh.okx.rankup.providers.TestPermissionManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -10,12 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import sh.okx.rankup.providers.TestEconomyProvider;
-import sh.okx.rankup.hook.GroupProvider;
-import sh.okx.rankup.providers.TestGroupProvider;
-import sh.okx.rankup.providers.TestPermissionManager;
 
 public abstract class RankupTest {
     private final File testResourceFolder;
