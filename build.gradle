@@ -16,14 +16,14 @@ group 'sh.okx'
 version '3.15.2'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
     mavenCentral()
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        url 'https://repo.papermc.io/repository/maven-public/'
     }
     maven {
         url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
@@ -51,7 +51,7 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
     compileOnly 'org.jetbrains:annotations:22.0.0'
-    compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
     compileOnly('com.github.Realizedd:TokenManager:3.2.4') {
         transitive = false
     }
