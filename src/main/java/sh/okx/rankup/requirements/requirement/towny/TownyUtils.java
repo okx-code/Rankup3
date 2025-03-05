@@ -1,10 +1,10 @@
 package sh.okx.rankup.requirements.requirement.towny;
 
+import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
 import org.bukkit.entity.Player;
 
 public class TownyUtils {
@@ -19,7 +19,11 @@ public class TownyUtils {
 
     public boolean isResident(Player player) {
         try {
-            Town town = TownyUniverse.getDataSource().getResident(player.getName()).getTown();
+            Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+            if (resident == null) {
+                return false;
+            }
+            Town town = resident.getTown();
 
             return town != null;
         } catch (NotRegisteredException e) {
@@ -27,45 +31,37 @@ public class TownyUtils {
         }
     }
 
-    public Resident getResident(Player player) {
-        try {
-            return TownyUniverse.getDataSource().getResident(player.getName());
-        } catch (NotRegisteredException e) {
-            return null;
-        }
-    }
-
     public Town getTown(Player player) {
-        try {
-            return TownyUniverse.getDataSource().getResident(player.getName()).getTown();
-        } catch (NotRegisteredException e) {
+        Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+        if (resident == null) {
             return null;
         }
+        return resident.getTownOrNull();
     }
 
     public Nation getNation(Player player) {
         Town town = getTown(player);
 
         try {
-            return getTown(player) == null ? null : town.getNation();
+            return town == null ? null : town.getNation();
         } catch (NotRegisteredException e) {
             return null;
         }
     }
 
     public boolean isMayor(Player player) {
-        try {
-            return TownyUniverse.getDataSource().getResident(player.getName()).isMayor();
-        } catch (NotRegisteredException e) {
+        Resident resident = TownyUniverse.getInstance().getResident(player.getName());
+        if (resident == null) {
             return false;
         }
+        return resident.isMayor();
     }
 
     public boolean isKing(Player player) {
-        try {
-            return TownyUniverse.getDataSource().getResident(player.getName()).isKing();
-        } catch (NotRegisteredException e) {
+        Resident resident = TownyUniverse.getInstance().getResident(player.getName());
+        if (resident == null) {
             return false;
         }
+        return resident.isKing();
     }
 }
