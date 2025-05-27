@@ -82,6 +82,7 @@ import sh.okx.rankup.serialization.ShadowDeserializer;
 import sh.okx.rankup.serialization.YamlDeserializer;
 import sh.okx.rankup.util.UpdateNotifier;
 import sh.okx.rankup.util.VersionChecker;
+import sh.okx.rankup.util.folia.FoliaScheduler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -280,15 +281,18 @@ public class RankupPlugin extends JavaPlugin {
   }
 
   /**
-   * Closes all rankup inventories on disable so players cannot grab items from the inventory on a
+   * Closes all rankup inventories on "disable" so players cannot grab items from the inventory on a
    * plugin reload.
    */
   private void closeInventories() {
     for (Player player : Bukkit.getOnlinePlayers()) {
-      InventoryView view = player.getOpenInventory();
-      if (view.getType() == InventoryType.CHEST
-          && view.getTopInventory().getHolder() instanceof Gui) {
-        player.closeInventory();
+      try {
+        InventoryView view = player.getOpenInventory();
+        if (view.getType() == InventoryType.CHEST
+            && view.getTopInventory().getHolder() instanceof Gui) {
+          player.closeInventory();
+        }
+      } catch (Throwable ignored) {
       }
     }
   }
@@ -301,10 +305,13 @@ public class RankupPlugin extends JavaPlugin {
     messages = YamlConfiguration.loadConfiguration(localeFile);
 
     if (init) {
-      Bukkit.getScheduler().runTask(this, () -> {
+      final Runnable runnable = () -> {
         refreshRanks();
         error();
-      });
+      };
+
+      if (FoliaScheduler.isFolia()) FoliaScheduler.getGlobalRegionScheduler().execute(this, runnable);
+      else Bukkit.getScheduler().runTask(this, runnable);
     } else {
       refreshRanks();
     }
@@ -317,16 +324,12 @@ public class RankupPlugin extends JavaPlugin {
 
       if (config.getBoolean("prestige")) {
         prestiges = new Prestiges(this, loadConfig("prestiges.yml"));
-//        prestiges.getOrderedList();
       } else {
         prestiges = null;
       }
 
       rankups = new Rankups(this, loadRankupConfig("rankups"));
       // check rankups are not in an infinite loop
-//      rankups.getOrderedList();
-
-
     } catch (RuntimeException e) {
       this.errorMessage = e.getClass().getName() + ": " + e.getMessage();
       e.printStackTrace();

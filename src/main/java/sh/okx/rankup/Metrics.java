@@ -3,12 +3,14 @@ package sh.okx.rankup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
+import sh.okx.rankup.util.folia.FoliaScheduler;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -50,7 +52,8 @@ public class Metrics {
   private static final String URL = "https://bStats.org/submitData/bukkit";
 
   // Is bStats enabled on this server?
-  private boolean enabled;
+  @Getter
+  private final boolean enabled;
 
   // Should failed requests be logged?
   private static boolean logFailedRequests;
@@ -139,15 +142,6 @@ public class Metrics {
   }
 
   /**
-   * Checks if bStats is enabled.
-   *
-   * @return Whether bStats is enabled or not.
-   */
-  public boolean isEnabled() {
-    return enabled;
-  }
-
-  /**
    * Adds a custom chart.
    *
    * @param chart The chart to add.
@@ -163,19 +157,30 @@ public class Metrics {
    * Starts the Scheduler which submits our data every 30 minutes.
    */
   private void startSubmitting() {
-    final Timer timer = new Timer(true); // We use a timer cause the Bukkit scheduler is affected by server lags
-    timer.scheduleAtFixedRate(new TimerTask() {
-      @Override
-      public void run() {
-        if (!plugin.isEnabled()) { // Plugin was disabled
-          timer.cancel();
-          return;
+    if (FoliaScheduler.isFolia()) {
+      FoliaScheduler.getGlobalRegionScheduler().runAtFixedRate(plugin,
+          (ignored) -> {
+            if (!plugin.isEnabled()) { // Plugin was disabled
+              return;
+            }
+            submitData();
+          }, 20L * 60 * 5, 20L * 60 * 30
+      );
+    } else {
+      final Timer timer = new Timer(true); // We use a timer cause the Bukkit scheduler is affected by server lags
+      timer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+          if (!plugin.isEnabled()) { // Plugin was disabled
+            timer.cancel();
+            return;
+          }
+          // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
+          // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
+          Bukkit.getScheduler().runTask(plugin, () -> submitData());
         }
-        // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
-        // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
-        Bukkit.getScheduler().runTask(plugin, () -> submitData());
-      }
-    }, 1000 * 60 * 5, 1000 * 60 * 30);
+      }, 1000 * 60 * 5, 1000 * 60 * 30);
+    }
     // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
     // WARNING: Changing the frequency has no effect but your plugin WILL be blocked/deleted!
     // WARNING: Just don't do it!
@@ -257,7 +262,7 @@ public class Metrics {
   }
 
   /**
-   * Collects the data and sends it afterwards.
+   * Collects the data and sends it afterward.
    */
   private void submitData() {
     final JsonObject data = getServerData();
@@ -280,7 +285,7 @@ public class Metrics {
                   Method jsonStringGetter = jsonObjectJsonSimple.getDeclaredMethod("toJSONString");
                   jsonStringGetter.setAccessible(true);
                   String jsonString = (String) jsonStringGetter.invoke(plugin);
-                  JsonObject object = new JsonParser().parse(jsonString).getAsJsonObject();
+                  JsonObject object = JsonParser.parseString(jsonString).getAsJsonObject();
                   pluginData.add(object);
                 }
               } catch (ClassNotFoundException e) {
@@ -330,7 +335,7 @@ public class Metrics {
       throw new IllegalAccessException("This method must not be called from the main thread!");
     }
     if (logSentData) {
-      plugin.getLogger().info("Sending data to bStats: " + data.toString());
+      plugin.getLogger().info("Sending data to bStats: " + data);
     }
     HttpsURLConnection connection = (HttpsURLConnection) new URL(URL).openConnection();
 

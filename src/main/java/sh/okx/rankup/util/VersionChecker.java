@@ -5,12 +5,15 @@ import com.google.common.io.CharStreams;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import sh.okx.rankup.util.folia.FoliaScheduler;
 
 public class VersionChecker {
   public static final int RESOURCE_ID = 76964;
 
+  @Getter
   private final Plugin plugin;
   private final String currentVersion;
   private String latestVersion;
@@ -19,10 +22,6 @@ public class VersionChecker {
   public VersionChecker(Plugin plugin) {
     this.currentVersion = plugin.getDescription().getVersion();
     this.plugin = plugin;
-  }
-
-  public Plugin getPlugin() {
-    return plugin;
   }
 
   /**
@@ -48,7 +47,11 @@ public class VersionChecker {
       checked = true;
       callback.onPreReleaseVersion(currentVersion);
     } else {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> checkVersionAsync(callback));
+      if (FoliaScheduler.isFolia()) {
+        FoliaScheduler.getAsyncScheduler().runNow(plugin, ignored -> checkVersionAsync(callback));
+      } else {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> checkVersionAsync(callback));
+      }
     }
   }
 
@@ -144,7 +147,11 @@ public class VersionChecker {
     }
 
     private void doSync(Runnable r) {
-      Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, r);
+      if (FoliaScheduler.isFolia()) {
+        FoliaScheduler.getGlobalRegionScheduler().execute(plugin, r);
+      } else {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, r);
+      }
     }
   }
 }

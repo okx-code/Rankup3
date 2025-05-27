@@ -319,11 +319,14 @@ public class InfoCommand implements TabExecutor {
     sender.sendMessage(
         ChatColor.GREEN + "" + ChatColor.BOLD + description.getName() + " " + version +
             ChatColor.YELLOW + " by " + ChatColor.BLUE + ChatColor.BOLD + String.join(", ", description.getAuthors()));
+
     if (sender.hasPermission("rankup.reload")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " reload " + ChatColor.YELLOW + "Reloads configuration files.");
     }
+
     if (sender.hasPermission("rankup.force")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " forcerankup <player> " + ChatColor.YELLOW + "Force a player to rankup, bypassing requirements.");
+
       if (plugin.getPrestiges() != null) {
         sender.sendMessage(
             ChatColor.GREEN + "/" + label + " forceprestige <player> " + ChatColor.YELLOW
@@ -331,6 +334,7 @@ public class InfoCommand implements TabExecutor {
       }
       sender.sendMessage(ChatColor.GREEN + "/" + label + " rankdown <player> " + ChatColor.YELLOW + "Force a player to move down one rank.");
     }
+
     if (sender.hasPermission("rankup.playtime")) {
       sender.sendMessage(ChatColor.GREEN + "/" + label + " playtime " + ChatColor.YELLOW + "View your playtime");
     }
