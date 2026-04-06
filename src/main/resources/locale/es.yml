@@ -1,6 +1,6 @@
 # the messages in this section can be customised for each rankup in rankups.yml.
 rankup:
-  requirements-not-met: "&cNo satisfaces los requisitos para seguir al siguiente rango."
+  requirements-not-met: "&cNo cumples los requisitos para seguir al siguiente rango."
   no-rankup: "&eEstás en el último rango."
   # set to an empty string, ie: success-public: ""
   # to hide that message.
